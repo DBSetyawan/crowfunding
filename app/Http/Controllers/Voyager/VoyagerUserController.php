@@ -2,18 +2,17 @@
 
 namespace App\Http\Controllers\Voyager;
 
-use App\User;
 use Illuminate\Http\Request;
+use App\Http\Controllers\Controller;
+use TCG\Voyager\Http\Controllers\VoyagerBaseController;
 use TCG\Voyager\Facades\Voyager;
 use Illuminate\Support\Facades\DB;
-use App\Http\Controllers\Controller;
 use TCG\Voyager\Events\BreadDataAdded;
 use Illuminate\Database\Eloquent\Model;
 use TCG\Voyager\Events\BreadDataDeleted;
 use TCG\Voyager\Events\BreadDataUpdated;
 use TCG\Voyager\Events\BreadImagesDeleted;
 use TCG\Voyager\Database\Schema\SchemaManager;
-use TCG\Voyager\Http\Controllers\VoyagerBaseController;
 use TCG\Voyager\Http\Controllers\Traits\BreadRelationshipParser;
 use TCG\Voyager\Http\Controllers\VoyagerUserController as BaseVoyagerUserController;
 
@@ -34,7 +33,6 @@ class VoyagerUserController extends BaseVoyagerUserController
 
     public function index(Request $request)
     {
-        // GET THE SLUG, ex. 'posts', 'pages', etc.
         $slug = $this->getSlug($request);
 
         // GET THE DataType based on the slug
@@ -98,15 +96,12 @@ class VoyagerUserController extends BaseVoyagerUserController
             $view = "voyager::$slug.browse";
         }
 
-        $User = User::all();
-
         return Voyager::view($view, compact(
             'dataType',
             'dataTypeContent',
             'isModelTranslatable',
             'search',
             'orderBy',
-            'User',
             'sortOrder',
             'searchable',
             'isServerSide'

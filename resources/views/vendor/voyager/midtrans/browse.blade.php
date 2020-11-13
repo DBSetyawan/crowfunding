@@ -34,10 +34,7 @@
             @endif
         @endforeach
         @include('voyager::multilingual.language-selector')
-        <button class="btn btn-primary  btn-add-new" type="button" data-toggle="modal" data-target="#modal-print" >
-            <i class="voyager-file-text"></i>
-            Print Kwitansi Berdasarkan Tanggal
-        </button>
+     
         <button class="btn btn-primary  btn-add-new" type="button" data-toggle="modal" data-target="#modal-print-last-month" >
             <i class="voyager-file-text"></i>
             Print Kwitansi Bulanan

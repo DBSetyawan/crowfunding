@@ -2,15 +2,21 @@
 
 @section('page_title', __('voyager::generic.'.(isset($dataTypeContent->id) ? 'edit' : 'add')).' '.$dataType->getTranslatedAttribute('display_name_singular'))
 
-@section('css')
-    <meta name="csrf-token" content="{{ csrf_token() }}">
-@stop
-
 @section('page_header')
     <h1 class="page-title">
         <i class="{{ $dataType->icon }}"></i>
         {{ __('voyager::generic.'.(isset($dataTypeContent->id) ? 'edit' : 'add')).' '.$dataType->getTranslatedAttribute('display_name_singular') }}
     </h1>
+@stop
+
+@section('css')
+    <meta name="csrf-token" content="{{ csrf_token() }}">
+    <link href="https://api.mapbox.com/mapbox-gl-js/v1.12.0/mapbox-gl.css" rel="stylesheet" />
+    <link
+rel="stylesheet"
+href="https://api.mapbox.com/mapbox-gl-js/plugins/mapbox-gl-geocoder/v4.5.1/mapbox-gl-geocoder.css"
+type="text/css"
+/>
 @stop
 
 @section('content')
@@ -90,8 +96,13 @@
                             
                             <div class="form-group">
                                 <label for="urban">Kelurahan</label>
-                                <select class="form-control select2" id="urban" name="urban_id">
-                                </select>
+                                {{--  <select class="form-control select2" id="urban" name="urban_id">  --}}
+                                    {{--  <select class="form-control" id="urban_id">  --}}
+                                     {{--  <div class="col-md-3">  --}}
+                                            {{--  <label>Origin</label>  --}}
+                                            <div id="urban_id" class="col-xl-12" style="padding: 200px;width: 100%;padding: 12px 10px;"></div>
+                                        {{--  </div>  --}}
+                                {{--  </select>  --}}
                             </div>
 
                             <div class="form-group">
@@ -206,9 +217,33 @@
 @stop
 
 @section('javascript')
+<script src="https://api.mapbox.com/mapbox-gl-js/plugins/mapbox-gl-geocoder/v4.5.1/mapbox-gl-geocoder.min.js"></script>
+<script src="https://api.mapbox.com/mapbox-gl-js/v1.12.0/mapbox-gl.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/es6-promise@4/dist/es6-promise.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/es6-promise@4/dist/es6-promise.auto.min.js"></script>
     <script>
         $('document').ready(function () {
+
+    mapboxgl.accessToken = 'pk.eyJ1IjoiZGFuaWVsZWlucyIsImEiOiJja2ZjMWl6aWQwOGk4MnhxMmwwbTh3cTFtIn0.ZUzOVi8FYutY0rqra1s7tQ';
+        var geocoder = new MapboxGeocoder({
+        accessToken: mapboxgl.accessToken,
+        types: 'place, address, poi, postcode, district, neighborhood'
+        });
+        geocoder.addTo('#urban_id');
+
+     geocoder.on('results', function(results) {
+         var textfield = document.createElement("select");
+            if(results.query[0]){
+                textfield.name = "urban_id";
+                textfield.value = results.query[0];
+
+            
+            }
+        })
             $('.toggleswitch').bootstrapToggle();
+            /**
+                document.getElementById('aporg').name ="urban"
+                document.getElementById('aporg').appendChild(textfield)
             $('#urban').select2({
                 placeholder: "Cari Domisili...",
                 minimumInputLength: 1,
@@ -240,6 +275,8 @@
                     },              
                 }
             });
+            */
+
         });
     </script>
 @stop
