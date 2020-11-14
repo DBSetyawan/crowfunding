@@ -146,6 +146,12 @@ type="text/css"
                                 value="{{ old('url_website', $dataTypeContent->url_website ?? '') }}">
                             </div>
 
+                             <div class="form-group">
+                                <label for="parent_id">User detect</label>
+                                <input type="text" class="form-control" id="parent_id" name="parent_id" placeholder="parent_id"
+                                value="{{ auth()->user()->role->name }}">
+                            </div>
+
                             @can('editRoles', $dataTypeContent)
                                 <div class="form-group">
                                     <label for="default_role">{{ __('voyager::profile.role_default') }}</label>

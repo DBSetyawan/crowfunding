@@ -34,10 +34,11 @@ class VoyagerUserController extends BaseVoyagerUserController
     public function index(Request $request)
     {
         $slug = $this->getSlug($request);
-
         // GET THE DataType based on the slug
         $dataType = Voyager::model('DataType')->where('slug', '=', $slug)->first();
-
+        
+        // $additionalSlug = 'users'; // for example
+        // $additionalDataType = Voyager::model('DataType')->where('slug', '=', $additionalSlug)->first();
         // Check permission
         $this->authorize('browse', app($dataType->model_name));
 
@@ -52,6 +53,7 @@ class VoyagerUserController extends BaseVoyagerUserController
         if (strlen($dataType->model_name) != 0) {
             $model = app($dataType->model_name);
             $query = $model::select('*');
+            // $query = $model::select('*')->whereIn('parent_id', [auth()->user()->role->name]);
 
             // If a column has a relationship associated with it, we do not want to show that field
             $this->removeRelationshipField($dataType, 'browse');
@@ -95,6 +97,8 @@ class VoyagerUserController extends BaseVoyagerUserController
         if (view()->exists("voyager::$slug.browse")) {
             $view = "voyager::$slug.browse";
         }
+
+        // $dataTypeBrowseRows = $dataType->browseRows->merge($additionalDataType->browseRows);
 
         return Voyager::view($view, compact(
             'dataType',
