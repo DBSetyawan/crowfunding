@@ -100,7 +100,7 @@ type="text/css"
                                     {{--  <select class="form-control" id="urban_id">  --}}
                                      {{--  <div class="col-md-3">  --}}
                                             {{--  <label>Origin</label>  --}}
-                                            <div id="urban_id" class="col-xl-12" style="padding: 200px;width: 100%;padding: 12px 10px;"></div>
+                                            <div id="urban_id" name="urban_id" class="col-xl-12" style="padding: 200px;width: 100%;padding: 12px 10px;"></div>
                                         {{--  </div>  --}}
                                 {{--  </select>  --}}
                             </div>

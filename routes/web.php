@@ -13,12 +13,13 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
-Route::get('/', function () {
-    return redirect('/admin');
-});
+// Route::get('/', function () {
+//     return redirect('/admin');
+// });
 
 
 Route::group(['prefix' => 'admin'], function () {
+    Voyager::routes();
 
     Route::get('donaturs/add-donation','Voyager\DonaturController@add_donation')->name('donaturs.add_donation');
     Route::post('donaturs/store-donation','Voyager\DonaturController@store_donation')->name('donaturs.store_donation');
@@ -28,7 +29,6 @@ Route::group(['prefix' => 'admin'], function () {
     Route::get('donaturs/generate_and_print_last_month','Voyager\DonaturController@generate_and_print_last_month')->name('donaturs.generate_and_print_last_month');
     Route::post('konfirmasi-donasi','Voyager\DonaturController@confirm_donation')->name('donaturs.confirm_donation');
     
-    Voyager::routes();
 });
 // Route::group(['prefix' => 'admin/adminpusat'], function () {
 
