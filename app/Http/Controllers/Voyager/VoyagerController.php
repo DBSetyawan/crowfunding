@@ -11,8 +11,12 @@ class VoyagerController extends BaseVoyagerController
 
     public function index()
     {
-        if(Auth::user()->role_id == 1 || Auth::user()->role_id == 2 || Auth::user()->role_id == 3 || Auth::user()->role_id == 4 || Auth::user()->role_id == 5 || Auth::user()->role_id == 6){ //admin pusat
+        // dd(auth()->user()->role->all());
+        if(auth()->user()->role->all()){ //admin pusat
            
+            return view('vendor.voyager.index');
+
+        } else {
             return view('vendor.voyager.index');
 
         }

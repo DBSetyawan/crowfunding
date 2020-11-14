@@ -3,16 +3,17 @@
 namespace App\Http\Controllers\Voyager;
 
 use Illuminate\Http\Request;
-use App\Http\Controllers\Controller;
-use TCG\Voyager\Http\Controllers\VoyagerBaseController;
 use TCG\Voyager\Facades\Voyager;
 use Illuminate\Support\Facades\DB;
+use App\Http\Controllers\Controller;
+use Illuminate\Support\Facades\Auth;
 use TCG\Voyager\Events\BreadDataAdded;
 use Illuminate\Database\Eloquent\Model;
 use TCG\Voyager\Events\BreadDataDeleted;
 use TCG\Voyager\Events\BreadDataUpdated;
 use TCG\Voyager\Events\BreadImagesDeleted;
 use TCG\Voyager\Database\Schema\SchemaManager;
+use TCG\Voyager\Http\Controllers\VoyagerBaseController;
 use TCG\Voyager\Http\Controllers\Traits\BreadRelationshipParser;
 use TCG\Voyager\Http\Controllers\VoyagerUserController as BaseVoyagerUserController;
 
@@ -52,8 +53,8 @@ class VoyagerUserController extends BaseVoyagerUserController
         // Next Get or Paginate the actual content from the MODEL that corresponds to the slug DataType
         if (strlen($dataType->model_name) != 0) {
             $model = app($dataType->model_name);
-            $query = $model::select('*');
-            // $query = $model::select('*')->whereIn('parent_id', [auth()->user()->role->name]);
+            // $query = $model::select('*');
+            $query = $model::select('*')->whereIn('parent_id', [auth()->user()->role->name]);
 
             // If a column has a relationship associated with it, we do not want to show that field
             $this->removeRelationshipField($dataType, 'browse');
