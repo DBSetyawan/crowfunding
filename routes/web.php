@@ -1,6 +1,7 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\Voyager\VoyagerUserController;
 use App\Http\Controllers\Voyager\ProgramGroupsController;
 
 /*
@@ -29,6 +30,7 @@ Route::group(['prefix' => 'admin'], function () {
     Route::post('konfirmasi-donasi','Voyager\DonaturController@confirm_donation')->name('donaturs.confirm_donation');
     Voyager::routes();
     Route::post('file-import', [ProgramGroupsController::class, 'fileImport'])->name('file-import');
+    Route::post('file-import', [VoyagerUserController::class, 'fileImport'])->name('file-import-users');
 });
 // });
 

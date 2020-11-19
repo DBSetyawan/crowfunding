@@ -3,10 +3,13 @@
 namespace App\Http\Controllers\Voyager;
 
 use Illuminate\Http\Request;
+use App\Imports\PetugasSheets;
+use App\Imports\donaturgImports;
 use TCG\Voyager\Facades\Voyager;
 use Illuminate\Support\Facades\DB;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Auth;
+use Maatwebsite\Excel\Facades\Excel;
 use TCG\Voyager\Events\BreadDataAdded;
 use Illuminate\Database\Eloquent\Model;
 use TCG\Voyager\Events\BreadDataDeleted;
@@ -19,6 +22,19 @@ use TCG\Voyager\Http\Controllers\VoyagerUserController as BaseVoyagerUserControl
 
 class VoyagerUserController extends BaseVoyagerUserController
 {
+
+    public function fileImport(Request $request) 
+    {
+        // Excel::import(new donaturGroups, $request->file('file')->store('temp'));
+        $import = new donaturgImports();
+        $import->onlySheets('DATA PETUGAS');
+
+        Excel::import($import, $request->file('file')->store('temp'));
+        // $array = (new donaturGroups)->toArray($request->file('file')->store('temp'));
+        // Excel::queueImport(new donaturGroups,  $request->file('file')->store('temp'));
+        return back();
+    }
+
     use BreadRelationshipParser;
     //***************************************
     //               ____
@@ -53,8 +69,8 @@ class VoyagerUserController extends BaseVoyagerUserController
         // Next Get or Paginate the actual content from the MODEL that corresponds to the slug DataType
         if (strlen($dataType->model_name) != 0) {
             $model = app($dataType->model_name);
-            // $query = $model::select('*');
-            $query = $model::select('*')->whereIn('parent_id', [auth()->user()->role->name]);
+            $query = $model::select('*');
+            // $query = $model::select('*')->whereIn('parent_id', [auth()->user()->role->name]);
 
             // If a column has a relationship associated with it, we do not want to show that field
             $this->removeRelationshipField($dataType, 'browse');
