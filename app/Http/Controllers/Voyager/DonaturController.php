@@ -288,9 +288,9 @@ class DonaturController extends VoyagerBaseController
         // if($kelurahan){
         //     $dataTypeContent->domisili = $kelurahan->kelurahan.', '.$kelurahan->kecamatan->kecamatan.', '.$kelurahan->kecamatan->kabkot->kabupaten_kota.', '.$kelurahan->kecamatan->kabkot->provinsi->provinsi.', '.$kelurahan->kd_pos;
         // }
-        // $dataTypeContent->donatur_group =  DonaturGroup::where('id',$dataTypeContent->donatur_group_id)->first();
+        $dataTypeContent->donatur_group =  DonaturGroup::where('id',$dataTypeContent->donatur_group_id)->first();
 
-        // $dataTypeContent->added_by_user = User::where('id',$dataTypeContent->added_by_user_id)->first();
+        $dataTypeContent->added_by_user = User::where('id',$dataTypeContent->added_by_user_id)->first();
 
         // dd(Auth::user()->role);
         
@@ -358,9 +358,9 @@ class DonaturController extends VoyagerBaseController
         //     $selected_domisili->value = $kelurahan->id;
         //     $selected_domisili->text = $kelurahan->kelurahan.', '.$kelurahan->kecamatan->kecamatan.', '.$kelurahan->kecamatan->kabkot->kabupaten_kota.', '.$kelurahan->kecamatan->kabkot->provinsi->provinsi.', '.$kelurahan->kd_pos;
         // }
-        // $donatur_groups = DonaturGroup::all();
+        $donatur_groups = DonaturGroup::all();
 
-        return Voyager::view($view, compact('dataType', 'dataTypeContent', 'isModelTranslatable'));
+        return Voyager::view($view, compact('dataType', 'dataTypeContent', 'isModelTranslatable','donatur_groups'));
     }
 
     // POST BR(E)AD

@@ -30,7 +30,7 @@ Route::group(['prefix' => 'admin'], function () {
     Route::post('konfirmasi-donasi','Voyager\DonaturController@confirm_donation')->name('donaturs.confirm_donation');
     Voyager::routes();
     Route::post('file-import', [ProgramGroupsController::class, 'fileImport'])->name('file-import');
-    Route::post('file-import', [VoyagerUserController::class, 'fileImport'])->name('file-import-users');
+    Route::post('file-import-users', [VoyagerUserController::class, 'fileImport'])->name('file-import-users');
 });
 // });
 
