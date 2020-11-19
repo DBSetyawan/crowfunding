@@ -94,9 +94,9 @@ type="text/css"
                             <div class="form-group">
                                 <label for="kelurahan_id">Grup Donatur</label>
                                 <select class="form-control select2" id="donatur_group_id" name="donatur_group_id">
-                                    @foreach ($donatur_groups as $donatur_group)
+                                    {{-- @foreach ($donatur_groups as $donatur_group)
                                         <option value="{{$donatur_group->id}}" >{{$donatur_group->donatur_group_name}}</option>
-                                    @endforeach
+                                    @endforeach --}}
                                 </select>
                             </div>
 

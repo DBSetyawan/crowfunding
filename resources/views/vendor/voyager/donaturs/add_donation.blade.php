@@ -106,7 +106,7 @@
                             </div>
                         </div>
 
-                        <div class="row">
+                        {{-- <div class="row">
                             <div class="col-md-4">
                                 <span>Domisili</span>
                             </div>
@@ -114,7 +114,7 @@
                                 <span>KODEPOS:{{$donatur->kelurahan->kd_pos}}, Kel. {{$donatur->kelurahan->kelurahan}}, Kec. {{$donatur->kelurahan->kecamatan->kecamatan}}, Kota/Kab. {{$donatur->kelurahan->kecamatan->kabkot->kabupaten_kota}}, Prov. {{$donatur->kelurahan->kecamatan->kabkot->provinsi->provinsi}}
                                 </span>
                             </div>
-                        </div>
+                        </div> --}}
 
                     </div>
                 </div>
