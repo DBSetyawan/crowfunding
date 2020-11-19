@@ -2,24 +2,109 @@
 
 namespace App\Http\Controllers\Voyager;
 
-use TCG\Voyager\Http\Controllers\VoyagerMenuController as BaseVoyagerMenuController;
 use Exception;
-use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Auth;
+use App\Imports\donaturGroups;
+use TCG\Voyager\Facades\Voyager;
 use Illuminate\Support\Facades\DB;
-use TCG\Voyager\Database\Schema\SchemaManager;
+use Illuminate\Support\Facades\Auth;
+use Maatwebsite\Excel\Facades\Excel;
 use TCG\Voyager\Events\BreadDataAdded;
 use TCG\Voyager\Events\BreadDataDeleted;
-use TCG\Voyager\Events\BreadDataRestored;
 use TCG\Voyager\Events\BreadDataUpdated;
+use TCG\Voyager\Events\BreadDataRestored;
 use TCG\Voyager\Events\BreadImagesDeleted;
-use TCG\Voyager\Facades\Voyager;
+use Illuminate\Database\Eloquent\SoftDeletes;
+use TCG\Voyager\Database\Schema\SchemaManager;
 use TCG\Voyager\Http\Controllers\Traits\BreadRelationshipParser;
+use TCG\Voyager\Http\Controllers\VoyagerMenuController as BaseVoyagerMenuController;
 
 class ProgramGroupsController extends BaseVoyagerMenuController
 {
     use BreadRelationshipParser;
+
+    public function deleteBreadImages($data, $rows, $single_image = null)
+    {
+        $imagesDeleted = false;
+
+        foreach ($rows as $row) {
+            if ($row->type == 'multiple_images') {
+                $images_to_remove = json_decode($data->getOriginal($row->field), true) ?? [];
+            } else {
+                $images_to_remove = [$data->getOriginal($row->field)];
+            }
+
+            foreach ($images_to_remove as $image) {
+                // Remove only $single_image if we are removing from bread edit
+                if ($image != config('voyager.user.default_avatar') && (is_null($single_image) || $single_image == $image)) {
+                    $this->deleteFileIfExists($image);
+                    $imagesDeleted = true;
+
+                    if (isset($row->details->thumbnails)) {
+                        foreach ($row->details->thumbnails as $thumbnail) {
+                            $ext = explode('.', $image);
+                            $extension = '.'.$ext[count($ext) - 1];
+
+                            $path = str_replace($extension, '', $image);
+
+                            $thumb_name = $thumbnail->name;
+
+                            $this->deleteFileIfExists($path.'-'.$thumb_name.$extension);
+                        }
+                    }
+                }
+            }
+        }
+
+        if ($imagesDeleted) {
+            event(new BreadImagesDeleted($data, $rows));
+        }
+    }
+
+    protected function cleanup($dataType, $data)
+    {
+        // Delete Translations, if present
+        if (is_bread_translatable($data)) {
+            $data->deleteAttributeTranslations($data->getTranslatableAttributes());
+        }
+
+        // Delete Images
+        $this->deleteBreadImages($data, $dataType->deleteRows->whereIn('type', ['image', 'multiple_images']));
+
+        // Delete Files
+        foreach ($dataType->deleteRows->where('type', 'file') as $row) {
+            if (isset($data->{$row->field})) {
+                foreach (json_decode($data->{$row->field}) as $file) {
+                    $this->deleteFileIfExists($file->download_link);
+                }
+            }
+        }
+
+        // Delete media-picker files
+        $dataType->rows->where('type', 'media_picker')->where('details.delete_files', true)->each(function ($row) use ($data) {
+            $content = $data->{$row->field};
+            if (isset($content)) {
+                if (!is_array($content)) {
+                    $content = json_decode($content);
+                }
+                if (is_array($content)) {
+                    foreach ($content as $file) {
+                        $this->deleteFileIfExists($file);
+                    }
+                } else {
+                    $this->deleteFileIfExists($content);
+                }
+            }
+        });
+    }
+
+    public function fileImport(Request $request) 
+    {
+        Excel::import(new donaturGroups, $request->file('file')->store('temp'));
+        // $array = (new donaturGroups)->toArray($request->file('file')->store('temp'));
+        // Excel::queueImport(new donaturGroups,  $request->file('file')->store('temp'));
+        return back();
+    }
 
     //***************************************
     //               ____

@@ -13,12 +13,10 @@
             </a>
           
         @endcan
-          @can('add', app($dataType->model_name))
-            <a href="{{ route('voyager.'.$dataType->slug.'.create') }}" class="btn btn-success btn-add-new">
-                <i class="voyager-import"></i> <span>{{ __('voyager::generic.import') }}</span>
-            </a>
-          
-        @endcan
+        <button class="btn btn-primary btn-add-new" type="button" data-toggle="modal" data-target="#modal-print-last-month" >
+            <i class="voyager-file-text"></i>
+            Import
+        </button>
         @can('delete', app($dataType->model_name))
             @include('voyager::partials.bulk-delete')
         @endcan
@@ -314,6 +312,7 @@
             </div><!-- /.modal-content -->
         </div><!-- /.modal-dialog -->
     </div><!-- /.modal -->
+    @include('vendor.voyager.donatur-groups.modal-import-pgroup');
 @stop
 
 @section('css')

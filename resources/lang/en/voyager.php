@@ -47,7 +47,7 @@ return [
         'field_does_not_exist'   => 'Field does not exist',
         'how_to_use'             => 'How To Use',
         'index'                  => 'Index',
-        'import'                  => 'Iport your file here',
+        'imports'                 => 'Import',
         'internal_error'         => 'Internal error',
         'items'                  => 'item(s)',
         'keep_sidebar_open'      => 'Yarr! Drop the anchors! (and keep the sidebar open)',
