@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Voyager;
 use Exception;
 use Illuminate\Http\Request;
 use App\Imports\donaturGroups;
+use App\Imports\donaturgImports;
 use TCG\Voyager\Facades\Voyager;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Auth;
@@ -100,7 +101,11 @@ class ProgramGroupsController extends BaseVoyagerMenuController
 
     public function fileImport(Request $request) 
     {
-        Excel::import(new donaturGroups, $request->file('file')->store('temp'));
+        // Excel::import(new donaturGroups, $request->file('file')->store('temp'));
+        $import = new donaturgImports();
+        $import->onlySheets('DATA GROUP');
+
+        Excel::import($import, $request->file('file')->store('temp'));
         // $array = (new donaturGroups)->toArray($request->file('file')->store('temp'));
         // Excel::queueImport(new donaturGroups,  $request->file('file')->store('temp'));
         return back();
