@@ -28,8 +28,6 @@ use \go2hi\go2hi;
 class DonaturController extends VoyagerBaseController
 {
 
-
-
     public function add_donation(Request $request){
         $programs = Program::all();
         $donatur = Donatur::where('id',$request->id)->first();
@@ -463,6 +461,7 @@ class DonaturController extends VoyagerBaseController
      */
     public function store(Request $request)
     {
+
         $slug = $this->getSlug($request);
 
         $dataType = Voyager::model('DataType')->where('slug', '=', $slug)->first();

@@ -4,6 +4,12 @@
 
 @section('css')
     <meta name="csrf-token" content="{{ csrf_token() }}">
+        <link href="https://api.mapbox.com/mapbox-gl-js/v1.12.0/mapbox-gl.css" rel="stylesheet" />
+    <link
+rel="stylesheet"
+href="https://api.mapbox.com/mapbox-gl-js/plugins/mapbox-gl-geocoder/v4.5.1/mapbox-gl-geocoder.css"
+type="text/css"
+/>
 @stop
 
 @section('page_header')
@@ -62,15 +68,29 @@
                                 <textarea class="form-control" id="alamat" name="alamat">{{ old('alamat', $dataTypeContent->alamat ?? '') }}</textarea>
                             </div>
 
-                            <div class="form-group">
+                            {{--  <div class="form-group">
                                 <label for="kelurahan_id">Pilih Domisili</label>
                                 <select class="form-control select2" id="kelurahan_id" name="kelurahan_id">
                                     @if(isset($selected_domisili))
                                         <option value="{{$selected_domisili->value}}" selected>{{$selected_domisili->text}}</option>
                                     @endif
                                 </select>
+                            </div>  --}}
+                            
+                            <div class="form-group">
+                                <label for="kelurahan">kelurahan</label>
+                                <input type="text" class="form-control" id="kelurahan_id" name="kelurahan_id">
                             </div>
-
+                            <div class="form-group">
+                                <label for="urban">Kelurahan</label>
+                                {{--  <select class="form-control select2" id="urban" name="urban_id">  --}}
+                                    {{--  <select class="form-control" id="urban_id">  --}}
+                                     {{--  <div class="col-md-3">  --}}
+                                            {{--  <label>Origin</label>  --}}
+                                            <div id="kelurahan" name="kelurahan" class="col-xl-12" style="padding: 200px;width: 100%;padding: 12px 10px;"></div>
+                                        {{--  </div>  --}}
+                                {{--  </select>  --}}
+                            </div>
                             <div class="form-group">
                                 <label for="kelurahan_id">Grup Donatur</label>
                                 <select class="form-control select2" id="donatur_group_id" name="donatur_group_id">
@@ -103,41 +123,34 @@
 @stop
 
 @section('javascript')
+<script src="https://api.mapbox.com/mapbox-gl-js/plugins/mapbox-gl-geocoder/v4.5.1/mapbox-gl-geocoder.min.js"></script>
+<script src="https://api.mapbox.com/mapbox-gl-js/v1.12.0/mapbox-gl.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/es6-promise@4/dist/es6-promise.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/es6-promise@4/dist/es6-promise.auto.min.js"></script>
     <script>
+     mapboxgl.accessToken = 'pk.eyJ1IjoiZGFuaWVsZWlucyIsImEiOiJja2ZjMWl6aWQwOGk4MnhxMmwwbTh3cTFtIn0.ZUzOVi8FYutY0rqra1s7tQ';
+        var geocoder = new MapboxGeocoder({
+        accessToken: mapboxgl.accessToken,
+        types: 'place, address, poi, postcode, district, neighborhood'
+        });
+        geocoder.addTo('#kelurahan');
+
+    
         $('document').ready(function () {
+             geocoder.on('results', function(results) {
+         var textfield = document.createElement("select");
+            if(results.query[0]){
+                textfield.name = "kelurahan";
+                textfield.value = results.query[0];
+                $.each(results, function(key, value) {  
+                    $('#kelurahan_id').val(value.query);
+                });
+            }
+        })
+            
+       
             $('.toggleswitch').bootstrapToggle();
 
-            $('#kelurahan_id').select2({
-            placeholder: "Cari Domisili...",
-            minimumInputLength: 1,
-            allowClear: true,
-            ajax: {
-                url: "{{route('domisili.get_json')}}",
-                dataType: 'json',
-                delay: 250,
-                cache: false,
-                data: function (params) {
-                    return {
-                        term: params.term,
-                        page: params.page || 1,
-                    };
-                },
-                processResults: function(data, params) {
-                    //console.log(data);
-                    //  NO NEED TO PARSE DATA `processResults` automatically parse it
-                    //var c = JSON.parse(data);
-                    console.log(data);
-                    var page = params.page || 1;
-                    return {
-                        results: $.map(data.results, function (item) { return {id: item.id, text: item.kelurahan+', '+item.kecamatan+', '+item.kabupaten_kota+', '+item.provinsi+', '+item.kd_pos}}),
-                        pagination: {
-                        // THE `10` SHOULD BE SAME AS `$resultCount FROM PHP, it is the number of records to fetch from table` 
-                            more: (page * 10) <= data.count_filtered
-                        }
-                    };
-                },              
-            }
-        });
 
         });
     </script>

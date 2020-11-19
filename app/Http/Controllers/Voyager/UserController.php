@@ -90,6 +90,7 @@ class UserController extends VoyagerBaseController
      */
     public function store(Request $request)
     {
+
         $this->authorize('browse_bread');
 
         try {
