@@ -3,6 +3,7 @@
 namespace App\Imports;
 
 use App\Imports\PetugasSheets;
+use App\Imports\donatursSheets;
 use App\Imports\FirstSheetImport;
 use Maatwebsite\Excel\Concerns\WithMultipleSheets;
 use Maatwebsite\Excel\Concerns\WithConditionalSheets;
@@ -24,7 +25,7 @@ class donaturgImports implements WithMultipleSheets
         return [
             'DATA GROUP' => new FirstSheetImport(),
             'DATA PETUGAS' => new PetugasSheets(),
-            // 'Worksheet 3' => new ThirdSheetImport(),
+            'DATA DONATUR OFFLINE' => new donatursSheets()
         ];
     }
 }

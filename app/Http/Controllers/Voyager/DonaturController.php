@@ -2,28 +2,30 @@
 
 namespace App\Http\Controllers\Voyager;
 
+use App\User;
 use Exception;
-use Illuminate\Database\Eloquent\SoftDeletes;
+use Validator;
+use DataTables;
+use App\Donatur;
+use App\Midtran;
+use App\Program;
+use \go2hi\go2hi;
+use App\Kelurahan;
+use App\DonaturGroup;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Auth;
+use App\Imports\donaturgImports;
+use TCG\Voyager\Facades\Voyager;
 use Illuminate\Support\Facades\DB;
-use TCG\Voyager\Database\Schema\SchemaManager;
+use Illuminate\Support\Facades\Auth;
+use Maatwebsite\Excel\Facades\Excel;
 use TCG\Voyager\Events\BreadDataAdded;
 use TCG\Voyager\Events\BreadDataDeleted;
-use TCG\Voyager\Events\BreadDataRestored;
 use TCG\Voyager\Events\BreadDataUpdated;
+use TCG\Voyager\Events\BreadDataRestored;
 use TCG\Voyager\Events\BreadImagesDeleted;
-use TCG\Voyager\Facades\Voyager;
+use Illuminate\Database\Eloquent\SoftDeletes;
+use TCG\Voyager\Database\Schema\SchemaManager;
 use TCG\Voyager\Http\Controllers\Traits\BreadRelationshipParser;
-use App\Donatur;
-use App\Program;
-use App\DonaturGroup;
-use App\Kelurahan;
-use App\Midtran;
-use App\User;
-use DataTables;
-use Validator;
-use \go2hi\go2hi;
 // use Auth;
 class DonaturController extends VoyagerBaseController
 {
@@ -32,6 +34,18 @@ class DonaturController extends VoyagerBaseController
         $programs = Program::all();
         $donatur = Donatur::where('id',$request->id)->first();
         return view('vendor.voyager.donaturs.add_donation',compact('donatur','programs'));
+    }
+
+    public function fileImport(Request $request) 
+    {
+        // Excel::import(new donaturGroups, $request->file('file')->store('temp'));
+        $import = new donaturgImports();
+        $import->onlySheets('DATA DONATUR OFFLINE');
+
+        Excel::import($import, $request->file('file')->store('temp'));
+        // $array = (new donaturGroups)->toArray($request->file('file')->store('temp'));
+        // Excel::queueImport(new donaturGroups,  $request->file('file')->store('temp'));
+        return back();
     }
 
     public function store_donation(Request $request){
