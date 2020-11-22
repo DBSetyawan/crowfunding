@@ -2,9 +2,12 @@
 
 namespace App\Imports;
 
+use App\Imports\cabangImports;
 use App\Imports\PetugasSheets;
 use App\Imports\donatursSheets;
-use App\Imports\FirstSheetImport;
+use App\Imports\DonaturGroupSheets;
+use App\Imports\donatursonlineSheets;
+use App\Imports\hisotrytransactionSheet;
 use Maatwebsite\Excel\Concerns\WithMultipleSheets;
 use Maatwebsite\Excel\Concerns\WithConditionalSheets;
 
@@ -23,9 +26,12 @@ class donaturgImports implements WithMultipleSheets
     public function conditionalSheets(): array
     {
         return [
-            'DATA GROUP' => new FirstSheetImport(),
+            'DATA GROUP' => new DonaturGroupSheets(),
             'DATA PETUGAS' => new PetugasSheets(),
-            'DATA DONATUR OFFLINE' => new donatursSheets()
+            'DATA CABANG' => new cabangImports(),
+            'DATA DONATUR OFFLINE' => new donatursSheets(),
+            'DATA DONATUR' => new donatursonlineSheets(),
+            'HISTORY BULAN OKT 2020' => new hisotrytransactionSheet(),
         ];
     }
 }

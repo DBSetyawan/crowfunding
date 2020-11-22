@@ -2,8 +2,11 @@
 
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Voyager\DonaturController;
+use App\Http\Controllers\Voyager\MidtranController;
 use App\Http\Controllers\Voyager\VoyagerUserController;
 use App\Http\Controllers\Voyager\ProgramGroupsController;
+use App\Http\Controllers\Voyager\VoyagerCabangController;
+use App\Http\Controllers\Voyager\VoyagerPetugasController;
 
 /*
 |--------------------------------------------------------------------------
@@ -27,11 +30,15 @@ Route::group(['prefix' => 'admin'], function () {
     Route::get('donaturs/donation-history/{donatur_id}','Voyager\DonaturController@donation_history_index')->name('donaturs.donation_history');
     Route::get('domisili/get-json','DomisiliController@get_json')->name('domisili.get_json');
     Route::get('donaturs/print','Voyager\DonaturController@print')->name('donaturs.print');
+    Route::get('donaturs/reset/{table_name}','Voyager\DonaturController@testResetIncrement')->name('donaturs.resets');
     Route::get('donaturs/generate_and_print_last_month','Voyager\DonaturController@generate_and_print_last_month')->name('donaturs.generate_and_print_last_month');
     Route::post('konfirmasi-donasi','Voyager\DonaturController@confirm_donation')->name('donaturs.confirm_donation');
     Route::post('file-import', [ProgramGroupsController::class, 'fileImport'])->name('file-import');
     Route::post('file-import-users', [VoyagerUserController::class, 'fileImport'])->name('file-import-users');
     Route::post('file-import-donaturs', [DonaturController::class, 'fileImport'])->name('file-import-donaturs');
+    Route::post('file-import-branch', [VoyagerCabangController::class, 'fileImport'])->name('file-import-branch');
+    Route::post('file-import-funding', [VoyagerPetugasController::class, 'fileImport'])->name('file-import-funding');
+    Route::post('file-import-hisotry', [MidtranController::class, 'fileImport'])->name('file-import-history');
     Voyager::routes();
 });
 // });

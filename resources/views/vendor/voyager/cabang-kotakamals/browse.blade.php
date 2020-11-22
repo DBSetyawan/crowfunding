@@ -5,15 +5,15 @@
 @section('page_header')
     <div class="container-fluid">
         <h1 class="page-title">
-            
             <i class="{{ $dataType->icon }}"></i> {{ $dataType->getTranslatedAttribute('display_name_plural') }}
         </h1>
         @can('add', app($dataType->model_name))
             <a href="{{ route('voyager.'.$dataType->slug.'.create') }}" class="btn btn-success btn-add-new">
                 <i class="voyager-plus"></i> <span>{{ __('voyager::generic.add_new') }}</span>
             </a>
+          
         @endcan
-        <button class="btn btn-primary btn-add-new" type="button" data-toggle="modal" data-target="#modal-transaction-import-hisotry" >
+        <button class="btn btn-primary btn-add-new" type="button" data-toggle="modal" data-target="#modal-import-branch" >
             <i class="voyager-file-text"></i>
             Import
         </button>
@@ -38,11 +38,6 @@
             @endif
         @endforeach
         @include('voyager::multilingual.language-selector')
-     
-        <button class="btn btn-primary  btn-add-new" type="button" data-toggle="modal" data-target="#modal-print-last-month" >
-            <i class="voyager-file-text"></i>
-            Print Kwitansi Bulanan
-        </button>
     </div>
 @stop
 
@@ -298,8 +293,6 @@
         </div>
     </div>
 
-    @include('vendor.voyager.midtrans.modal-print-kwitansi');
-    
     {{-- Single delete modal --}}
     <div class="modal modal-danger fade" tabindex="-1" id="delete_modal" role="dialog">
         <div class="modal-dialog">
@@ -319,8 +312,7 @@
             </div><!-- /.modal-content -->
         </div><!-- /.modal-dialog -->
     </div><!-- /.modal -->
-
-    @include('vendor.voyager.midtrans.modal-import-history-okt');
+    @include('vendor.voyager.cabang-kotakamals.modal-import-branch');
 @stop
 
 @section('css')

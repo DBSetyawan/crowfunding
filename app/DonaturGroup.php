@@ -9,7 +9,6 @@ class DonaturGroup extends Model
 {
     protected $fillable = [
         'id',
-        'donatur_group_name',
-        'kode_dn_groups'
+        'donatur_group_name'
     ];
 }

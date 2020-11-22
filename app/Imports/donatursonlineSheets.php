@@ -13,7 +13,7 @@ use Maatwebsite\Excel\Concerns\WithMappedCells;
 use Maatwebsite\Excel\Concerns\WithChunkReading;
 use Maatwebsite\Excel\Concerns\WithCalculatedFormulas;
 
-class donatursSheets implements WithHeadingRow, WithChunkReading, ToModel, WithCalculatedFormulas
+class donatursonlineSheets implements WithHeadingRow, WithChunkReading, ToModel, WithCalculatedFormulas
 {
         public function model(array $row)
         {
@@ -28,16 +28,16 @@ class donatursSheets implements WithHeadingRow, WithChunkReading, ToModel, WithC
             $donatur = Donatur::create([
                 'added_by_user_id' => $row['id_petugas'],
                 'id_cabang' => $row['id_cabang'],
-                'user_id' => $row['id_petugas'],
                 'id' => $row['id_donatur'],
-                'donatur_group_id' => $row['id_group_donatur'],
-                'nama' => $row['nama_nama_donatur'],
+                'user_id' => $row['id_petugas'],
+                'donatur_group_id' => $row['id_group'],
+                'nama' => $row['nama_donatur'],
                 'alamat' => $row['alamat_donatur']
             ]);
 
             return new User([
                 'name' => $donatur['nama'],
-                'email' => $donatur['nama'].Str::random(count(auth()->user()->id)+1).Str::random(4).'@gmail.com',
+                'email' => $donatur['nama'].Str::random(2).'@gmail.com',
                 'password' => "88888888",
                 'alamat' => $donatur['alamat'],
             ]);

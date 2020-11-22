@@ -8,8 +8,9 @@ use Maatwebsite\Excel\Concerns\ToCollection;
 use Maatwebsite\Excel\Concerns\WithHeadingRow;
 use Maatwebsite\Excel\Concerns\WithMappedCells;
 use Maatwebsite\Excel\Concerns\WithChunkReading;
+use Maatwebsite\Excel\Concerns\WithCalculatedFormulas;
 
-class FirstSheetImport implements WithHeadingRow, ToModel, WithChunkReading
+class DonaturGroupSheets implements WithHeadingRow, ToModel, WithChunkReading, WithCalculatedFormulas
 {
     // public function collection(Collection $rows)
     // {
@@ -38,9 +39,10 @@ class FirstSheetImport implements WithHeadingRow, ToModel, WithChunkReading
             //         // DonaturGroup::create($data);
             //      return new DonaturGroup($datae);
             //     }
+            // dd($row);
             return new DonaturGroup([
-                'kode_dn_groups' => $row['kode_dn_groups'],
-                'donatur_group_name' => $row['donatur_group_name'],
+                'id' => $row['id_group'],
+                'donatur_group_name' => $row['nama_group'],
             ]);
                 // dd($data);
 

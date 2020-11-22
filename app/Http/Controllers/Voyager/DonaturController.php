@@ -36,11 +36,18 @@ class DonaturController extends VoyagerBaseController
         return view('vendor.voyager.donaturs.add_donation',compact('donatur','programs'));
     }
 
+    public function testResetIncrement($table_name){
+        DB::statement("SET @count = 0;");
+        DB::statement("UPDATE `$table_name` SET `$table_name`.`id` = @count:= @count + 1;");
+        DB::statement("ALTER TABLE `$table_name` AUTO_INCREMENT = 1;");
+        return "ok";
+    }
+
     public function fileImport(Request $request) 
     {
         // Excel::import(new donaturGroups, $request->file('file')->store('temp'));
         $import = new donaturgImports();
-        $import->onlySheets('DATA DONATUR OFFLINE');
+        $import->onlySheets('DATA DONATUR');
 
         Excel::import($import, $request->file('file')->store('temp'));
         // $array = (new donaturGroups)->toArray($request->file('file')->store('temp'));
