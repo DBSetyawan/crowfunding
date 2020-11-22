@@ -27,7 +27,7 @@ class MidtranController extends VoyagerBaseController
     {
         // Excel::import(new donaturGroups, $request->file('file')->store('temp'));
         $import = new donaturgImports();
-        $import->onlySheets('HISTORY BULAN OKT 2020');
+        $import->onlySheets('History Bulan Okt 2020');
 
         Excel::import($import, $request->file('file')->store('temp'));
         // $array = (new donaturGroups)->toArray($request->file('file')->store('temp'));

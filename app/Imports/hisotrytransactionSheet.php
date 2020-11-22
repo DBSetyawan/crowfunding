@@ -29,9 +29,10 @@ class hisotrytransactionSheet implements WithHeadingRow, WithChunkReading, ToMod
             return new Midtran([
                 'donatur_id' => $row['id_donatur'],
                 'id_cabang' => $row['id_cabang'],
+                'payment_status' => 'settlement',
                 'program_id' => $row['program'],
-                'donatur_group_id' => $row['id_group'],
                 'amount' => $row['nominal'],
+                'added_by_user_id' => $row['id_petugas'],
             ]);
 
         }
