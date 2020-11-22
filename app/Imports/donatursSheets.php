@@ -37,7 +37,7 @@ class donatursSheets implements WithHeadingRow, WithChunkReading, ToModel, WithC
 
             return new User([
                 'name' => $donatur['nama'],
-                'email' => $donatur['nama'].Str::random(count(auth()->user()->id)+1).Str::random(4).'@gmail.com',
+                'email' => $donatur['nama'].mt_rand(1000, 2222).'@gmail.com',
                 'password' => "88888888",
                 'role_id' => 4,
                 'alamat' => $donatur['alamat'],
