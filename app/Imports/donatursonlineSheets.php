@@ -39,6 +39,7 @@ class donatursonlineSheets implements WithHeadingRow, WithChunkReading, ToModel,
                 'name' => $donatur['nama'],
                 'email' => $donatur['nama'].Str::random(2).'@gmail.com',
                 'password' => "88888888",
+                'role_id' => 4,
                 'alamat' => $donatur['alamat'],
             ]);
          
