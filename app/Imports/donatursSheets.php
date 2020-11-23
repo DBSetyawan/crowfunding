@@ -12,7 +12,11 @@ use Maatwebsite\Excel\Concerns\WithHeadingRow;
 use Maatwebsite\Excel\Concerns\WithMappedCells;
 use Maatwebsite\Excel\Concerns\WithChunkReading;
 use Maatwebsite\Excel\Concerns\WithCalculatedFormulas;
-
+// set_time_limit(300000000);
+// ini_set('upload_max_filesize', '500M');
+// ini_set('post_max_size', '500M');
+// ini_set('max_input_time', 300);
+// ini_set('max_execution_time', 300);
 class donatursSheets implements WithHeadingRow, WithChunkReading, ToModel, WithCalculatedFormulas
 {
         public function model(array $row)
@@ -37,8 +41,8 @@ class donatursSheets implements WithHeadingRow, WithChunkReading, ToModel, WithC
 
             return new User([
                 'name' => $donatur['nama'],
-                'email' => $donatur['nama'].mt_rand(1000, 2222).'@gmail.com',
-                'password' => "88888888",
+                'email' => $donatur['id'].'@gmail.com',
+                'password' => bcrypt('88888888'),
                 'role_id' => 4,
                 'alamat' => $donatur['alamat'],
             ]);
@@ -85,6 +89,6 @@ class donatursSheets implements WithHeadingRow, WithChunkReading, ToModel, WithC
 
     public function chunkSize(): int
     {
-        return 2000;
+        return 5000;
     }
 }

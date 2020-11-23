@@ -25,9 +25,9 @@ class PetugasSheets implements WithHeadingRow, WithChunkReading, ToModel, WithCa
             
             return new User([
                 'name' => $petugas['nama_petugas'],
-                'email' => $petugas['nama_petugas'].Str::random(2).'@gmail.com',
+                'email' => $petugas['id'].'@gmail.com',
                 'role_id' => 3,
-                'password' => "88888888",
+                'password' => bcrypt('88888888')
             ]);
          
         }

@@ -12,7 +12,11 @@ use Maatwebsite\Excel\Concerns\WithHeadingRow;
 use Maatwebsite\Excel\Concerns\WithMappedCells;
 use Maatwebsite\Excel\Concerns\WithChunkReading;
 use Maatwebsite\Excel\Concerns\WithCalculatedFormulas;
-
+// set_time_limit(300000000);
+ini_set('upload_max_filesize', '500M');
+ini_set('post_max_size', '500M');
+ini_set('max_input_time', 300);
+ini_set('max_execution_time', 300);
 class donatursonlineSheets implements WithHeadingRow, WithChunkReading, ToModel, WithCalculatedFormulas
 {
         public function model(array $row)
@@ -25,7 +29,7 @@ class donatursonlineSheets implements WithHeadingRow, WithChunkReading, ToModel,
             //      return new DonaturGroup($datae);
             //     }
             // dd($row);die;
-            $donatur = Donatur::create([
+            $donaturs = Donatur::create([
                 'added_by_user_id' => $row['id_petugas'],
                 'id_cabang' => $row['id_cabang'],
                 'id' => $row['id_donatur'],
@@ -36,11 +40,11 @@ class donatursonlineSheets implements WithHeadingRow, WithChunkReading, ToModel,
             ]);
 
             return new User([
-                'name' => $donatur['nama'],
-                'email' => $donatur['nama'].mt_rand(1000, 2222).'@gmail.com',
-                'password' => "88888888",
+                'name' => $donaturs['nama'],
+                'email' => $donaturs['id'].'@gmail.com',
+                'password' => bcrypt('88888888'),
                 'role_id' => 4,
-                'alamat' => $donatur['alamat'],
+                'alamat' => $donaturs['alamat'],
             ]);
          
         }
@@ -85,6 +89,6 @@ class donatursonlineSheets implements WithHeadingRow, WithChunkReading, ToModel,
 
     public function chunkSize(): int
     {
-        return 2000;
+        return 1000;
     }
 }
