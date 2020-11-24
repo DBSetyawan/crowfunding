@@ -133,7 +133,17 @@ class DonaturController extends VoyagerBaseController
             if ($dataType->scope && $dataType->scope != '' && method_exists($model, 'scope'.ucfirst($dataType->scope))) {
                 $query = $model->{$dataType->scope}();
             } else {
-                $query = $model::select('*');
+                    if(auth()->user()->id = 1){
+    
+                        $query = $model::select('*');
+
+                    } 
+                        else {
+                         
+                            $query = $model::select('*')->
+                        whereIn('user_id', [auth()->user()->id]);
+                    }
+
             }
 
             // Use withTrashed() if model uses SoftDeletes and if toggle is selected
