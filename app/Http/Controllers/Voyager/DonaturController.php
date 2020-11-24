@@ -39,7 +39,7 @@ class DonaturController extends VoyagerBaseController
     public function testResetIncrement($table_name){
         DB::statement("SET @count = 0;");
         DB::statement("UPDATE `$table_name` SET `$table_name`.`id` = @count:= @count + 1;");
-        DB::statement("ALTER TABLE `$table_name` AUTO_INCREMENT = 12354;");
+        DB::statement("ALTER TABLE `$table_name` AUTO_INCREMENT = 0;");
         return "ok";
     }
 

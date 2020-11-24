@@ -27,6 +27,8 @@ class User extends \TCG\Voyager\Models\User
         'password',
         'nama_cabang',
         'id_cabang',
+        'additional_each_id',
+        'groups_id',
         'remember_token',
         'settings',
         'created_at',
