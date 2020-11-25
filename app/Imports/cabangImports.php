@@ -19,14 +19,12 @@ class cabangImports implements WithHeadingRow, WithChunkReading, ToModel, WithCa
         // public function collection(Collection $row)
         {
             // dd($row);
-            $donaturg = DonaturGroup::create([
-                'id' => $row['id_group'],
-                'donatur_group_name' => $row['nama_group'],
-            ]);
+
             $cabangs = CabangKotakamal::create([
                 'id' => $row['id_cabang'],
                 'nama_cabang' => $row['nama_cabang']
             ]);
+
                 $nama_cabang = $cabangs['nama_cabang'];
                 $id_cabang = $cabangs['id'];
                 $group_id = $donaturg['id'];

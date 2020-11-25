@@ -13,10 +13,10 @@
             </a>
           
         @endcan
-        <button class="btn btn-primary btn-add-new" type="button" data-toggle="modal" data-target="#modal-import-branch" >
+        {{-- <button class="btn btn-primary btn-add-new" type="button" data-toggle="modal" data-target="#modal-import-branch" >
             <i class="voyager-file-text"></i>
             Import
-        </button>
+        </button> --}}
         @can('delete', app($dataType->model_name))
             @include('voyager::partials.bulk-delete')
         @endcan
