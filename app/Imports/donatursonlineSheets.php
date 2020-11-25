@@ -13,22 +13,16 @@ use Maatwebsite\Excel\Concerns\WithMappedCells;
 use Maatwebsite\Excel\Concerns\WithChunkReading;
 use Maatwebsite\Excel\Concerns\WithCalculatedFormulas;
 // set_time_limit(300000000);
-ini_set('upload_max_filesize', '500M');
-ini_set('post_max_size', '500M');
-ini_set('max_input_time', 300);
-ini_set('max_execution_time', 300);
+ini_set('upload_max_filesize', '50M');
+ini_set('post_max_size', '50M');
+ini_set('max_input_time', 600);
+ini_set('max_execution_time', 600);
 class donatursonlineSheets implements WithHeadingRow, WithChunkReading, ToModel, WithCalculatedFormulas
 {
+    
         public function model(array $row)
         {
 
-            //   foreach ($row as $rows => $datae) 
-            //     {
-            //         $data[$rows] = $datae;
-            //         // DonaturGroup::create($data);
-            //      return new DonaturGroup($datae);
-            //     }
-            // dd($row);die;
             $donaturs = Donatur::create([
                 'added_by_user_id' => $row['id_petugas'],
                 'id_cabang' => $row['id_cabang'],
@@ -36,12 +30,13 @@ class donatursonlineSheets implements WithHeadingRow, WithChunkReading, ToModel,
                 'user_id' => $row['id_petugas'],
                 'donatur_group_id' => $row['id_group'],
                 'nama' => $row['nama_donatur'],
-                'alamat' => $row['alamat_donatur']
+                'alamat' => $row['alamat_donatur']  
             ]);
+            
 
             return new User([
                 'name' => $donaturs['nama'],
-                'email' => $donaturs['id'].'@gmail.com',
+                'email' =>'DONATUR-'.Str::random(5).'@kotakamal.care',
                 'password' => bcrypt('88888888'),
                 'role_id' => 4,
                 'alamat' => $donaturs['alamat'],
@@ -49,46 +44,29 @@ class donatursonlineSheets implements WithHeadingRow, WithChunkReading, ToModel,
          
         }
 
-        // public function collection(Collection $rows)
-        // {
-        //     foreach ($rows as $row => $dump) 
-        //     {
-                
-        //         if($dump['id_petugas'] < 112){
-        //             $sdas[] = $dump['id_petugas'];
-        //         } elseif($dump['id_petugas'] == 201) {
-        //             return "201 ok".$dump['id_petugas'];
-    
-        //         } elseif($dump['id_petugas'] == 301){
-        //             return "301 ok".$dump['id_petugas'];
-    
-        //         } elseif($dump['id_petugas'] ==401){
-        //             return "401 ok".$dump['id_petugas'];
-    
-        //         }elseif($dump['id_petugas'] ==501){
-        //             return "501 ok".$dump['id_petugas'];
-    
-        //         }elseif($dump['id_petugas'] ==601){
-        //             return "601 ok".$dump['id_petugas'];
-    
-        //         }elseif($dump['id_petugas'] == 701){
-        //             return "701 ok".$dump['id_petugas'];
-    
-        //         } elseif($dump['id_petugas'] == 801){
-        //             return "801 ok".$dump['id_petugas'];
-    
-        //         } else{
-        //             return "unknown";
-        //         }
-                
-        //     }
-        //     dd($sdas);
-        //     die;
-         
-        // }
-
     public function chunkSize(): int
     {
-        return 1000;
+        return 3000;
     }
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
