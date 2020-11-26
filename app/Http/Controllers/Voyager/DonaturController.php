@@ -133,6 +133,8 @@ class DonaturController extends VoyagerBaseController
             if ($dataType->scope && $dataType->scope != '' && method_exists($model, 'scope'.ucfirst($dataType->scope))) {
                 $query = $model->{$dataType->scope}();
             } else {
+
+                // dd(auth()->user());
                     if(auth()->user()->id = 1){
     
                         $query = $model::select('*');
@@ -141,7 +143,9 @@ class DonaturController extends VoyagerBaseController
                         else {
                          
                             $query = $model::select('*')->
-                        whereIn('user_id', [auth()->user()->id]);
+                        whereIn('user_id', [auth()->user()->id])
+                        ->whereIn('id_cabang', [auth()->user()->additional_each_id])
+                        ->orWhereIn('donatur_group_id', [auth()->user()->groups_id]);
                     }
 
             }
