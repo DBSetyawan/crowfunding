@@ -39,19 +39,19 @@ class hisotrytransactionSheet implements WithHeadingRow, WithChunkReading, ToMod
                 'id_cabang' => $row['id_cabang'],
                 'id' => $row['id_donatur'],
                 'user_id' => $row['id_petugas'],
-                'donatur_group_id' => $row['id_group_donatur'], //batch 1
-                // 'donatur_group_id' => $row['id_group'],//batch 2
-                'nama' => $row['nama_nama_donatur'], //batch 1
-                // 'nama' => $row['nama_donatur'], //batch 2
+                // 'donatur_group_id' => $row['id_group_donatur'], //batch 1
+                'donatur_group_id' => $row['id_group'],//batch 2
+                // 'nama' => $row['nama_nama_donatur'], //batch 1
+                'nama' => $row['nama_donatur'], //batch 2
                 'alamat' => $row['alamat_donatur']  
             ]);
 
             DB::table('users')->insert([
-                'name' => $row['nama_nama_donatur'],
+                'name' => $row['nama_donatur'],
                 'email' =>'DONATUR-'.Str::random(5).'@kotakamal.care',
                 'password' => bcrypt('88888888'),
                 'role_id' => 4,
-                'alamat' => $row['nama_nama_donatur']
+                'alamat' => $row['nama_donatur']
             ]);
 
             DB::commit();
