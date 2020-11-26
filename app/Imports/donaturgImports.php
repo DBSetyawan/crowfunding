@@ -33,6 +33,7 @@ class donaturgImports implements WithMultipleSheets
             'DATA DONATUR' => new donatursonlineSheets(),
             'HISTORY BULAN OKT 2020' => new hisotrytransactionSheet(),
             'History Bulan Okt 2020' => new hisotrytransactionSheet(),
+            'history batch 2' => new hisotrytransactionSheet(),
         ];
     }
 }
