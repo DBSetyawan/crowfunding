@@ -52,7 +52,7 @@ class PetugasSheets implements WithHeadingRow, WithChunkReading, ToModel, WithCa
                     'additional_each_id' => $cabangs['id'],
                     'role_id' => 3, //petugas
                     'name' => $petugas['nama_petugas'].'-AMIL',
-                    'email' =>  $petugas['nama_petugas'].'-AMIL@kotakamal.care',
+                    'email' =>  $petugas['nama_petugas'].'-AMIL'.Str::random(4).'@kotakamal.care',
                ]);
 
                return new User([
@@ -61,7 +61,7 @@ class PetugasSheets implements WithHeadingRow, WithChunkReading, ToModel, WithCa
                 'additional_each_id' => $cabangs['id'],
                 'role_id' => 2, //admin cabang
                 'name' => $petugas['nama_petugas'].'-ADMIN CABANG',
-                'email' =>  $petugas['nama_petugas'].'-ADMIN CABANG@kotakamal.care',
+                'email' =>  $petugas['nama_petugas'].'-ADMIN CABANG'.Str::random(4).'@kotakamal.care',
            ]);
          
         }

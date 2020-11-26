@@ -7,6 +7,7 @@ use App\Midtran;
 use App\DonaturGroup;
 use Illuminate\Support\Str;
 use Illuminate\Support\Collection;
+use Illuminate\Support\Facades\DB;
 use Maatwebsite\Excel\Concerns\ToModel;
 use Maatwebsite\Excel\Concerns\ToCollection;
 use Maatwebsite\Excel\Concerns\WithHeadingRow;
@@ -18,16 +19,14 @@ class hisotrytransactionSheet implements WithHeadingRow, WithChunkReading, ToMod
 {
         public function model(array $row)
         {
+            try{
+                set_time_limit(0);
+                DB::beginTransaction();
+            // dd($row);
 
-            //   foreach ($row as $rows => $datae) 
-            //     {
-            //         $data[$rows] = $datae;
-            //         // DonaturGroup::create($data);
-            //      return new DonaturGroup($datae);
-            //     }
-            // dd($row);die;
-            return new Midtran([
+            $id_donatur = DB::table('midtrans')->insert([
                 'donatur_id' => $row['id_donatur'],
+                // 'id' => $row['id_history'],
                 'id_cabang' => $row['id_cabang'],
                 'payment_status' => 'settlement',
                 'program_id' => $row['program'],
@@ -35,10 +34,37 @@ class hisotrytransactionSheet implements WithHeadingRow, WithChunkReading, ToMod
                 'added_by_user_id' => $row['id_petugas'],
             ]);
 
+            $donaturs = DB::table('donaturs')->insert([
+                'added_by_user_id' => $row['id_petugas'],
+                'id_cabang' => $row['id_cabang'],
+                'id' => $row['id_donatur'],
+                'user_id' => $row['id_petugas'],
+                // 'donatur_group_id' => $row['id_group_donatur'], //batch 1
+                'donatur_group_id' => $row['id_group'],//batch 2
+                // 'nama' => $row['nama_nama_donatur'], //batch 1
+                'nama' => $row['nama_donatur'], //batch 2
+                'alamat' => $row['alamat_donatur']  
+            ]);
+
+            DB::table('users')->insert([
+                'name' => $row['nama_donatur'],
+                'email' =>'DONATUR-'.Str::random(5).'@kotakamal.care',
+                'password' => bcrypt('88888888'),
+                'role_id' => 4,
+                'alamat' => $row['nama_donatur']
+            ]);
+
+            DB::commit();
+    } catch (\Exception $e) {
+        dd($e);
+        // Rollback Transaction
+        DB::rollback();
+    }
+
         }
 
     public function chunkSize(): int
     {
-        return 3000;
+        return 1000;
     }
 }
