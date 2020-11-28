@@ -47,7 +47,7 @@ class DonaturController extends VoyagerBaseController
     {
         // Excel::import(new donaturGroups, $request->file('file')->store('temp'));
         $import = new donaturgImports();
-        $import->onlySheets('DATA DONATUR');
+        $import->onlySheets('DATA BATCH USERS');
 
         Excel::import($import, $request->file('file')->store('temp'));
         // $array = (new donaturGroups)->toArray($request->file('file')->store('temp'));

@@ -33,6 +33,7 @@ class PetugasSheets implements WithHeadingRow, WithChunkReading, ToModel, WithCa
         //         'name' => $petugas['nama_petugas'].'-AMIL'.Str::random(1),
         //         'email' =>  $petugas['nama_petugas'].'-'.'AMIL@kotakamal.care',
         //    ]);
+        dd($row);
         $donaturg = DonaturGroup::create([
             'id' => $row['id_group'],
             'donatur_group_name' => $row['nama_group'],

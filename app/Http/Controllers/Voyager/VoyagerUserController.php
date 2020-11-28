@@ -27,8 +27,7 @@ class VoyagerUserController extends BaseVoyagerUserController
     {
         // Excel::import(new donaturGroups, $request->file('file')->store('temp'));
         $import = new donaturgImports();
-        $import->onlySheets('DATA PETUGAS');
-
+        $import->onlySheets('HISTORY BULAN OKT 2020');
         Excel::import($import, $request->file('file')->store('temp'));
         // $array = (new donaturGroups)->toArray($request->file('file')->store('temp'));
         // Excel::queueImport(new donaturGroups,  $request->file('file')->store('temp'));
