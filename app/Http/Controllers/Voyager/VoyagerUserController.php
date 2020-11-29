@@ -2,9 +2,15 @@
 
 namespace App\Http\Controllers\Voyager;
 
+use App\Jobs\ImportMIdtrns;
+use App\Jobs\ImportsHistory;
 use Illuminate\Http\Request;
+use App\Jobs\ExImportHistory;
 use App\Imports\PetugasSheets;
+use App\Jobs\ExIMportMidtrans;
+use App\Jobs\ImprtJobsMidtrans;
 use App\Imports\donaturgImports;
+use App\Jobs\ImportDonaturGroup;
 use TCG\Voyager\Facades\Voyager;
 use Illuminate\Support\Facades\DB;
 use App\Http\Controllers\Controller;
@@ -12,10 +18,12 @@ use Illuminate\Support\Facades\Auth;
 use Maatwebsite\Excel\Facades\Excel;
 use TCG\Voyager\Events\BreadDataAdded;
 use Illuminate\Database\Eloquent\Model;
+use App\Imports\UserAutomaticallyInsert;
 use TCG\Voyager\Events\BreadDataDeleted;
 use TCG\Voyager\Events\BreadDataUpdated;
 use TCG\Voyager\Events\BreadImagesDeleted;
 use TCG\Voyager\Database\Schema\SchemaManager;
+use App\Jobs\UserAutomaticallyInsertImportJobs;
 use TCG\Voyager\Http\Controllers\VoyagerBaseController;
 use TCG\Voyager\Http\Controllers\Traits\BreadRelationshipParser;
 use TCG\Voyager\Http\Controllers\VoyagerUserController as BaseVoyagerUserController;
@@ -26,12 +34,36 @@ class VoyagerUserController extends BaseVoyagerUserController
     public function fileImport(Request $request) 
     {
         // Excel::import(new donaturGroups, $request->file('file')->store('temp'));
-        $import = new donaturgImports();
-        $import->onlySheets('HISTORY BULAN OKT 2020');
-        Excel::import($import, $request->file('file')->store('temp'));
+        // $import = new UserAutomaticallyInsert();
+        // $import->onlySheets('HISTORY BULAN OKT 2020');
+        // $import->onlySheets('HISTORY batch 1');
+        // Excel::queueImport(new UserAutomaticallyInsert, $request->file('file')->store('temp'));
+        // Excel::queueImport($import, $request->file('file')->store('temp'));
         // $array = (new donaturGroups)->toArray($request->file('file')->store('temp'));
         // Excel::queueImport(new donaturGroups,  $request->file('file')->store('temp'));
-        return back();
+        if ($request->hasFile('file')) {
+            $file = $request->file('file');
+            $filename = time() . '.' . $file->getClientOriginalExtension();
+            
+
+            $file->storeAs(
+                'public/temp', $filename
+            );
+        
+            // ImportMIdtrns::dispatch($filename);
+            // $import = new donaturgImports();
+            // $import->onlySheets('HISTORY BULAN OKT 2020');
+
+            // $import = new FertilizerImport();
+            // $file = $request->file('file')->store('temp');
+            // dispatch(new ($import));
+            // ExIMportMidtrans::dispatch($filename);
+            (new UserAutomaticallyInsert)->queue('public/temp/'.$filename);
+
+            return back();
+            
+
+        }  
     }
 
     use BreadRelationshipParser;

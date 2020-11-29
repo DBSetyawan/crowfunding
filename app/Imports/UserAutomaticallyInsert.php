@@ -3,21 +3,30 @@ namespace App\Imports;
 
 use App\Amil;
 use App\User;
+use App\Donatur;
+use App\Midtran;
 use App\DonaturGroup;
 use App\CabangKotakamal;
 use Illuminate\Support\Str;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\DB;
 use Maatwebsite\Excel\Concerns\ToModel;
+use Maatwebsite\Excel\Concerns\Importable;
+use Illuminate\Contracts\Queue\ShouldQueue;
 use Maatwebsite\Excel\Concerns\ToCollection;
+use Maatwebsite\Excel\Concerns\WithStartRow;
 use Maatwebsite\Excel\Concerns\ShouldAutoSize;
 use Maatwebsite\Excel\Concerns\WithHeadingRow;
 use Maatwebsite\Excel\Concerns\WithMappedCells;
+use Maatwebsite\Excel\Concerns\WithBatchInserts;
 use Maatwebsite\Excel\Concerns\WithChunkReading;
 use Maatwebsite\Excel\Concerns\WithCalculatedFormulas;
 
-class UserAutomaticallyInsert implements WithHeadingRow, WithChunkReading, ToModel, WithCalculatedFormulas, ShouldAutoSize
+class UserAutomaticallyInsert implements WithHeadingRow, WithChunkReading, ToModel, WithCalculatedFormulas, ShouldAutoSize, ShouldQueue
 {
+
+    use Importable;
+
         public function model(array $row)
         {
 
@@ -57,36 +66,56 @@ class UserAutomaticallyInsert implements WithHeadingRow, WithChunkReading, ToMod
         //             'name' => $petugas['nama_petugas'].'-AMIL',
         //             'email' =>  $petugas['nama_petugas'].'-AMIL'.Str::random(4).'@kotakamal.care',
         //        ]);
+        
+        DB::beginTransaction();
         try 
-            {
-
-                set_time_limit(0);
-                DB::beginTransaction();
-
-                $users = DB::table('users')->insert([
-                        'id' => $row['id_user'],
-                        'role_id' => $row['id_role'], //admin cabang
-                        'parent_id' => $row['id_parrent'], //admin cabang
+        {
+            // dd($row);
+            // ini_set('memory_limit','1024M');
+            // set_time_limit(0);
+            ini_set('max_execution_time', 0);
+                // dd($row);
+                $users = User::create([
+                        'id' => (Int) $row['id_user'],
+                        'users_id' => (Int) $row['id_user'],
+                        'role_id' => (Int)  $row['id_role'], //admin cabang
+                        'parent_id' => (Int)  $row['id_parrent'], //admin cabang
                         'add_by_user_id' => $row['add_by_id'],
-                        'cabang_id' => $row['id_cabang'],
-                        'amil_id' => $row['id_petugas'],
-                        'groups_id' => $row['id_group_donatur'],
-                        'name' => ! is_null($row['nama_user']) ? $row['nama_user'] : $row['id_parrent'],
+                        'cabang_id' => (Int) $row['id_cabang'],
+                        'amil_id' => (Int) $row['id_petugas'],
+                        'groups_id' => (Int) $row['id_group_donatur'],
+                        'name' => $row['nama_user'],
                         'alamat' => $row['alamat_donatur'],
-                        'password' => bcrypt('88888888'),
+                        'password' => \Hash::make('88888888'),
                         'email' =>  $row['id_user'].'@kotakamal.care',
                     ]
                 );
 
-                $midtrans = DB::table('midtrans')->insert([
-                    'donatur_id' => $users['id'],
-                    // 'id' => $row['id_history'],
-                    'id_cabang' => $users['cabang_id'],
-                    'payment_status' => 'settlement',
-                    'program_id' => $row['program'],
-                    'amount' => $row['nominal'],
-                    'added_by_user_id' => $users['id'],
+                $donatur = Donatur::create([
+                    'added_by_user_id' => (Int) $users['id'],
+                    'id_cabang' => (Int) $users['cabang_id'],
+                    'donaturs_id' => $row['id_user'],
+                    'user_id' => (Int) $users['id'],
+                    'donatur_group_id' => (Int) $users['groups_id'],
+                    'nama' => $users['name'],
+                    'alamat' => $row['alamat_donatur']
                 ]);
+
+                return new Midtran([
+                    'donatur_id' => (Int) $donatur['id'],
+                    'id_cabang' => (Int) $users['cabang_id'],
+                    'payment_status' => 'settlement',
+                    'program_id' => (Int) $row['program'],
+                    'amount' => $row['nominal'],
+                    'group_id' => (Int) $users['groups_id'],
+                    'added_by_user_id' => (Int) $users['id'],
+                ]);
+
+                    // if($midtrans == false){
+        
+                    //     DB::rollback();
+                        
+                    // }
 
                 DB::commit();
 
@@ -98,8 +127,19 @@ class UserAutomaticallyInsert implements WithHeadingRow, WithChunkReading, ToMod
          
         }
 
+        // public function startRow(): int 
+        // {
+        //      return 1;
+        // }
+
     public function chunkSize(): int
+    {
+        return 6000;
+    }
+
+    public function batchSize(): int
     {
         return 1000;
     }
+
 }

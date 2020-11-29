@@ -12,7 +12,7 @@ use App\Imports\UserAutomaticallyInsert;
 use Maatwebsite\Excel\Concerns\WithMultipleSheets;
 use Maatwebsite\Excel\Concerns\WithConditionalSheets;
 
-class donaturgImports implements WithMultipleSheets  
+class donaturgImports implements WithMultipleSheets
 {
     use WithConditionalSheets;
     
@@ -29,6 +29,9 @@ class donaturgImports implements WithMultipleSheets
         return [
             'DATA GROUP' => new DonaturGroupSheets(),
             'HISTORY BULAN OKT 2020' => new UserAutomaticallyInsert(),
+            'HISTORY batch 1' => new UserAutomaticallyInsert(),
+            'history batch 1.1' => new UserAutomaticallyInsert(),
+            'history batch 1.2' => new UserAutomaticallyInsert(),
             'DATA PETUGAS' => new PetugasSheets(),
             'DATA CABANG' => new cabangImports(),
             'DATA DONATUR OFFLINE' => new donatursSheets(),

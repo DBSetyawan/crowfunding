@@ -10,6 +10,7 @@ class User extends \TCG\Voyager\Models\User
 {
     use Notifiable;
 
+    public $incrementing = true;
     /**
      * The attributes that are mass assignable.
      *
@@ -18,6 +19,7 @@ class User extends \TCG\Voyager\Models\User
     protected $fillable = [
         // 'id','name', 'email', 'password',''
         'id',
+        'users_id',
         'role_id',
         'name',
         'email',

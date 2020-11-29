@@ -61,6 +61,16 @@ return [
         ],
     ],
 
+    /*
+        |--------------------------------------------------------------------------
+        | Enable strict null comparison
+        |--------------------------------------------------------------------------
+        |
+        | When enabling strict null comparison empty cells ('') will
+        | be added to the sheet.
+        */
+        'strict_null_comparison' => false,
+
     'imports'            => [
 
         /*
