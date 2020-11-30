@@ -14,19 +14,65 @@ use Maatwebsite\Excel\Concerns\ToModel;
 use Maatwebsite\Excel\Concerns\Importable;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Maatwebsite\Excel\Concerns\ToCollection;
+use Maatwebsite\Excel\Concerns\WithHeadings;
 use Maatwebsite\Excel\Concerns\WithStartRow;
 use Maatwebsite\Excel\Concerns\ShouldAutoSize;
 use Maatwebsite\Excel\Concerns\WithHeadingRow;
 use Maatwebsite\Excel\Concerns\WithMappedCells;
 use Maatwebsite\Excel\Concerns\WithBatchInserts;
 use Maatwebsite\Excel\Concerns\WithChunkReading;
+use Maatwebsite\Excel\Imports\HeadingRowFormatter;
 use Maatwebsite\Excel\Concerns\WithCalculatedFormulas;
 
-class UserAutomaticallyInsert implements WithHeadingRow, WithChunkReading, ToModel, WithCalculatedFormulas, ShouldAutoSize, ShouldQueue
+HeadingRowFormatter::default('none');
+class UserAutomaticallyInsert implements WithStartRow, WithHeadingRow, WithChunkReading, ToModel, WithCalculatedFormulas, ShouldAutoSize, ShouldQueue
 {
-
     use Importable;
 
+    // public function mapping(): array
+    // {
+    //     return [
+    //         'id_user'  => 'A1',
+    //         'id_role' => 'B1',
+    //         'id_parrent' => 'C1',
+    //         'add_by_id' => 'D1',
+    //         'id_cabang' => 'E1',
+    //         'nama_cabang' => 'F1',
+    //         'id_petugas' => 'G1',
+    //         'nama_petugas' => 'H1',
+    //         'id_group_donatur' => 'I1',
+    //         'nama_group' => 'J1',
+    //         'nama_user' => 'K1',
+    //         'alamat_donatur' => 'L1',
+    //         'program' => 'M1',
+    //         'nominal' => 'N1',
+    //     ];
+    // }
+
+    // public function headings(): array
+    // {
+        // return [
+        //     'ID USER',
+        //     'ID ROLE',
+        //     'ID PARRENT',
+        //     'add_by_id',
+        //     'ID CABANG',
+        //     'NAMA CABANG',
+        //     'ID PETUGAS',
+        //     'NAMA PETUGAS',
+        //     'ID GROUP',
+        //     'NAMA GROUP',
+        //     'NAMA USER',
+        //     'ALAMAT DONATUR',
+        //     'PROGRAM',
+        //     'NOMINAL',
+        // ];
+        // return $this->columns;
+    // }
+    // public function headingRow(): int
+    // {
+    //     return 12;
+    // }
         public function model(array $row)
         {
 
@@ -72,9 +118,15 @@ class UserAutomaticallyInsert implements WithHeadingRow, WithChunkReading, ToMod
         {
             // dd($row);
             // ini_set('memory_limit','1024M');
-            // set_time_limit(0);
+            set_time_limit(0);
             ini_set('max_execution_time', 0);
-                // dd($row);
+                // $pow = array();
+                // foreach ($row as $key => $value) {
+                //     # code...
+                //     $pow[$key] = $value;
+                // }
+                // dd($pow);die;
+                dd($row);
                 $users = User::create([
                         'id' => (Int) $row['id_user'],
                         'users_id' => (Int) $row['id_user'],
@@ -84,7 +136,7 @@ class UserAutomaticallyInsert implements WithHeadingRow, WithChunkReading, ToMod
                         'cabang_id' => (Int) $row['id_cabang'],
                         'amil_id' => (Int) $row['id_petugas'],
                         'groups_id' => (Int) $row['id_group_donatur'],
-                        'name' => $row['nama_user'],
+                        'name' => ! is_null($row['nama_user']) ? $row['nama_user'] : $row['nama_petguas'],
                         'alamat' => $row['alamat_donatur'],
                         'password' => \Hash::make('88888888'),
                         'email' =>  $row['id_user'].'@kotakamal.care',
@@ -127,19 +179,19 @@ class UserAutomaticallyInsert implements WithHeadingRow, WithChunkReading, ToMod
          
         }
 
-        // public function startRow(): int 
-        // {
-        //      return 1;
-        // }
+        public function startRow(): int
+{
+    return 2;
+}
 
     public function chunkSize(): int
     {
-        return 6000;
+        return 500;
     }
 
     public function batchSize(): int
     {
-        return 1000;
+        return 500;
     }
 
 }

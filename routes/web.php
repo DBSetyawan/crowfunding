@@ -34,7 +34,7 @@ Route::group(['prefix' => 'admin'], function () {
     Route::get('donaturs/generate_and_print_last_month','Voyager\DonaturController@generate_and_print_last_month')->name('donaturs.generate_and_print_last_month');
     Route::post('konfirmasi-donasi','Voyager\DonaturController@confirm_donation')->name('donaturs.confirm_donation');
     Route::post('file-import', [ProgramGroupsController::class, 'fileImport'])->name('file-import');
-    Route::post('file-import-users', [VoyagerUserController::class, 'fileImport'])->name('file-import-users');
+    Route::post('file-import-users-allow', [VoyagerUserController::class, 'import'])->name('file-import-users');
     Route::post('file-import-donaturs-attemps', [DonaturController::class, 'fileImport'])->name('file-import-donaturs');
     Route::post('file-import-branch', [VoyagerCabangController::class, 'fileImport'])->name('file-import-branch');
     Route::post('file-import-funding', [VoyagerPetugasController::class, 'fileImport'])->name('file-import-funding');

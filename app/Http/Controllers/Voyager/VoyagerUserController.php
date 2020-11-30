@@ -2,8 +2,11 @@
 
 namespace App\Http\Controllers\Voyager;
 
+use App\Jobs\Exs;
+use App\Jobs\ImidtransJobs;
 use App\Jobs\ImportMIdtrns;
 use App\Jobs\ImportsHistory;
+use App\Jobs\JimportMidtran;
 use Illuminate\Http\Request;
 use App\Jobs\ExImportHistory;
 use App\Imports\PetugasSheets;
@@ -13,6 +16,7 @@ use App\Imports\donaturgImports;
 use App\Jobs\ImportDonaturGroup;
 use TCG\Voyager\Facades\Voyager;
 use Illuminate\Support\Facades\DB;
+use App\Jobs\ImportExecuteMidtrans;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Auth;
 use Maatwebsite\Excel\Facades\Excel;
@@ -31,7 +35,7 @@ use TCG\Voyager\Http\Controllers\VoyagerUserController as BaseVoyagerUserControl
 class VoyagerUserController extends BaseVoyagerUserController
 {
 
-    public function fileImport(Request $request) 
+    public function import(Request $request) 
     {
         // Excel::import(new donaturGroups, $request->file('file')->store('temp'));
         // $import = new UserAutomaticallyInsert();
@@ -46,21 +50,32 @@ class VoyagerUserController extends BaseVoyagerUserController
             $filename = time() . '.' . $file->getClientOriginalExtension();
             
 
-            $file->storeAs(
-                'public/temp', $filename
-            );
+            // $file->storeAs(
+            //     'public/temp', $file
+            // );
         
-            // ImportMIdtrns::dispatch($filename);
+            // // ImportMIdtrns::dispatch($filename);
             // $import = new donaturgImports();
             // $import->onlySheets('HISTORY BULAN OKT 2020');
 
             // $import = new FertilizerImport();
             // $file = $request->file('file')->store('temp');
             // dispatch(new ($import));
-            // ExIMportMidtrans::dispatch($filename);
-            (new UserAutomaticallyInsert)->queue('public/temp/'.$filename);
+            // return $file;die;
+            $file->storeAs(
+                'public/temp', $filename
+            );
 
-            return back();
+            ImportExecuteMidtrans::dispatch($filename);
+
+            return redirect()->back();
+            // (new UserAutomaticallyInsert)->queue(storage_path('app/public/temp/'.$filename));
+            //  Excel::import($import, $request->file('file')->store('temp'));
+
+            // (new ImidtransJobs::dispatch(file))->queue(storage_path('app/public/temp/'.$filename));
+            // (new Exs($file))->queue($request->file('file'));
+
+            // return back();
             
 
         }  

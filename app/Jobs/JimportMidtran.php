@@ -13,26 +13,24 @@ use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Foundation\Bus\Dispatchable;
 
-class UserAutomaticallyInsertImportJobs implements ShouldQueue
+class JimportMidtran implements ShouldQueue
 {
     use Dispatchable, InteractsWithQueue, Queueable, SerializesModels;
 
-    private $file;
-    private $import;
+    public $file;
     /**
      * Create a new job instance.
      *
      * @return void
      */
-    public function __construct($import, $file)
+    public function __construct($file)
     {
-        $this->import = $import;
         $this->file = $file;
     }
     public function handle()
     {
         // Excel::import($this->import, $this->file);
-        Excel::import(new UserAutomaticallyInsert, storage_path('app/public/temp/' . $this->file)); //MENJALANKAN PROSES IMPORT
+        Excel::queueImport(new UserAutomaticallyInsert, storage_path('app/public/temp/' . $this->file)); //MENJALANKAN PROSES IMPORT
         unlink(storage_path('app/public/temp/' . $this->file)); //MENGHAPUS FILE EXCEL YANG TELAH DI-UPLOAD
     }
 }

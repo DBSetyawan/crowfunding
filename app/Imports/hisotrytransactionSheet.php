@@ -47,13 +47,10 @@ class hisotrytransactionSheet implements WithHeadingRow, WithChunkReading, ToMod
             ]);
 
             DB::table('users')->insert([
-<<<<<<< HEAD
                 'name' => $row['nama_nama_donatur'],
                 'email' =>$donaturs['id'].'@kotakamal.care',
-=======
                 'name' => $row['nama_donatur'],
                 'email' =>'DONATUR-'.Str::random(5).'@kotakamal.care',
->>>>>>> a9581433641f20d1e36101b57e1cd4b45693877b
                 'password' => bcrypt('88888888'),
                 'role_id' => 4,
                 'alamat' => $row['nama_donatur']
