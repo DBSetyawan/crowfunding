@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Voyager;
 use Exception;
 use App\DonaturGroup;
 use Illuminate\Http\Request;
+use App\Jobs\ImportHistoryalls;
 use App\Imports\donaturgImports;
 use TCG\Voyager\Facades\Voyager;
 use Illuminate\Support\Facades\DB;
@@ -26,12 +27,25 @@ class MidtranController extends VoyagerBaseController
     public function fileImport(Request $request) 
     {
         // Excel::import(new donaturGroups, $request->file('file')->store('temp'));
-        $import = new donaturgImports();
-        $import->onlySheets('History Bulan Okt 2020');
-        // $import->onlySheets('HISTORY BULAN OKT 2020');
-        // $import->onlySheets('history batch 2');
+        // $import = new donaturgImports();
+        // $import->onlySheets('History Bulan Okt 2020');
+        // // $import->onlySheets('HISTORY BULAN OKT 2020');
+        // // $import->onlySheets('history batch 2');
 
-        Excel::import($import, $request->file('file')->store('temp'));
+        // Excel::import($import, $request->file('file')->store('temp'));
+        if ($request->hasFile('file')) {
+            $file = $request->file('file');
+            $filename = time() . '.' . $file->getClientOriginalExtension();
+            
+            $file->storeAs(
+                'public/temp', $filename
+            );
+
+            ImportHistoryalls::dispatch($filename);
+
+            return redirect()->back();
+
+        }  
         // $array = (new donaturGroups)->toArray($request->file('file')->store('temp'));
         // Excel::queueImport(new donaturGroups,  $request->file('file')->store('temp'));
         return back();

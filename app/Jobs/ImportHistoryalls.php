@@ -8,19 +8,18 @@ use League\Csv\Statement;
 use Illuminate\Bus\Queueable;
 use Maatwebsite\Excel\Facades\Excel;
 use Illuminate\Queue\SerializesModels;
+use App\Imports\MidtransImportTemporary;
 use App\Imports\UserAutomaticallyInsert;
 use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Foundation\Bus\Dispatchable;
 use Maatwebsite\Excel\Concerns\WithHeadingRow;
 
-class ImportExecuteMidtrans implements ShouldQueue
+class ImportHistoryalls implements ShouldQueue
 {
     use Dispatchable, InteractsWithQueue, Queueable, SerializesModels;
 
     protected $filename;
-    public $tries = 20;
-    public $timeout = 0;
     /**
      * Create a new job instance.
      *
@@ -35,9 +34,9 @@ class ImportExecuteMidtrans implements ShouldQueue
     {   
         
         // Excel::import($this->import, $this->filename);
-        (new UserAutomaticallyInsert)->queue(storage_path('app/public/temp/' . $this->filename));
+        (new MidtransImportTemporary)->queue(storage_path('app/public/temp/' . $this->filename));
         // Excel::queueImport(new UserAutomaticallyInsert, storage_path('app/public/temp/' . $this->filename)); //MENJALANKAN PROSES IMPORT
-        // unlink(storage_path('app/public/temp/' . $this->filename)); //MENGHAPUS filename EXCEL YANG TELAH DI-UPLOAD
+        unlink(storage_path('app/public/temp/' . $this->filename)); //MENGHAPUS filename EXCEL YANG TELAH DI-UPLOAD
     }
 
 }

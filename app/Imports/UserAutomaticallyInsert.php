@@ -12,6 +12,7 @@ use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\DB;
 use Maatwebsite\Excel\Concerns\ToModel;
 use Maatwebsite\Excel\Concerns\Importable;
+use Maatwebsite\Excel\Concerns\WithEvents;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Maatwebsite\Excel\Concerns\ToCollection;
 use Maatwebsite\Excel\Concerns\WithHeadings;
@@ -22,13 +23,29 @@ use Maatwebsite\Excel\Concerns\WithMappedCells;
 use Maatwebsite\Excel\Concerns\WithBatchInserts;
 use Maatwebsite\Excel\Concerns\WithChunkReading;
 use Maatwebsite\Excel\Imports\HeadingRowFormatter;
+use Maatwebsite\Excel\Concerns\WithCustomCsvSettings;
 use Maatwebsite\Excel\Concerns\WithCalculatedFormulas;
+use Maatwebsite\Excel\Concerns\RegistersEventListeners;
 
 HeadingRowFormatter::default('none');
-class UserAutomaticallyInsert implements WithStartRow, WithHeadingRow, WithChunkReading, ToModel, WithCalculatedFormulas, ShouldAutoSize, ShouldQueue
+class UserAutomaticallyInsert implements WithStartRow, WithCustomCsvSettings, WithEvents, WithHeadingRow, WithChunkReading, ToModel, WithCalculatedFormulas, ShouldAutoSize, ShouldQueue
 {
-    use Importable;
+    use Importable, RegistersEventListeners;
 
+    public function startRow(): int
+    {
+        return 2;
+    }
+    
+    public function chunkSize(): int
+    {
+        return 6000;
+    }
+
+    public function batchSize(): int
+    {
+        return 700;
+    }
     // public function mapping(): array
     // {
     //     return [
@@ -128,7 +145,7 @@ class UserAutomaticallyInsert implements WithStartRow, WithHeadingRow, WithChunk
                 // dd($pow);die;
                 // dd($row);
                 $users = User::create([
-                        // 'id' => (Int) $row['ID USER'],
+                        'id' => (Int) $row['ID USER'],
                         'users_id' => (Int) $row['ID USER'],
                         'role_id' => (Int)  $row['ID ROLE'], //admin cabang
                         'parent_id' => (Int)  $row['ID PARRENT'], //admin cabang
@@ -143,29 +160,29 @@ class UserAutomaticallyInsert implements WithStartRow, WithHeadingRow, WithChunk
                     ]
                 );
 
-                // set_time_limit(0);
-                // ini_set('max_execution_time', 0);
-                // $donatur = Donatur::create([
-                //     'added_by_user_id' => (Int) $users['id'],
-                //     'id_cabang' => (Int) $users['cabang_id'],
-                //     'donaturs_id' => $row['ID USER'],
-                //     'user_id' => (Int) $users['id'],
-                //     'donatur_group_id' => (Int) $users['groups_id'],
-                //     'nama' => $users['name'],
-                //     'alamat' => $row['ALAMAT DONATUR']
-                // ]);
+                set_time_limit(0);
+                ini_set('max_execution_time', 0);
+                $donatur = Donatur::create([
+                    'added_by_user_id' => (Int) $users['id'],
+                    'id_cabang' => (Int) $users['cabang_id'],
+                    'donaturs_id' => $row['ID USER'],
+                    'user_id' => (Int) $users['id'],
+                    'donatur_group_id' => (Int) $users['groups_id'],
+                    'nama' => $users['name'],
+                    'alamat' => $row['ALAMAT DONATUR']
+                ]);
 
-                // set_time_limit(0);
-                // ini_set('max_execution_time', 0);
-                // return new Midtran([
-                //     'donatur_id' => (Int) $donatur['id'],
-                //     'id_cabang' => (Int) $users['cabang_id'],
-                //     'payment_status' => 'settlement',
-                //     'program_id' => (Int) ! is_null($row['PROGRAM']) ? $row['PROGRAM'] : 0,
-                //     'amount' => ! is_null($row['NOMINAL']) ? $row['NOMINAL'] : 0,
-                //     'group_id' => (Int) $users['groups_id'],
-                //     'added_by_user_id' => (Int) $users['id'],
-                // ]);
+                set_time_limit(0);
+                ini_set('max_execution_time', 0);
+                return new Midtran([
+                    'donatur_id' => (Int) $donatur['id'],
+                    'id_cabang' => (Int) $users['cabang_id'],
+                    'payment_status' => 'settlement',
+                    'program_id' => (Int) ! is_null($row['PROGRAM']) ? $row['PROGRAM'] : 0,
+                    'amount' => ! is_null($row['NOMINAL']) ? $row['NOMINAL'] : 0,
+                    'group_id' => (Int) $users['groups_id'],
+                    'added_by_user_id' => (Int) $users['id'],
+                ]);
 
                     // if($midtrans == false){
         
@@ -183,19 +200,12 @@ class UserAutomaticallyInsert implements WithStartRow, WithHeadingRow, WithChunk
          
         }
 
-        public function startRow(): int
-{
-    return 2;
-}
-
-    public function chunkSize(): int
-    {
-        return 6000;
-    }
-
-    public function batchSize(): int
-    {
-        return 1000;
-    }
+        public function getCsvSettings(): array
+        {
+            return [
+                'input_encoding' => 'ISO-8859-1',
+                'delimiter' => ',',
+            ];
+        }
 
 }
