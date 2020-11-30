@@ -126,42 +126,46 @@ class UserAutomaticallyInsert implements WithStartRow, WithHeadingRow, WithChunk
                 //     $pow[$key] = $value;
                 // }
                 // dd($pow);die;
-                dd($row);
+                // dd($row);
                 $users = User::create([
-                        'id' => (Int) $row['id_user'],
-                        'users_id' => (Int) $row['id_user'],
-                        'role_id' => (Int)  $row['id_role'], //admin cabang
-                        'parent_id' => (Int)  $row['id_parrent'], //admin cabang
-                        'add_by_user_id' => $row['add_by_id'],
-                        'cabang_id' => (Int) $row['id_cabang'],
-                        'amil_id' => (Int) $row['id_petugas'],
-                        'groups_id' => (Int) $row['id_group_donatur'],
-                        'name' => ! is_null($row['nama_user']) ? $row['nama_user'] : $row['nama_petguas'],
-                        'alamat' => $row['alamat_donatur'],
+                        // 'id' => (Int) $row['ID USER'],
+                        'users_id' => (Int) $row['ID USER'],
+                        'role_id' => (Int)  $row['ID ROLE'], //admin cabang
+                        'parent_id' => (Int)  $row['ID PARRENT'], //admin cabang
+                        'add_by_user_id' => $row['ADD BY ID'],
+                        'cabang_id' => (Int) $row['ID CABANG'],
+                        'amil_id' => (Int) $row['ID PETUGAS'],
+                        'groups_id' => (Int) $row['ID GROUP DONATUR'],
+                        'name' => ! is_null($row['NAMA USER']) ? $row['NAMA USER'] : $row['NAMA PETUGAS'],
+                        'alamat' => $row['ALAMAT DONATUR'],
                         'password' => \Hash::make('88888888'),
-                        'email' =>  $row['id_user'].'@kotakamal.care',
+                        'email' =>  $row['ID USER'].'@kotakamal.care',
                     ]
                 );
 
-                $donatur = Donatur::create([
-                    'added_by_user_id' => (Int) $users['id'],
-                    'id_cabang' => (Int) $users['cabang_id'],
-                    'donaturs_id' => $row['id_user'],
-                    'user_id' => (Int) $users['id'],
-                    'donatur_group_id' => (Int) $users['groups_id'],
-                    'nama' => $users['name'],
-                    'alamat' => $row['alamat_donatur']
-                ]);
+                // set_time_limit(0);
+                // ini_set('max_execution_time', 0);
+                // $donatur = Donatur::create([
+                //     'added_by_user_id' => (Int) $users['id'],
+                //     'id_cabang' => (Int) $users['cabang_id'],
+                //     'donaturs_id' => $row['ID USER'],
+                //     'user_id' => (Int) $users['id'],
+                //     'donatur_group_id' => (Int) $users['groups_id'],
+                //     'nama' => $users['name'],
+                //     'alamat' => $row['ALAMAT DONATUR']
+                // ]);
 
-                return new Midtran([
-                    'donatur_id' => (Int) $donatur['id'],
-                    'id_cabang' => (Int) $users['cabang_id'],
-                    'payment_status' => 'settlement',
-                    'program_id' => (Int) $row['program'],
-                    'amount' => $row['nominal'],
-                    'group_id' => (Int) $users['groups_id'],
-                    'added_by_user_id' => (Int) $users['id'],
-                ]);
+                // set_time_limit(0);
+                // ini_set('max_execution_time', 0);
+                // return new Midtran([
+                //     'donatur_id' => (Int) $donatur['id'],
+                //     'id_cabang' => (Int) $users['cabang_id'],
+                //     'payment_status' => 'settlement',
+                //     'program_id' => (Int) ! is_null($row['PROGRAM']) ? $row['PROGRAM'] : 0,
+                //     'amount' => ! is_null($row['NOMINAL']) ? $row['NOMINAL'] : 0,
+                //     'group_id' => (Int) $users['groups_id'],
+                //     'added_by_user_id' => (Int) $users['id'],
+                // ]);
 
                     // if($midtrans == false){
         
@@ -186,12 +190,12 @@ class UserAutomaticallyInsert implements WithStartRow, WithHeadingRow, WithChunk
 
     public function chunkSize(): int
     {
-        return 500;
+        return 6000;
     }
 
     public function batchSize(): int
     {
-        return 500;
+        return 1000;
     }
 
 }
