@@ -193,7 +193,7 @@ return [
 
     // Here you can specify additional assets you would like to be included in the master.blade
     'additional_css' => [
-        // 'css/fonts.css',
+        'css/fonts.css',
     ],
 
     'additional_js' => [
