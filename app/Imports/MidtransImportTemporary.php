@@ -23,20 +23,41 @@ use Maatwebsite\Excel\Concerns\WithBatchInserts;
 use Maatwebsite\Excel\Concerns\WithChunkReading;
 use Maatwebsite\Excel\Imports\HeadingRowFormatter;
 use Maatwebsite\Excel\Concerns\WithCalculatedFormulas;
-
+set_time_limit(0);
+ini_set('max_execution_time', 0);
 HeadingRowFormatter::default('none');
-class MidtransImportTemporary implements WithStartRow, WithHeadingRow, WithChunkReading, ToModel, WithCalculatedFormulas, ShouldAutoSize, ShouldQueue
+class MidtransImportTemporary implements ToCollection, WithStartRow, WithMappedCells, WithHeadingRow, WithChunkReading, WithCalculatedFormulas, ShouldAutoSize, ShouldQueue
 {
     use Importable;
 
-    public function model(array $row)
+      public function mapping(): array
     {
+        return [
+            'ID CABANG'  => 'A1',
+            'NAMA CABANG' => 'B1',
+            'ID PETUGAS' => 'C1',
+            'NAMA PETUGAS' => 'D1',
+            'ID GROUP' => 'E1',
+            'NAMA GROUP' => 'F1',
+            'ID' => 'G1',
+            'NAMA NAMA DONATUR' => 'H1',
+            'ALAMAT DONATUR' => 'I1',
+        ];
+    }
+
+    public function collection(Collection $row)
+    {
+        foreach ($row as $key => $value) {
+            # code...
+            $dump[$key] = $value;
+            dd($row);
+        }
+        die;
 
         DB::beginTransaction();
         try 
         {
-            set_time_limit(0);
-            ini_set('max_execution_time', 0);
+           
             dd($row);
                 // set_time_limit(0);
                 // ini_set('max_execution_time', 0);
@@ -85,7 +106,7 @@ class MidtransImportTemporary implements WithStartRow, WithHeadingRow, WithChunk
 
     public function chunkSize(): int
     {
-        return 6000;
+        return 1000;
     }
 
     public function batchSize(): int

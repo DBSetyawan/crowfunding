@@ -4,6 +4,8 @@ namespace App\Http\Controllers\Voyager;
 
 use Exception;
 use App\DonaturGroup;
+use App\Jobs\HmidImports;
+use App\Jobs\ImidtransJobs;
 use Illuminate\Http\Request;
 use App\Jobs\ImportHistoryalls;
 use App\Imports\donaturgImports;
@@ -41,7 +43,7 @@ class MidtranController extends VoyagerBaseController
                 'public/temp', $filename
             );
 
-            ImportHistoryalls::dispatch($filename);
+            HmidImports::dispatch($filename);
 
             return redirect()->back();
 

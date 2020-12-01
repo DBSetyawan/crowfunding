@@ -25,6 +25,7 @@ use Illuminate\Database\Eloquent\Model;
 use App\Imports\UserAutomaticallyInsert;
 use TCG\Voyager\Events\BreadDataDeleted;
 use TCG\Voyager\Events\BreadDataUpdated;
+use Maatwebsite\Excel\Concerns\Importable;
 use TCG\Voyager\Events\BreadImagesDeleted;
 use TCG\Voyager\Database\Schema\SchemaManager;
 use App\Jobs\UserAutomaticallyInsertImportJobs;
@@ -34,6 +35,8 @@ use TCG\Voyager\Http\Controllers\VoyagerUserController as BaseVoyagerUserControl
 
 class VoyagerUserController extends BaseVoyagerUserController
 {
+
+    use Importable;
 
     public function import(Request $request) 
     {

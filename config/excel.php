@@ -213,7 +213,7 @@ return [
         | Drivers: memory|illuminate|batch
         |
         */
-        'driver'     => 'batch',
+        'driver'     => 'memory',
 
         /*
         |--------------------------------------------------------------------------
@@ -226,7 +226,7 @@ return [
         |
         */
         'batch'     => [
-            'memory_limit' => 120000,
+            'memory_limit' => 60000,
         ],
 
         /*

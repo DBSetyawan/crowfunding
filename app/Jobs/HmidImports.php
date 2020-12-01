@@ -5,6 +5,8 @@ namespace App\Jobs;
 use filename;
 use League\Csv\Reader;
 use League\Csv\Statement;
+use App\Imports\MidImports;
+use App\Jobs\ImidtransJobs;
 use Illuminate\Bus\Queueable;
 use Maatwebsite\Excel\Facades\Excel;
 use Illuminate\Queue\SerializesModels;
@@ -14,7 +16,7 @@ use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Foundation\Bus\Dispatchable;
 use Maatwebsite\Excel\Concerns\WithHeadingRow;
 
-class ImportExecuteMidtrans implements ShouldQueue
+class HmidImports implements ShouldQueue
 {
     use Dispatchable, InteractsWithQueue, Queueable, SerializesModels;
 
@@ -33,7 +35,7 @@ class ImportExecuteMidtrans implements ShouldQueue
     {   
         
         // Excel::import($this->import, $this->filename);
-        (new UserAutomaticallyInsert)->queue(storage_path('app/public/temp/' . $this->filename));
+        (new MidImports)->queue(storage_path('app/public/temp/' . $this->filename));
         // Excel::queueImport(new UserAutomaticallyInsert, storage_path('app/public/temp/' . $this->filename)); //MENJALANKAN PROSES IMPORT
         unlink(storage_path('app/public/temp/' . $this->filename)); //MENGHAPUS filename EXCEL YANG TELAH DI-UPLOAD
     }

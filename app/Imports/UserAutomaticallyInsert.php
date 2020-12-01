@@ -39,12 +39,12 @@ class UserAutomaticallyInsert implements WithStartRow, WithCustomCsvSettings, Wi
     
     public function chunkSize(): int
     {
-        return 6000;
+        return 3000;
     }
 
     public function batchSize(): int
     {
-        return 700;
+        return 888;
     }
     // public function mapping(): array
     // {
@@ -160,29 +160,29 @@ class UserAutomaticallyInsert implements WithStartRow, WithCustomCsvSettings, Wi
                     ]
                 );
 
-                set_time_limit(0);
-                ini_set('max_execution_time', 0);
-                $donatur = Donatur::create([
-                    'added_by_user_id' => (Int) $users['id'],
-                    'id_cabang' => (Int) $users['cabang_id'],
-                    'donaturs_id' => $row['ID USER'],
-                    'user_id' => (Int) $users['id'],
-                    'donatur_group_id' => (Int) $users['groups_id'],
-                    'nama' => $users['name'],
-                    'alamat' => $row['ALAMAT DONATUR']
-                ]);
+                // set_time_limit(0);
+                // ini_set('max_execution_time', 0);
+                // $donatur = Donatur::create([
+                //     'added_by_user_id' => (Int) $users['id'],
+                //     'id_cabang' => (Int) $users['cabang_id'],
+                //     'donaturs_id' => $row['ID USER'],
+                //     'user_id' => (Int) $users['id'],
+                //     'donatur_group_id' => (Int) $users['groups_id'],
+                //     'nama' => $users['name'],
+                //     'alamat' => $row['ALAMAT DONATUR']
+                // ]);
 
-                set_time_limit(0);
-                ini_set('max_execution_time', 0);
-                return new Midtran([
-                    'donatur_id' => (Int) $donatur['id'],
-                    'id_cabang' => (Int) $users['cabang_id'],
-                    'payment_status' => 'settlement',
-                    'program_id' => (Int) ! is_null($row['PROGRAM']) ? $row['PROGRAM'] : 0,
-                    'amount' => ! is_null($row['NOMINAL']) ? $row['NOMINAL'] : 0,
-                    'group_id' => (Int) $users['groups_id'],
-                    'added_by_user_id' => (Int) $users['id'],
-                ]);
+                // set_time_limit(0);
+                // ini_set('max_execution_time', 0);
+                // return new Midtran([
+                //     'donatur_id' => (Int) $donatur['id'],
+                //     'id_cabang' => (Int) $users['cabang_id'],
+                //     'payment_status' => 'settlement',
+                //     'program_id' => (Int) ! is_null($row['PROGRAM']) ? $row['PROGRAM'] : 0,
+                //     'amount' => ! is_null($row['NOMINAL']) ? $row['NOMINAL'] : 0,
+                //     'group_id' => (Int) $users['groups_id'],
+                //     'added_by_user_id' => (Int) $users['id'],
+                // ]);
 
                     // if($midtrans == false){
         
