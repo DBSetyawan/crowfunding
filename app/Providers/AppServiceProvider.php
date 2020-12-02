@@ -27,5 +27,6 @@ class AppServiceProvider extends ServiceProvider
     {
         Voyager::addAction(\App\Actions\AddDonationAction::class);
         Voyager::replaceAction(ViewAction::class,\App\Actions\ViewDonatorAction::class);
+        Voyager::replaceAction(ViewAction::class,\App\Actions\ViewDetailUserAction::class);
     }
 }
