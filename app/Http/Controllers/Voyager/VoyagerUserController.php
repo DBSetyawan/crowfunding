@@ -36,7 +36,7 @@ use TCG\Voyager\Http\Controllers\VoyagerUserController as BaseVoyagerUserControl
 class VoyagerUserController extends BaseVoyagerUserController
 {
 
-    use Importable;
+    use BreadRelationshipParser, Importable;
 
     public function import(Request $request) 
     {
@@ -111,7 +111,6 @@ class VoyagerUserController extends BaseVoyagerUserController
         return redirect()->route('voyager.bread.index')->with($data);
     }
 
-    use BreadRelationshipParser;
     //***************************************
     //               ____
     //              |  _ \

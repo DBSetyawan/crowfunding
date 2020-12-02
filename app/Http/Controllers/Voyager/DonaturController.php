@@ -143,9 +143,8 @@ class DonaturController extends VoyagerBaseController
                         else {
                          
                             $query = $model::select('*')->
-                        whereIn('user_id', [auth()->user()->id])
-                        ->whereIn('id_cabang', [auth()->user()->additional_each_id])
-                        ->orWhereIn('donatur_group_id', [auth()->user()->groups_id]);
+                        whereIn('user_id', [Auth::user()->users_id]);
+                        // ->where('id_cabang', [auth()->user()->additional_each_id]);
                     }
 
             }
