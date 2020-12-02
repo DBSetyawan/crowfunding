@@ -9,6 +9,7 @@ use App\Jobs\ImportsHistory;
 use App\Jobs\JimportMidtran;
 use Illuminate\Http\Request;
 use App\Jobs\ExImportHistory;
+use App\Jobs\UserImportsCase;
 use App\Imports\PetugasSheets;
 use App\Jobs\ExIMportMidtrans;
 use App\Jobs\ImprtJobsMidtrans;
@@ -69,7 +70,7 @@ class VoyagerUserController extends BaseVoyagerUserController
                 'public/temp', $filename
             );
 
-            ImportExecuteMidtrans::dispatch($filename);
+            UserImportsCase::dispatch($filename);
 
             return redirect()->back();
             // (new UserAutomaticallyInsert)->queue(storage_path('app/public/temp/'.$filename));
@@ -160,23 +161,26 @@ class VoyagerUserController extends BaseVoyagerUserController
         if (strlen($dataType->model_name) != 0) {
             $model = app($dataType->model_name);
 
+            // dd(auth()->user());
+            if(auth()->user()->id = 1){
+    
+                $query = $model::select('*');
+
+            } 
+                else {
+                 
+                $query = $model::select('*')->
+                whereIn('parent_id', [auth()->user()->parent_id]);
+                // ->where('id_cabang', [auth()->user()->additional_each_id]);
+                // ->orWhereIn('donatur_group_id', [auth()->user()->groups_id]);
+            }
+
             if ($dataType->scope && $dataType->scope != '' && method_exists($model, 'scope'.ucfirst($dataType->scope))) {
                 $query = $model->{$dataType->scope}();
             } else {
 
                 // dd(auth()->user());
-                    if(auth()->user()->id = 1){
-    
-                        $query = $model::select('*');
-
-                    } 
-                        else {
-                         
-                            $query = $model::select('*')->
-                        whereIn('user_id', [auth()->user()->id])
-                        ->whereIn('id_cabang', [auth()->user()->additional_each_id])
-                        ->orWhereIn('donatur_group_id', [auth()->user()->groups_id]);
-                    }
+                   
 
             }
 

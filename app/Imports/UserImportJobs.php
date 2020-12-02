@@ -28,14 +28,14 @@ use Maatwebsite\Excel\Concerns\WithCalculatedFormulas;
 use Maatwebsite\Excel\Concerns\RegistersEventListeners;
 
 HeadingRowFormatter::default('none');
-class UserAutomaticallyInsert implements WithStartRow, WithCustomCsvSettings, WithEvents, WithHeadingRow, WithChunkReading, ToModel, WithCalculatedFormulas, ShouldAutoSize, ShouldQueue
+class UserImportJobs implements WithStartRow, WithCustomCsvSettings, WithEvents, WithHeadingRow, WithChunkReading, ToModel, WithCalculatedFormulas, ShouldAutoSize, ShouldQueue
 {
     use Importable, RegistersEventListeners;
 
-    // public function startRow(): int
-    // {
-    //     return 2;
-    // }
+    public function startRow(): int
+    {
+        return 2;
+    }
     
     public function chunkSize(): int
     {
@@ -142,23 +142,24 @@ class UserAutomaticallyInsert implements WithStartRow, WithCustomCsvSettings, Wi
                 //     # code...
                 //     $pow[$key] = $value;
                 // }
-                dd($row);die;
+                // dd($row);die;
                 // dd($row);
-                $users = User::create([
-                        'id' => (Int) $row['ID USER'],
-                        'users_id' => (Int) $row['ID USER'],
-                        'role_id' => (Int)  $row['ID ROLE'], //admin cabang
-                        'parent_id' => (Int)  $row['ID PARRENT'], //admin cabang
-                        'add_by_user_id' => $row['ADD BY ID'],
-                        'cabang_id' => (Int) $row['ID CABANG'],
-                        'amil_id' => (Int) $row['ID PETUGAS'],
-                        'groups_id' => (Int) $row['ID GROUP DONATUR'],
-                        'name' => ! is_null($row['NAMA USER']) ? $row['NAMA USER'] : $row['NAMA PETUGAS'],
-                        'alamat' => $row['ALAMAT DONATUR'],
-                        'password' => \Hash::make('88888888'),
-                        'email' =>  $row['ID USER'].'@kotakamal.care',
-                    ]
-                );
+                User::whereId($row['ID USER'])->update(['parent_id' => $row['ID PARRENT']]);
+                // $users = User::update([
+                //         'id' => (Int) $row['ID USER'],
+                //         'users_id' => (Int) $row['ID USER'],
+                //         'role_id' => (Int)  $row['ID ROLE'], //admin cabang
+                //         'parent_id' => (Int)  $row['ID PARRENT'], //admin cabang
+                //         'add_by_user_id' => $row['ADD BY ID'],
+                //         'cabang_id' => (Int) $row['ID CABANG'],
+                //         'amil_id' => (Int) $row['ID PETUGAS'],
+                //         'groups_id' => (Int) $row['ID GROUP DONATUR'],
+                //         'name' => ! is_null($row['NAMA USER']) ? $row['NAMA USER'] : $row['NAMA PETUGAS'],
+                //         'alamat' => $row['ALAMAT DONATUR'],
+                //         'password' => \Hash::make('88888888'),
+                //         'email' =>  $row['ID USER'].'@kotakamal.care',
+                //     ]
+                // );
 
                 // set_time_limit(0);
                 // ini_set('max_execution_time', 0);

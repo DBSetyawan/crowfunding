@@ -32,6 +32,7 @@ class User extends \TCG\Voyager\Models\User
         'nama_cabang',
         'id_cabang',
         'cabang_id',
+        'parent_id',
         'groups_id',
         'remember_token',
         'settings',

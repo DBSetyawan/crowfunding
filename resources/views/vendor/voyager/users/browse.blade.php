@@ -317,7 +317,7 @@
         </div><!-- /.modal-dialog -->
     </div><!-- /.modal -->
 
-    @include('vendor.voyager.donaturs.modal-import-donaturs');
+    @include('vendor.voyager.users.modal-import-users');
 
 @stop
 
