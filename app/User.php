@@ -70,7 +70,6 @@ class User extends \TCG\Voyager\Models\User
         'email_verified_at' => 'datetime',
     ];
 
-
     public function setSettingsAttribute($value)
     {
             $this->attributes['settings'] = $value->toJson();
@@ -78,6 +77,7 @@ class User extends \TCG\Voyager\Models\User
 
     public function AmilDonaturGroup()
     {
-        return $this->belongsTo('App\DonaturGroup', 'id');
+        return $this->belongsTo('App\DonaturGroup', 'groups_id');
     }
+
 }

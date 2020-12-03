@@ -116,6 +116,12 @@ type="text/css"
                                 value="{{ old('posisi', $dataTypeContent->posisi ?? '') }}">
                             </div>
 
+                              <div class="form-group">
+                                <label for="groups_id">Group</label>
+                                <input type="text" class="form-control" id="groups_id" name="groups_id" placeholder="groups_id"
+                                value="{{ old('groups_id', $dataTypeContent->groups_id ?? '') }}">
+                            </div>
+
                             <div class="form-group">
                                 <label for="no_whatsapp">Whatsapp</label>
                                 <input type="text" class="form-control" id="no_whatsapp" name="no_whatsapp" placeholder="no_whatsapp"

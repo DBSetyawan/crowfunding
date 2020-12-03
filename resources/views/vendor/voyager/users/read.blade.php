@@ -48,9 +48,10 @@
                                     <th>ID</th>
                                     <th>Nama</th>
                                     <th>Role</th>
-                                    <th>Group name</th>
+                                    {{-- <th>Group name</th> --}}
                                     <th>Email</th>
                                     <th>Parent id</th>
+                                    <th>Group id</th>
                                     @if(Auth::user()->role->name == "admin-pusat" || Auth::user()->role->name == "admin-cabang"|| Auth::user()->role->name == "petugas" )
                                     <th>Aksi</th>
                                     @endif
@@ -309,17 +310,19 @@
       var table = $('#dataTable').DataTable({
           processing: true,
           serverSide: true,
-          ajax: "{{ route('users.sub.branch', ['parent_id'=>$dataTypeContent->name]) }}",
+          ajax: "{{ route('users.sub.branch', ['parent_id'=> $dataTypeContent->name]) }}",
           columns: [
             {data: 'id', name: 'id'},
             {data: 'name', name: 'name'},
             {data: 'role.name', name: 'role.name'},
-            {data: 'group_id', name: 'group_id'},
             {data: 'email', name: 'email'},
             {data: 'parent_id', name: 'parent_id'},
+            {data: 'groups_id', name: 'groups_id'},
             // {
             //     data: null, 
             //     render: function ( data, type, row ) {
+//            {data: 'AmilDonaturGroup.donatur_group_name', name: 'AmilDonaturGroup.donatur_group_name'},
+
             //         return '<button class="btn btn-primary">Edit</button>';
             //     }
             // },
