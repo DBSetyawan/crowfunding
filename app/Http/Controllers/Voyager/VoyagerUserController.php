@@ -164,7 +164,13 @@ class VoyagerUserController extends BaseVoyagerUserController
         if (strlen($dataType->model_name) != 0) {
             $model = app($dataType->model_name);
             // dd(Auth::user()->role->permissions);
-            $query = (Auth::user()->role->id == 1) ? $model->whereIn('role_id', [2]) : $model->whereIn('users_id', [Auth::user()->users_id])->whereIn('parent_id', [Auth::user()->parent_id])->whereIn('cabang_id', [Auth::user()->cabang_id]);
+            if(Auth::user()->role->id == 1){
+                $query = $model->whereIn('role_id', [2]);
+            }
+
+            if(Auth::user()->role->id == 2){
+                $query = $model->whereIn('id', [Auth::user()->id]);
+            }
 
             if ($dataType->scope && $dataType->scope != '' && method_exists($model, 'scope'.ucfirst($dataType->scope))) {
                 $query = $model->{$dataType->scope}();
