@@ -102,6 +102,8 @@ class MidtranController extends VoyagerBaseController
         // Next Get or Paginate the actual content from the MODEL that corresponds to the slug DataType
         if (strlen($dataType->model_name) != 0) {
             $model = app($dataType->model_name);
+            // dd(Auth::user());
+            $query = (Auth::user()->role->id == 1) ? $model->select("*") : $model->whereIn('parent_id', [Auth::user()->parent_id])->whereIn('id_cabang', [Auth::user()->cabang_id]);
 
             if ($dataType->scope && $dataType->scope != '' && method_exists($model, 'scope'.ucfirst($dataType->scope))) {
                 $query = $model->{$dataType->scope}();

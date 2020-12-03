@@ -37,20 +37,21 @@
         <div class="row">
             <div class="col-md-12">
                 
-                <div class="panel panel-bordered" style="padding-bottom:5px;padding-top:5px;">
+                <div class="panel panel-bordered">
                     <div class="panel-heading" style="border-bottom:0;margin-bottom:10px">
                         <h3 class="panel-title">Petugas</h3>
                     </div>
                     <div class="table-responsive">
-                        <table id="dataTable" class="table table-hover" >
+                        <table id="dataTable" class="table table-hover">
                             <thead>
                                 <tr>
-                                    <th>ID Donasi</th>
-                                    <th>Payment Gateway</th>
-                                    <th>Payment Status</th>
-                                    <th>Program</th>
-                                    <th>Jumlah(Rp)</th>
-                                    @if(Auth::user()->role->name == "admin" || Auth::user()->role->name == "admincabang"|| Auth::user()->role->name == "petugas" )
+                                    <th>ID</th>
+                                    <th>Nama</th>
+                                    <th>Role</th>
+                                    <th>Group name</th>
+                                    <th>Email</th>
+                                    <th>Parent id</th>
+                                    @if(Auth::user()->role->name == "admin-pusat" || Auth::user()->role->name == "admin-cabang"|| Auth::user()->role->name == "petugas" )
                                     <th>Aksi</th>
                                     @endif
                                 </tr>
@@ -247,7 +248,6 @@
             <input type="hidden" value="" name="donation_id" id="confirmation-donation-id" />
             <button type="submit" class="btn btn-success">Konfirmasi Donasi Telah Diterima</button>
           </form>
-          
         </div>
       </div>
     </div>
@@ -309,13 +309,14 @@
       var table = $('#dataTable').DataTable({
           processing: true,
           serverSide: true,
-          ajax: "{{ route('donaturs.donation_history',['donatur_id'=>$dataTypeContent->id]) }}",
+          ajax: "{{ route('users.sub.branch', ['parent_id'=>$dataTypeContent->name]) }}",
           columns: [
             {data: 'id', name: 'id'},
-            {data: 'payment_gateway', name: 'payment_gateway'},
-            {data: 'payment_status', name: 'payment_status'},
-            {data: 'program_id', name: 'program_id'},
-            {data: 'amount', name: 'amount'},
+            {data: 'name', name: 'name'},
+            {data: 'role.name', name: 'role.name'},
+            {data: 'group_id', name: 'group_id'},
+            {data: 'email', name: 'email'},
+            {data: 'parent_id', name: 'parent_id'},
             // {
             //     data: null, 
             //     render: function ( data, type, row ) {
@@ -323,16 +324,15 @@
             //     }
             // },
             
-            @if(Auth::user()->role->name == "admin" || Auth::user()->role->name == "admincabang" )
+            @if(Auth::user()->role->name == "admin-cabang" || Auth::user()->role->name == "admin" || Auth::user()->role->name == "admin-pusat" )
               {data: 'action', name: 'action', orderable: false, searchable: false},
             @endif 
+            /**
             @if(Auth::user()->role->name == "petugas" )
               {data: 'action_petugas', name: 'action_petugas', orderable: false, searchable: false},
             @endif
+            */
           ],
-          "columnDefs":[
-            {"targets":3,"render":function(data,type,row,meta){return '<a href="'+public_app_url+'/program/'+data+'" target="_blank">ID:'+data+' | '+row.program_name+'</a>';}},
-        ]
 
       });
 

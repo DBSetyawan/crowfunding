@@ -75,4 +75,9 @@ class User extends \TCG\Voyager\Models\User
     {
             $this->attributes['settings'] = $value->toJson();
     }
+
+    public function AmilDonaturGroup()
+    {
+        return $this->belongsTo('App\DonaturGroup', 'id');
+    }
 }

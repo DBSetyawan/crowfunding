@@ -129,26 +129,12 @@ class DonaturController extends VoyagerBaseController
         // Next Get or Paginate the actual content from the MODEL that corresponds to the slug DataType
         if (strlen($dataType->model_name) != 0) {
             $model = app($dataType->model_name);
-            $query = $model->whereIn('user_id', [Auth::user()->users_id]);
+            // dd(Auth::user()->role->id);
+            $query = (Auth::user()->role->id == 1) ? $model->select("*") : $model->whereIn('user_id', [Auth::user()->users_id]);
+
             if ($dataType->scope && $dataType->scope != '' && method_exists($model, 'scope'.ucfirst($dataType->scope))) {
                 $query = $model->{$dataType->scope}();
             } 
-            // else {
-
-            //     // dd(auth()->user());
-            //         if(auth()->user()->id = 1){
-    
-            //             $query = $model::select('*');
-
-            //         } 
-            //             else {
-                         
-            //                 $query = $model::select('*')->
-            //             whereIn('user_id', [Auth::user()->users_id]);
-            //             // ->where('id_cabang', [auth()->user()->additional_each_id]);
-            //         }
-
-            // }
 
             // Use withTrashed() if model uses SoftDeletes and if toggle is selected
             if ($model && in_array(SoftDeletes::class, class_uses_recursive($model)) && Auth::user()->can('delete', app($dataType->model_name))) {

@@ -2,7 +2,10 @@
 
 namespace App\Http\Controllers\Voyager;
 
+use App\User;
+use DataTables;
 use App\Jobs\Exs;
+use App\DonaturGroup;
 use App\Jobs\ImidtransJobs;
 use App\Jobs\ImportMIdtrns;
 use App\Jobs\ImportsHistory;
@@ -161,29 +164,12 @@ class VoyagerUserController extends BaseVoyagerUserController
         if (strlen($dataType->model_name) != 0) {
             $model = app($dataType->model_name);
 
-            // dd(auth()->user());
-            if(auth()->user()->id = 1){
-    
-                $query = $model::select('*');
-
-            } 
-                else {
-                 
-                $query = $model::select('*')->
-                whereIn('parent_id', [auth()->user()->parent_id]);
-                // ->where('id_cabang', [auth()->user()->additional_each_id]);
-                // ->orWhereIn('donatur_group_id', [auth()->user()->groups_id]);
-            }
+            $query = (Auth::user()->role->id == 1) ? $model->whereIn('role_id', [2]) : $model->whereIn('users_id', [Auth::user()->users_id])->whereIn('parent_id', [Auth::user()->parent_id])->whereIn('cabang_id', [Auth::user()->cabang_id]);
 
             if ($dataType->scope && $dataType->scope != '' && method_exists($model, 'scope'.ucfirst($dataType->scope))) {
                 $query = $model->{$dataType->scope}();
-            } else {
-
-                // dd(auth()->user());
-                   
-
-            }
-
+            } 
+            
             // Use withTrashed() if model uses SoftDeletes and if toggle is selected
             if ($model && in_array(SoftDeletes::class, class_uses_recursive($model)) && Auth::user()->can('delete', app($dataType->model_name))) {
                 $usesSoftDeletes = true;
@@ -290,6 +276,70 @@ class VoyagerUserController extends BaseVoyagerUserController
         ));
     }
 
+    public function show(Request $request, $id){
+        
+        $slug = $this->getSlug($request);
+
+        $dataType = Voyager::model('DataType')->where('slug', '=', $slug)->first();
+
+        $isSoftDeleted = false;
+
+        if (strlen($dataType->model_name) != 0) {
+            $model = app($dataType->model_name);
+
+            // Use withTrashed() if model uses SoftDeletes and if toggle is selected
+            if ($model && in_array(SoftDeletes::class, class_uses_recursive($model))) {
+                $model = $model->withTrashed();
+            }
+            if ($dataType->scope && $dataType->scope != '' && method_exists($model, 'scope'.ucfirst($dataType->scope))) {
+                $model = $model->{$dataType->scope}();
+            }
+            $dataTypeContent = call_user_func([$model, 'findOrFail'], $id);
+            if ($dataTypeContent->deleted_at) {
+                $isSoftDeleted = true;
+            }
+        } else {
+            // If Model doest exist, get data from table name
+            $dataTypeContent = DB::table($dataType->name)->where('id', $id)->first();
+        }
+
+        // Replace relationships' keys for labels and create READ links if a slug is provided.
+        $dataTypeContent = $this->resolveRelations($dataTypeContent, $dataType, true);
+
+        // If a column has a relationship associated with it, we do not want to show that field
+        $this->removeRelationshipField($dataType, 'read');
+
+        // Check permission
+        $this->authorize('read', $dataTypeContent);
+
+        // Check if BREAD is Translatable
+        $isModelTranslatable = is_bread_translatable($dataTypeContent);
+
+        // Eagerload Relations
+        $this->eagerLoadRelations($dataTypeContent, $dataType, 'read', $isModelTranslatable);
+
+        $view = 'voyager::bread.read';
+
+        if (view()->exists("voyager::$slug.read")) {
+            $view = "voyager::$slug.read";
+        }
+
+        // dd($dataTypeContent);
+
+        // $kelurahan = Kelurahan::where('id',$dataTypeContent->kelurahan_id)->first();
+        // $dataTypeContent->domisili="";
+        // if($kelurahan){
+        //     $dataTypeContent->domisili = $kelurahan->kelurahan.', '.$kelurahan->kecamatan->kecamatan.', '.$kelurahan->kecamatan->kabkot->kabupaten_kota.', '.$kelurahan->kecamatan->kabkot->provinsi->provinsi.', '.$kelurahan->kd_pos;
+        // }
+        $dataTypeContent->donatur_group =  DonaturGroup::where('id', $dataTypeContent->groups_id)->first();
+
+        $dataTypeContent->added_by_user = User::where('add_by_user_id', $dataTypeContent->id)->get();
+
+        // dd(Auth::user()->role);
+        
+        return Voyager::view($view, compact('dataType', 'dataTypeContent', 'isModelTranslatable', 'isSoftDeleted'));
+    }
+
     public function profile(Request $request)
     {
         $route = '';
@@ -301,6 +351,49 @@ class VoyagerUserController extends BaseVoyagerUserController
         }
 
         return Voyager::view('voyager::profile', compact('route'));
+    }
+
+    public function detailBranchUser(Request $request, $parent_id)
+    {
+
+        $data = User::with('role','AmilDonaturGroup')->whereIn('parent_id', [$parent_id])->get();
+        dd($data);
+        if ($request->ajax()) {
+
+            return Datatables::of($data)
+                    ->addIndexColumn()
+                    ->addColumn('action', function($row){
+                        // if($row->payment_gateway !== "offline"){
+                        //     return "";
+                        // }else{
+                        //     $disable="";
+                        //     if($row->payment_status == "settlement"){
+                        //         return "";
+                        //     }
+                        //     $btn = '<button type="button" class="btn btn-primary btn-lg button-confirmation" data-toggle="modal" data-target="#myModal" data-id="'.$row->id.'" '.$disable.'>Konfirmasi</button>';
+                        //     return $btn;
+                        // }
+                        $btn = '<a href="/'.$row->id.'" class="btn btn-primary btn-lg button-confirmation">Alihkan</a>';
+                            return $btn;
+                    })
+                    // ->addColumn('action_petugas', function($row){
+                    //     if($row->payment_gateway !== "offline"){
+                    //         return "";
+                    //     }else{
+                    //         $disable="";
+                    //         if($row->payment_status == "kwitansi" && Auth::user()->id == $row->added_by_user_id){
+                    //             $btn = '<button type="button" class="btn btn-primary btn-lg button-confirmation" data-toggle="modal" data-target="#myModal" data-id="'.$row->id.'" '.$disable.'>Konfirmasi</button>';
+                    //             return $btn;
+                    //         }
+                    //         return "";
+                    //     }
+                           
+                    // })
+                    ->rawColumns(['action'])
+                    // ->rawColumns(['action','action_petugas'])
+                    ->make(true);
+        }
+      
     }
 
     // POST BR(E)AD
