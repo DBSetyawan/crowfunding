@@ -163,7 +163,7 @@ class VoyagerUserController extends BaseVoyagerUserController
         // Next Get or Paginate the actual content from the MODEL that corresponds to the slug DataType
         if (strlen($dataType->model_name) != 0) {
             $model = app($dataType->model_name);
-
+            // dd(Auth::user()->role->permissions);
             $query = (Auth::user()->role->id == 1) ? $model->whereIn('role_id', [2]) : $model->whereIn('users_id', [Auth::user()->users_id])->whereIn('parent_id', [Auth::user()->parent_id])->whereIn('cabang_id', [Auth::user()->cabang_id]);
 
             if ($dataType->scope && $dataType->scope != '' && method_exists($model, 'scope'.ucfirst($dataType->scope))) {
@@ -453,6 +453,51 @@ class VoyagerUserController extends BaseVoyagerUserController
         return Voyager::view('voyager::profile', compact('route'));
     }
 
+    
+    public function donaturDetailTransaction(Request $request, $group_id)
+    {
+        // $data = User::with('role','AmilDonaturGroup')->whereIn('parent_id', [$parent_id])->get();
+        return redirect()->route("voyager.donaturs.index.groups", ['group_id' => $group_id]);
+
+        // if ($request->ajax()) {
+        //     $data = Donatur::whereIn('donatur_group_id', [$group_id])->get();
+    
+        //         return Datatables::of($data)
+        //                 ->addIndexColumn()
+        //                 ->addColumn('action', function($row){
+    
+        //                     // dd($row);
+        //                     // if($row->payment_gateway !== "offline"){
+        //                     //     return "";
+        //                     // }else{
+        //                     //     $disable="";
+        //                     //     if($row->payment_status == "settlement"){
+        //                     //         return "";
+        //                     //     }
+        //                     //     $btn = '<button type="button" class="btn btn-primary btn-lg button-confirmation" data-toggle="modal" data-target="#myModal" data-id="'.$row->id.'" '.$disable.'>Konfirmasi</button>';
+        //                     //     return $btn;
+        //                     // }
+        //                     $btn = '<a href="/'.$row->id.'" class="btn btn-primary btn-lg button-confirmation">Detail group</a>';
+        //                         return $btn;
+        //                 })
+        //                 // ->addColumn('action_petugas', function($row){
+        //                 //     if($row->payment_gateway !== "offline"){
+        //                 //         return "";
+        //                 //     }else{
+        //                 //         $disable="";
+        //                 //         if($row->payment_status == "kwitansi" && Auth::user()->id == $row->added_by_user_id){
+        //                 //             $btn = '<button type="button" class="btn btn-primary btn-lg button-confirmation" data-toggle="modal" data-target="#myModal" data-id="'.$row->id.'" '.$disable.'>Konfirmasi</button>';
+        //                 //             return $btn;
+        //                 //         }
+        //                 //         return "";
+        //                 //     }
+                               
+        //                 // })
+        //                 ->rawColumns(['action'])
+        //                 // ->rawColumns(['action','action_petugas'])
+        //                 ->make(true);
+            // }
+    }
     public function detailBranchUser(Request $request, $parent_id)
     {
         // $data = User::with('role','AmilDonaturGroup')->whereIn('parent_id', [$parent_id])->get();
@@ -464,7 +509,7 @@ class VoyagerUserController extends BaseVoyagerUserController
                     ->addIndexColumn()
                     ->addColumn('action', function($row){
 
-                        dd($row);
+                        // dd($row);
                         // if($row->payment_gateway !== "offline"){
                         //     return "";
                         // }else{
@@ -475,7 +520,8 @@ class VoyagerUserController extends BaseVoyagerUserController
                         //     $btn = '<button type="button" class="btn btn-primary btn-lg button-confirmation" data-toggle="modal" data-target="#myModal" data-id="'.$row->id.'" '.$disable.'>Konfirmasi</button>';
                         //     return $btn;
                         // }
-                        $btn = '<a href="/'.$row->id.'" class="btn btn-primary btn-lg button-confirmation">Detail group</a>';
+                        $btn = '<a class="btn btn-primary btn-lg button-confirmation" href="' . route('donaturs.sub.amil.history', ['group_id'=> $row->AmilDonaturGroup->id]) .'">'.$row->AmilDonaturGroup->id.'</a>';
+                        // $btn = '<a href="{{ route("donaturs.sub.amil.history",  ["group_id"=> $row->id]) }}" class="btn btn-primary btn-lg button-confirmation">Detail group</a>';
                             return $btn;
                     })
                     // ->addColumn('action_petugas', function($row){

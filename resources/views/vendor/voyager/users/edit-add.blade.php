@@ -158,7 +158,7 @@ type="text/css"
                                 value="{{ auth()->user()->role->name }}">
                             </div>
 
-                            @can('editRoles', $dataTypeContent)
+                            {{-- @can('editRoles', $dataTypeContent) --}}
                                 <div class="form-group">
                                     <label for="default_role">{{ __('voyager::profile.role_default') }}</label>
                                     @php
@@ -177,7 +177,7 @@ type="text/css"
                                     @endphp
                                     @include('voyager::formfields.relationship')
                                 </div>
-                            @endcan
+                            {{-- @endcan --}}
                             @php
                             if (isset($dataTypeContent->locale)) {
                                 $selected_locale = $dataTypeContent->locale;

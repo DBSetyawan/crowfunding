@@ -92,7 +92,7 @@ class DonaturController extends VoyagerBaseController
     //
     //****************************************
 
-    public function index(Request $request)
+    public function index(Request $request, $group_id = null)
     {
         // GET THE SLUG, ex. 'posts', 'pages', etc.
         $slug = $this->getSlug($request);
@@ -130,7 +130,7 @@ class DonaturController extends VoyagerBaseController
         if (strlen($dataType->model_name) != 0) {
             $model = app($dataType->model_name);
             // dd(Auth::user()->role->id);
-            $query = (Auth::user()->role->id == 1) ? $model->select("*") : $model->whereIn('user_id', [Auth::user()->users_id]);
+            $query = (Auth::user()->role->id == 1) ? $model->whereIn('donatur_group_id', [(Int) $group_id]) : $model->whereIn('user_id', [Auth::user()->users_id])->whereIn('donatur_group_id', [(Int) $group_id]);
 
             if ($dataType->scope && $dataType->scope != '' && method_exists($model, 'scope'.ucfirst($dataType->scope))) {
                 $query = $model->{$dataType->scope}();

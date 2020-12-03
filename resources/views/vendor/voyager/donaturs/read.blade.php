@@ -308,7 +308,7 @@
       var table = $('#dataTable').DataTable({
           processing: true,
           serverSide: true,
-          ajax: "{{ route('donaturs.donation_history',['donatur_id'=>$dataTypeContent->id]) }}",
+          ajax: "{{ route('donaturs.donation_history',['donatur_id'=> $dataTypeContent->id]) }}",
           columns: [
             {data: 'id', name: 'id'},
             {data: 'payment_gateway', name: 'payment_gateway'},
