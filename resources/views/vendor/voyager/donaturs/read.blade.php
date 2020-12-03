@@ -50,7 +50,7 @@
                                     <th>Payment Status</th>
                                     <th>Program</th>
                                     <th>Jumlah(Rp)</th>
-                                    @if(Auth::user()->role->name == "admin" || Auth::user()->role->name == "admincabang"|| Auth::user()->role->name == "petugas" )
+                                    @if(Auth::user()->role->name == "admin-pusat" || Auth::user()->role->name == "admin-cabang"|| Auth::user()->role->name == "petugas" )
                                     <th>Aksi</th>
                                     @endif
                                 </tr>
@@ -322,10 +322,10 @@
             //     }
             // },
             
-            @if(Auth::user()->role->name == "admin" || Auth::user()->role->name == "admincabang" )
+            @if(Auth::user()->role->name == "admin-pusat" || Auth::user()->role->name == "admin-cabang")
               {data: 'action', name: 'action', orderable: false, searchable: false},
             @endif 
-            @if(Auth::user()->role->name == "petugas" )
+            @if(Auth::user()->role->name == "petugas")
               {data: 'action_petugas', name: 'action_petugas', orderable: false, searchable: false},
             @endif
           ],
