@@ -131,7 +131,8 @@ class DonaturController extends VoyagerBaseController
             $model = app($dataType->model_name);
             // dd(Auth::user()->role->id);
             if(Auth::user()->role->id == 1){
-                $query = $model->whereIn('donatur_group_id', [(Int) $group_id]);
+                // $query = $model->whereIn('donatur_group_id', [(Int) $group_id]);
+                $query = $model->select("*");
             }
 
             if(Auth::user()->role->id == 2){

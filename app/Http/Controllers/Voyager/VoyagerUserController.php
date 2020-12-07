@@ -510,7 +510,7 @@ class VoyagerUserController extends BaseVoyagerUserController
         // $data = User::with('role','AmilDonaturGroup')->whereIn('parent_id', [$parent_id])->whereIn('role_id', [4])->get();
         // dd($data);
         if ($request->ajax()) {
-        $data = User::with('role','AmilDonaturGroup')->whereIn('parent_id', [$parent_id])->whereIn('role_id', [4])->get();
+        $data = User::with('role','AmilDonaturGroup')->whereIn('parent_id', [$parent_id])->whereIn('role_id', [3])->get();
 
             return Datatables::of($data)
                     ->addIndexColumn()
