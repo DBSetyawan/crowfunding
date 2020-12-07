@@ -46,14 +46,14 @@
                             <thead>
                                 <tr>
                                     <th>ID</th>
-                                    <th>Nama</th>
+                                    <th>Nama Petugas</th>
                                     <th>Role</th>
                                     {{-- <th>Group name</th> --}}
                                     <th>Email</th>
                                     <th>Parent id</th>
                                     <th>Group id</th>
                                     @if(Auth::user()->role->name == "admin-pusat" || Auth::user()->role->name == "admin-cabang"|| Auth::user()->role->name == "petugas" )
-                                    <th>Aksi</th>
+                                    <th>Actions</th>
                                     @endif
                                 </tr>
                             </thead>
