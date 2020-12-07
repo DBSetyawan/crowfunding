@@ -15,6 +15,7 @@ use App\DonaturGroup;
 use Illuminate\Http\Request;
 use App\Imports\donaturgImports;
 use TCG\Voyager\Facades\Voyager;
+use App\Jobs\ImportDonaturNewJobs;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Auth;
 use Maatwebsite\Excel\Facades\Excel;
@@ -46,10 +47,45 @@ class DonaturController extends VoyagerBaseController
     public function fileImport(Request $request) 
     {
         // Excel::import(new donaturGroups, $request->file('file')->store('temp'));
-        $import = new donaturgImports();
-        $import->onlySheets('DATA BATCH USERS');
+        // $import = new donaturgImports();
+        // $import->onlySheets('DATA BATCH USERS');
 
-        Excel::import($import, $request->file('file')->store('temp'));
+        // Excel::import($import, $request->file('file')->store('temp'));
+        if ($request->hasFile('file')) {
+            $file = $request->file('file');
+            $filename = time() . '.' . $file->getClientOriginalExtension();
+            
+
+            // $file->storeAs(
+            //     'public/temp', $file
+            // );
+        
+            // // ImportMIdtrns::dispatch($filename);
+            // $import = new donaturgImports();
+            // $import->onlySheets('HISTORY BULAN OKT 2020');
+
+            // $import = new FertilizerImport();
+            // $file = $request->file('file')->store('temp');
+            // dispatch(new ($import));
+            // return $file;die;
+            $file->storeAs(
+                'public/temp', $filename
+            );
+
+            ImportDonaturNewJobs::dispatch($filename);
+
+            return redirect()->back();
+            // (new UserAutomaticallyInsert)->queue(storage_path('app/public/temp/'.$filename));
+            //  Excel::import($import, $request->file('file')->store('temp'));
+
+            // (new ImidtransJobs::dispatch(file))->queue(storage_path('app/public/temp/'.$filename));
+            // (new Exs($file))->queue($request->file('file'));
+
+            // return back();
+            
+
+        }  
+     
         // $array = (new donaturGroups)->toArray($request->file('file')->store('temp'));
         // Excel::queueImport(new donaturGroups,  $request->file('file')->store('temp'));
         return back();
@@ -131,8 +167,14 @@ class DonaturController extends VoyagerBaseController
             $model = app($dataType->model_name);
             // dd(Auth::user()->role->id);
             if(Auth::user()->role->id == 1){
-                // $query = $model->whereIn('donatur_group_id', [(Int) $group_id]);
-                $query = $model->select("*");
+                $query_donatur_group = DonaturGroup::whereIn('add_by_user_id', [$group_id])->get();
+                    foreach ($query_donatur_group as $key => $value) {
+                        # code...
+                        $queryIngroupName[$key] = $value->id_parent;
+                    }
+                    // dd($queryIngroupName);
+                $query = $model->whereIn('added_by_user_id', [$queryIngroupName]);
+                // $query = $model->select('*');
             }
 
             if(Auth::user()->role->id == 2){

@@ -506,8 +506,8 @@ class VoyagerUserController extends BaseVoyagerUserController
     }
     public function detailBranchUser(Request $request, $parent_id)
     {
-        // $data = User::with('role','AmilDonaturGroup')->whereIn('parent_id', [$parent_id])->get();
-        // $data = User::with('role','AmilDonaturGroup')->whereIn('parent_id', [$parent_id])->whereIn('role_id', [4])->get();
+        // $data = User::with('role','AmilDonaturGroup')->whereIn('parent_id', [$parent_id])->whereIn('role_id', [3])->get();
+
         // dd($data);
         if ($request->ajax()) {
         $data = User::with('role','AmilDonaturGroup')->whereIn('parent_id', [$parent_id])->whereIn('role_id', [3])->get();
@@ -527,9 +527,9 @@ class VoyagerUserController extends BaseVoyagerUserController
                         //     $btn = '<button type="button" class="btn btn-primary btn-lg button-confirmation" data-toggle="modal" data-target="#myModal" data-id="'.$row->id.'" '.$disable.'>Konfirmasi</button>';
                         //     return $btn;
                         // }
-                        // $btn = '<a class="btn btn-primary btn-lg button-confirmation" href="' . route('donaturs.sub.amil.history', ['group_id'=> $row->AmilDonaturGroup->id]) .'">'.$row->AmilDonaturGroup->id.'</a>';
+                        $btn = '<a class="btn btn-primary btn-lg button-confirmation" href="' . route('donaturs.sub.amil.history', ['group_id'=> $row->users_id]) .'">'.$row->users_id.'</a>';
                         // $btn = '<a href="{{ route("donaturs.sub.amil.history",  ["group_id"=> $row->id]) }}" class="btn btn-primary btn-lg button-confirmation">Detail group</a>';
-                            // return $btn;
+                            return $btn;
                     })
                     // ->addColumn('action_petugas', function($row){
                     //     if($row->payment_gateway !== "offline"){

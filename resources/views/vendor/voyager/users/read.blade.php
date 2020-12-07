@@ -317,7 +317,7 @@
             {data: 'role.name', name: 'role.name'},
             {data: 'email', name: 'email'},
             {data: 'parent_id', name: 'parent_id'},
-            {data: 'groups_id', name: 'groups_id'},
+            {data: 'users_id', name: 'users_id'}, //refere to parent id donatur groups
             // {
             //     data: null, 
             //     render: function ( data, type, row ) {
