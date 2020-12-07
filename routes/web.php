@@ -27,7 +27,7 @@ Route::group(['prefix' => 'admin'], function () {
 
     Route::get('donaturs/add-donation','Voyager\DonaturController@add_donation')->name('donaturs.add_donation');
     Route::post('donaturs/store-donation','Voyager\DonaturController@store_donation')->name('donaturs.store_donation');
-    Route::get('donaturs/history-detail/{group_id}','Voyager\DonaturController@index')->name('voyager.donaturs.index.groups');
+    Route::get('donaturs/group.donaturs/{group_id}','Voyager\DonaturController@index')->name('voyager.donaturs.index.groups');
     Route::get('donaturs/donation-history/{donatur_id}','Voyager\DonaturController@donation_history_index')->name('donaturs.donation_history');
     Route::get('users/detail-sub-branch/{parent_id}','Voyager\VoyagerUserController@detailBranchUser')->name('users.sub.branch');
     Route::get('donaturs/donatur-group-history/{group_id}','Voyager\VoyagerUserController@donaturDetailTransaction')->name('donaturs.sub.amil.history');

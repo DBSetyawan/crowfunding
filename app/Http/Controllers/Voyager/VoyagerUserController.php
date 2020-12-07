@@ -527,7 +527,8 @@ class VoyagerUserController extends BaseVoyagerUserController
                         //     $btn = '<button type="button" class="btn btn-primary btn-lg button-confirmation" data-toggle="modal" data-target="#myModal" data-id="'.$row->id.'" '.$disable.'>Konfirmasi</button>';
                         //     return $btn;
                         // }
-                        $btn = '<a class="btn btn-primary btn-lg button-confirmation" href="' . route('donaturs.sub.amil.history', ['group_id'=> $row->users_id]) .'">'.$row->users_id.'</a>';
+                        $btn = '<a class="btn btn-primary btn-lg button-confirmation icofont-box" href="' . route('donaturs.sub.amil.history', ['group_id'=> $row->users_id]) .'"><span class="glyphicon glyphicon-list"></span> Detail history</a>';
+                        // $btn = '<a class="btn btn-primary btn-lg button-confirmation" href="' . route('donaturs.sub.amil.history', ['group_id'=> $row->users_id]) .'">'.$row->users_id.'</a>';
                         // $btn = '<a href="{{ route("donaturs.sub.amil.history",  ["group_id"=> $row->id]) }}" class="btn btn-primary btn-lg button-confirmation">Detail group</a>';
                             return $btn;
                     })

@@ -173,7 +173,9 @@ class DonaturController extends VoyagerBaseController
                         $queryIngroupName[$key] = $value->id_parent;
                     }
                     // dd($queryIngroupName);
-                $query = $model->whereIn('added_by_user_id', [$queryIngroupName]);
+                    $query = isset($queryIngroupName) 
+                    ? $model->whereIn('added_by_user_id', [$queryIngroupName]) 
+                    : $model->select('*');
                 // $query = $model->select('*');
             }
 
