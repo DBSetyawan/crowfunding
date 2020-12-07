@@ -24,7 +24,7 @@ class AddDonationAction extends AbstractAction
     {
         // Action button class
         return [
-            'class' => 'btn btn-sm btn-primary pull-left',
+            'class' => 'btn btn-sm btn-primary pull-sm-right',
         ];
     }
 

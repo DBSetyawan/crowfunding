@@ -8,7 +8,7 @@ class ViewDetailUserAction extends VoyagerViewAction
 {
     public function getTitle()
     {
-        return 'View / Detail users';
+        return 'View / Detail petugas';
     }
 
     public function shouldActionDisplayOnDataType()
