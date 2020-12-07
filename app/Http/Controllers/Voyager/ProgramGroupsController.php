@@ -7,6 +7,7 @@ use Illuminate\Http\Request;
 use App\Imports\donaturGroups;
 use App\Imports\donaturgImports;
 use TCG\Voyager\Facades\Voyager;
+use App\Jobs\ImportdonaturGroups;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Auth;
 use Maatwebsite\Excel\Facades\Excel;
@@ -102,12 +103,46 @@ class ProgramGroupsController extends BaseVoyagerMenuController
     public function fileImport(Request $request) 
     {
         // Excel::import(new donaturGroups, $request->file('file')->store('temp'));
-        $import = new donaturgImports();
-        $import->onlySheets('DATA GROUP');
+        // $import = new donaturgImports();
+        // $import->onlySheets('DATA GROUP');
 
-        Excel::import($import, $request->file('file')->store('temp'));
+        // Excel::import($import, $request->file('file')->store('temp'));
         // $array = (new donaturGroups)->toArray($request->file('file')->store('temp'));
         // Excel::queueImport(new donaturGroups,  $request->file('file')->store('temp'));
+        if ($request->hasFile('file')) {
+            $file = $request->file('file');
+            $filename = time() . '.' . $file->getClientOriginalExtension();
+            
+
+            // $file->storeAs(
+            //     'public/temp', $file
+            // );
+        
+            // // ImportMIdtrns::dispatch($filename);
+            // $import = new donaturgImports();
+            // $import->onlySheets('HISTORY BULAN OKT 2020');
+
+            // $import = new FertilizerImport();
+            // $file = $request->file('file')->store('temp');
+            // dispatch(new ($import));
+            // return $file;die;
+            $file->storeAs(
+                'public/temp', $filename
+            );
+
+            ImportdonaturGroups::dispatch($filename);
+
+            return redirect()->back();
+            // (new UserAutomaticallyInsert)->queue(storage_path('app/public/temp/'.$filename));
+            //  Excel::import($import, $request->file('file')->store('temp'));
+
+            // (new ImidtransJobs::dispatch(file))->queue(storage_path('app/public/temp/'.$filename));
+            // (new Exs($file))->queue($request->file('file'));
+
+            // return back();
+            
+
+        }  
         return back();
     }
 
