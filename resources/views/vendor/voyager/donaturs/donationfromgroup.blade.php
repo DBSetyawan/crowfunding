@@ -4,7 +4,7 @@
 
 @section('page_header')
     <h1 class="page-title">
-        <i class="{{ $dataType->icon }}"></i> {{ __('voyager::generic.viewing') }} / Detail Akses Parent | {{ ucfirst($dataType->getTranslatedAttribute('display_name_singular')) }} &nbsp;
+        <i class="{{ $dataType->icon }}"></i> {{ __('voyager::generic.viewing') }} / Donation History | {{ ucfirst($dataType->getTranslatedAttribute('display_name_singular')) }} &nbsp;
 
         @can('edit', $dataTypeContent)
             <a href="{{ route('voyager.'.$dataType->slug.'.edit', $dataTypeContent->getKey()) }}" class="btn btn-info">
@@ -35,19 +35,20 @@
 @section('content')
     <div class="page-content read container-fluid">
         <div class="row">
-            <div class="col-md-12">
+            <div class="col-md-8">
                 
-                <div class="panel panel-bordered">
+                <div class="panel panel-bordered" style="padding-bottom:5px;padding-top:5px;">
                     <div class="panel-heading" style="border-bottom:0;margin-bottom:10px">
-                        <h3 class="panel-title">Petugas</h3>
+                        <h3 class="panel-title">Donation History</h3>
                     </div>
                     <div class="table-responsive">
-                        <table id="dataTable" class="table table-hover">
+                        <table id="dataTable" class="table table-hover" >
                             <thead>
                                 <tr>
-                                    <th>ID</th>
+                                    <th>ID Donasi</th>
+                                    <th>Payment Gateway</th>
                                     @if(Auth::user()->role->name == "admin-pusat" || Auth::user()->role->name == "admin-cabang"|| Auth::user()->role->name == "petugas" )
-                                    <th>Actions</th>
+                                    <th>Aksi</th>
                                     @endif
                                 </tr>
                             </thead>
@@ -57,7 +58,7 @@
                     </div>
                 </div>
             </div>
-            {{-- <div class="col-md-4">
+            <div class="col-md-4">
 
                 <div class="panel panel-bordered" style="padding-bottom:5px;">
 
@@ -111,21 +112,21 @@
                     </div>
                     <div class="panel-body" style="padding-top:0;">
                         {{$dataTypeContent->added_by_user->name}}
-                    </div> 
-                    @endif--}}
+                    </div>
+                    @endif
                     <hr style="margin:0;">
                     <!-- form start -->
-                    @foreach($dataType->readRows as $row)
+                    {{-- @foreach($dataType->readRows as $row)
                         @php
                         if ($dataTypeContent->{$row->field.'_read'}) {
                             $dataTypeContent->{$row->field} = $dataTypeContent->{$row->field.'_read'};
                         }
                         @endphp
-                        {{-- <div class="panel-heading" style="border-bottom:0;">
+                        <div class="panel-heading" style="border-bottom:0;">
                             <h3 class="panel-title">{{ $row->getTranslatedAttribute('display_name') }}</h3>
-                        </div> --}}
+                        </div>
 
-                        {{-- <div class="panel-body" style="padding-top:0;">
+                        <div class="panel-body" style="padding-top:0;">
                             @if (isset($row->details->view))
                                 @include($row->details->view, ['row' => $row, 'dataType' => $dataType, 'dataTypeContent' => $dataTypeContent, 'content' => $dataTypeContent->{$row->field}, 'action' => 'read', 'view' => 'read', 'options' => $row->details])
                             @elseif($row->type == "image")
@@ -205,12 +206,11 @@
                                 @include('voyager::multilingual.input-hidden-bread-read')
                                 <p>{{ $dataTypeContent->{$row->field} }}</p>
                             @endif
-                        </div> --}}
-                        <!-- panel-body -->
-                        {{-- @if(!$loop->last)
+                        </div><!-- panel-body -->
+                        @if(!$loop->last)
                             <hr style="margin:0;">
-                        @endif --}}
-                    @endforeach
+                        @endif
+                    @endforeach --}}
 
                 </div>
             </div>
@@ -243,6 +243,7 @@
             <input type="hidden" value="" name="donation_id" id="confirmation-donation-id" />
             <button type="submit" class="btn btn-success">Konfirmasi Donasi Telah Diterima</button>
           </form>
+          
         </div>
       </div>
     </div>
@@ -304,27 +305,27 @@
       var table = $('#dataTable').DataTable({
           processing: true,
           serverSide: true,
-          ajax: "{{ route('users.sub.branch', ['parent_id'=> $dataTypeContent->name]) }}",
+          ajax: "{{ route('donaturs.donation_history',['donatur_id'=> $dataTypeContent->id]) }}",
           columns: [
             {data: 'id', name: 'id'},
+            {data: 'users_id', name: 'users_id'},
             // {
             //     data: null, 
             //     render: function ( data, type, row ) {
-//            {data: 'AmilDonaturGroup.donatur_group_name', name: 'AmilDonaturGroup.donatur_group_name'},
-
             //         return '<button class="btn btn-primary">Edit</button>';
             //     }
             // },
             
-            @if(Auth::user()->role->name == "admin-cabang" || Auth::user()->role->name == "admin" || Auth::user()->role->name == "admin-pusat" )
+            @if(Auth::user()->role->name == "admin-pusat" || Auth::user()->role->name == "admin-cabang")
               {data: 'action', name: 'action', orderable: false, searchable: false},
             @endif 
-            /**
-            @if(Auth::user()->role->name == "petugas" )
+            @if(Auth::user()->role->name == "petugas")
               {data: 'action_petugas', name: 'action_petugas', orderable: false, searchable: false},
             @endif
-            */
           ],
+          "columnDefs":[
+            {"targets":3,"render":function(data,type,row,meta){return '<a href="'+public_app_url+'/program/'+data+'" target="_blank">ID:'+data+' | '+row.program_name+'</a>';}},
+        ]
 
       });
 
