@@ -166,6 +166,14 @@ class VoyagerUserController extends BaseVoyagerUserController
             // dd(Auth::user()->role->permissions);
             if(Auth::user()->role->id == 1){
                 $query = $model->whereIn('role_id', [2]);
+
+                foreach ($query->get() as $key => $value) {
+                    # code...
+                    $dataPetugas[] = $value->name;
+
+                }
+
+
             }
 
             if(Auth::user()->role->id == 2){
@@ -264,6 +272,8 @@ class VoyagerUserController extends BaseVoyagerUserController
             $view = "voyager::$slug.browse";
         }
 
+
+                // $datas = User::with('role','AmilDonaturGroup')->whereIn('name', [$dataPetugas])->count();
         return Voyager::view($view, compact(
             'actions',
             'dataType',
@@ -278,7 +288,7 @@ class VoyagerUserController extends BaseVoyagerUserController
             'defaultSearchKey',
             'usesSoftDeletes',
             'showSoftDeleted',
-            'showCheckboxColumn'
+            'showCheckboxColumn',
         ));
     }
 
