@@ -166,6 +166,14 @@ class VoyagerUserController extends BaseVoyagerUserController
             // dd(Auth::user()->role->permissions);
             if(Auth::user()->role->id == 1){
                 $query = $model->whereIn('role_id', [2]);
+
+                foreach ($query->get() as $key => $value) {
+                    # code...
+                    $dataPetugas[] = $value->name;
+
+                }
+
+
             }
 
             if(Auth::user()->role->id == 2){
@@ -264,6 +272,8 @@ class VoyagerUserController extends BaseVoyagerUserController
             $view = "voyager::$slug.browse";
         }
 
+
+                // $datas = User::with('role','AmilDonaturGroup')->whereIn('name', [$dataPetugas])->count();
         return Voyager::view($view, compact(
             'actions',
             'dataType',
@@ -278,7 +288,7 @@ class VoyagerUserController extends BaseVoyagerUserController
             'defaultSearchKey',
             'usesSoftDeletes',
             'showSoftDeleted',
-            'showCheckboxColumn'
+            'showCheckboxColumn',
         ));
     }
 
@@ -463,7 +473,7 @@ class VoyagerUserController extends BaseVoyagerUserController
     public function donaturDetailTransaction(Request $request, $group_id)
     {
         // $data = User::with('role','AmilDonaturGroup')->whereIn('parent_id', [$parent_id])->get();
-        return redirect()->route("voyager.donaturs.index.groups", ['group_id' => $group_id]);
+        return redirect()->route("voyager.donatur-groups.index.detail", ['id' => $group_id]);
 
         // if ($request->ajax()) {
         //     $data = Donatur::whereIn('donatur_group_id', [$group_id])->get();
@@ -527,7 +537,7 @@ class VoyagerUserController extends BaseVoyagerUserController
                         //     $btn = '<button type="button" class="btn btn-primary btn-lg button-confirmation" data-toggle="modal" data-target="#myModal" data-id="'.$row->id.'" '.$disable.'>Konfirmasi</button>';
                         //     return $btn;
                         // }
-                        $btn = '<a class="btn btn-primary btn-lg button-confirmation icofont-box" href="' . route('donaturs.sub.amil.history', ['group_id'=> $row->users_id]) .'"><span class="glyphicon glyphicon-list"></span> View | Donatur & History</a>';
+                        $btn = '<a class="btn btn-primary btn-lg button-confirmation icofont-box" href="' . route('donaturs.sub.amil.history', ['group_id'=> $row->users_id]) .'"><span class="glyphicon glyphicon-list"></span> View | Donatur Groups</a>';
                         // $btn = '<a class="btn btn-primary btn-lg button-confirmation" href="' . route('donaturs.sub.amil.history', ['group_id'=> $row->users_id]) .'">'.$row->users_id.'</a>';
                         // $btn = '<a href="{{ route("donaturs.sub.amil.history",  ["group_id"=> $row->id]) }}" class="btn btn-primary btn-lg button-confirmation">Detail group</a>';
                             return $btn;

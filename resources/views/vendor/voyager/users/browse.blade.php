@@ -256,7 +256,15 @@
                                                     @endif
                                                 @else
                                                     @include('voyager::multilingual.input-hidden-bread-browse')
-                                                    <span>{{ $data->{$row->field} }}</span>
+                                                    {{-- <span>{{ $data->{$row->field} }}</span> --}}
+                                                    {{-- {{ dd($row->field) }} --}}
+                                                      @if ($row->field == "amil_id")
+                                                      {{ __('as2112') }}
+                                                      
+                                                      @else
+                                                      {{ __('asdas') }}
+                                                          
+                                                      @endif      
                                                 @endif
                                             </td>
                                         @endforeach

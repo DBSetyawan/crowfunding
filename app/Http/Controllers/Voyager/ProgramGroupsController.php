@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Voyager;
 
 use Exception;
+use App\DonaturGroup;
 use Illuminate\Http\Request;
 use App\Imports\donaturGroups;
 use App\Imports\donaturgImports;
@@ -158,7 +159,7 @@ class ProgramGroupsController extends BaseVoyagerMenuController
     //
     //****************************************
 
-    public function index(Request $request)
+    public function index(Request $request, $id = null)
     {
         // GET THE SLUG, ex. 'posts', 'pages', etc.
         $slug = $this->getSlug($request);
@@ -197,7 +198,17 @@ class ProgramGroupsController extends BaseVoyagerMenuController
             $model = app($dataType->model_name);
             // dd(Auth::user());
             if(Auth::user()->role->id == 1){
-                $query = $model->select("*");
+                // $query = $model->select("*");
+                // dd($id);
+                $query = $model->whereIn('add_by_user_id', [(Int) $id]);
+                // foreach ($query_donatur_group as $key => $value) {
+                //     # code...
+                //     $queryIngroupName[$key] = $value->id_parent;
+                // }
+                // // dd($queryIngroupName);
+                // $query = isset($queryIngroupName) 
+                // ? 
+                // : $model->select('*');
             }
 
             if(Auth::user()->role->id == 2){
