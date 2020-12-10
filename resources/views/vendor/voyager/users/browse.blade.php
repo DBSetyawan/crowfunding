@@ -258,14 +258,45 @@
                                                 @else
                                                     @include('voyager::multilingual.input-hidden-bread-browse')
                                                     @inject('user','App\User')
+                                                    @inject('donatur','App\Donatur')
+                                                    @inject('donaturgroup','App\DonaturGroup')
+                                                    @inject('midtrans','App\Midtran')
+                                                    @php
+                                                    $countpetugas = $user->whereIn('parent_id', [$data->name])->whereIn('role_id', [3])->count();
+                                                    $caripetugas = $user->whereIn('parent_id', [$data->name])->whereIn('role_id', [3])->get();
+                                                    foreach ($caripetugas as $key => $value) {
+                                                        // # code...
+                                                        //     $namaDonatur[] = $value->name;
+                                                    $caridonaturgroup = $donaturgroup->whereIn('id_parent', [$value->name])->get();
+                                                    }
+
+
+                                                    foreach ($caridonaturgroup as $key => $value) {
+                                                        # code...
+                                                    $caridonatur = $donatur->whereIn('added_by_user_id',[ $value->id_parent])->get();
+
+                                                    }
+
+                                                    foreach ($caridonatur as $key => $value) {
+                                                        # code...
+                                                        $amount = $midtrans->whereIn('added_by_user_id', [$value->nama])->sum('amount');
+                                                    }
+                                                    // foreach ($amount as $key => $value) {
+                                                    //     # code...
+                                                    //     $o[] = $value;
+                                                    // }
+                                                    // // dd($amount);
+
+                                                    @endphp
                                                     {{--  <span>{{ $data->{$row->field} }}</span>  --}}
-                                                     @if ($row->display_name == 'AMIL')
-                                                        @php
-                                                            $countpetugas = $user->whereIn('parent_id', [$data->name])->whereIn('role_id', [3])->count();
-                                                            //dd($datax);
-                                                        @endphp
+                                                     @if ($row->display_name == 'NAMA PETUGAS')
+                                                     
                                                         <span>{{ $countpetugas  }}</span>
+                                                         
                                                     @else
+                                                    @if ($row->display_name == 'DONASI')
+                                                        <span>{{ $amount  }}</span>
+                                                        @endif
                                                         <span>{{ $data->{$row->field} }}</span>
                                                     @endif
                                                       {{--  @if ($data->amil_id == "amil_id)

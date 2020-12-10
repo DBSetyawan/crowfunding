@@ -79,6 +79,11 @@ class User extends \TCG\Voyager\Models\User
         'email_verified_at' => 'datetime',
     ];
 
+    public function usersDonatur()
+    {
+        return $this->belongsTo('App\Donatur', 'id');
+    }
+
     public function getUserCountAttribute()
     {
         $rs =  DB::table('users')->whereIn('role_id', [2])->get();
