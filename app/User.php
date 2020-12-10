@@ -2,6 +2,7 @@
 
 namespace App;
 
+use Illuminate\Support\Facades\DB;
 use TCG\Voyager\Traits\Translatable;
 use Illuminate\Notifications\Notifiable;
 use Illuminate\Contracts\Auth\MustVerifyEmail;
@@ -12,7 +13,11 @@ class User extends \TCG\Voyager\Models\User
     use Notifiable;
     use Translatable;
 
-    protected $translatable = ['amil_id'];
+    public $additional_attributes = ['user_count'];
+
+    // protected $appends = [
+    //     'petugasCount'
+    // ];
 
     public $incrementing = true;
     /**
@@ -73,6 +78,25 @@ class User extends \TCG\Voyager\Models\User
     protected $casts = [
         'email_verified_at' => 'datetime',
     ];
+
+    public function getUserCountAttribute()
+    {
+        $rs =  DB::table('users')->whereIn('role_id', [2])->get();
+        foreach ($rs as $key => $value) {
+            # code...
+            $petugas = DB::table('users')->whereIn('parent_id', $value->name)->count();
+
+        }
+
+
+        // foreach ($petugas as $key => $value) {
+        //     # code...
+        //     $dump[] = $value;
+        // }
+        // dd($petugas);
+        
+        return $petugas;
+    }
 
     public function setSettingsAttribute($value)
     {

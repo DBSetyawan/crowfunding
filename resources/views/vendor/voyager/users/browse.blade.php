@@ -254,17 +254,35 @@
                                                     @else
                                                         {{ trans_choice('voyager::media.files', 0) }}
                                                     @endif
+                                                       
                                                 @else
                                                     @include('voyager::multilingual.input-hidden-bread-browse')
-                                                    {{-- <span>{{ $data->{$row->field} }}</span> --}}
-                                                    {{-- {{ dd($row->field) }} --}}
-                                                      @if ($row->field == "amil_id")
+                                                    @inject('user','App\User')
+                                                    {{--  <span>{{ $data->{$row->field} }}</span>  --}}
+                                                     @if ($row->display_name == 'AMIL')
+                                                        @php
+                                                            $datax = $user->whereIn('parent_id', [$namacabang])->count();
+                                                            //dd($datax);
+                                                        @endphp
+                                                        <span>{{ $data->{$datax}  }}</span>
+                                                    @else
+                                                        <span>{{ $data->{$row->field} }}</span>
+                                                    @endif
+                                                      {{--  @if ($data->amil_id == "amil_id)
+                                                      {{ __('241412312') }}
+                                                      
+                                                      @else
+                                                      {{ __('asdasddsdddas') }}
+                                                          
+                                                      @endif   --}}
+                                                    {{--  {{ dd($row->display_name) }}  --}}
+                                                      {{--  @if ($data->{$row->field} == "amil_id")
                                                       {{ __('as2112') }}
                                                       
                                                       @else
                                                       {{ __('asdas') }}
                                                           
-                                                      @endif      
+                                                      @endif        --}}
                                                 @endif
                                             </td>
                                         @endforeach

@@ -165,14 +165,13 @@ class VoyagerUserController extends BaseVoyagerUserController
             $model = app($dataType->model_name);
             // dd(Auth::user()->role->permissions);
             if(Auth::user()->role->id == 1){
-                $query = $model->whereIn('role_id', [2]);
-
+            $query = $model->whereIn('role_id', [2]);
+                // dd($query);
                 foreach ($query->get() as $key => $value) {
                     # code...
-                    $dataPetugas[] = $value->name;
-
+                    $namacabang[] = $value->name;
                 }
-
+            
 
             }
 
@@ -271,9 +270,10 @@ class VoyagerUserController extends BaseVoyagerUserController
         if (view()->exists("voyager::$slug.browse")) {
             $view = "voyager::$slug.browse";
         }
+        // dd($namacabang);
 
 
-                // $datas = User::with('role','AmilDonaturGroup')->whereIn('name', [$dataPetugas])->count();
+        // $dataTypeContent = User::whereIn('parent_id', [$model->name])->count();
         return Voyager::view($view, compact(
             'actions',
             'dataType',
@@ -289,6 +289,7 @@ class VoyagerUserController extends BaseVoyagerUserController
             'usesSoftDeletes',
             'showSoftDeleted',
             'showCheckboxColumn',
+            'namacabang'
         ));
     }
 
