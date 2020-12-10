@@ -88,13 +88,6 @@ class User extends \TCG\Voyager\Models\User
 
         }
 
-
-        // foreach ($petugas as $key => $value) {
-        //     # code...
-        //     $dump[] = $value;
-        // }
-        // dd($petugas);
-        
         return $petugas;
     }
 
