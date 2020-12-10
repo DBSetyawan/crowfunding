@@ -261,10 +261,10 @@
                                                     {{--  <span>{{ $data->{$row->field} }}</span>  --}}
                                                      @if ($row->display_name == 'AMIL')
                                                         @php
-                                                            $datax = $user->whereIn('parent_id', [$data->name])->whereIn('role_id', [3])->count();
+                                                            $countpetugas = $user->whereIn('parent_id', [$data->name])->whereIn('role_id', [3])->count();
                                                             //dd($datax);
                                                         @endphp
-                                                        <span>{{ $datax  }}</span>
+                                                        <span>{{ $countpetugas  }}</span>
                                                     @else
                                                         <span>{{ $data->{$row->field} }}</span>
                                                     @endif

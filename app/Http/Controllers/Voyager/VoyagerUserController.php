@@ -270,10 +270,6 @@ class VoyagerUserController extends BaseVoyagerUserController
         if (view()->exists("voyager::$slug.browse")) {
             $view = "voyager::$slug.browse";
         }
-        // dd($namacabang);
-
-
-        // $dataTypeContent = User::whereIn('parent_id', [$model->name])->count();
         return Voyager::view($view, compact(
             'actions',
             'dataType',
