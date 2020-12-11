@@ -103,7 +103,7 @@ class User extends \TCG\Voyager\Models\User
 
     public function AmilDonaturGroup()
     {
-        return $this->belongsTo('App\DonaturGroup', 'groups_id');
+        return $this->belongsTo(DonaturGroup::class, 'add_by_user_id');
     }
 
 }

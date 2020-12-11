@@ -46,12 +46,12 @@
                             <thead>
                                 <tr>
                                     <th>ID</th>
-                                    <th>Nama Petugas</th>
-                                    <th>Role</th>
-                                    {{-- <th>Group name</th> --}}
-                                    <th>Email</th>
-                                    <th>Parent id</th>
-                                    <th>Group id</th>
+                                    <th>ROLE</th>
+                                    <th>NAMA CABANG</th>
+                                    <th>NAMA PETUGAS</th>
+                                    <th>NAMA GROUP</th>
+                                    <th>NAMA USER</th>
+                                    <th>DONASI</th>
                                     @if(Auth::user()->role->name == "admin-pusat" || Auth::user()->role->name == "admin-cabang"|| Auth::user()->role->name == "petugas" )
                                     <th>Actions</th>
                                     @endif
@@ -313,11 +313,13 @@
           ajax: "{{ route('users.sub.branch', ['parent_id'=> $dataTypeContent->name]) }}",
           columns: [
             {data: 'id', name: 'id'},
-            {data: 'name', name: 'name'},
             {data: 'role.name', name: 'role.name'},
-            {data: 'email', name: 'email'},
             {data: 'parent_id', name: 'parent_id'},
-            {data: 'users_id', name: 'users_id'}, //refere to parent id donatur groups
+            {data: 'name', name: 'name'},
+            {data: 'groups_id', name: 'groups_id'},
+            {data: 'groups_id', name: 'groups_id'},
+            // {data: 'email', name: 'email'},
+            {data: 'asd', name: 'asd'}, //refere to parent id donatur groups
             // {
             //     data: null, 
             //     render: function ( data, type, row ) {

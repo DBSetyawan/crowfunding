@@ -4,6 +4,8 @@ namespace App\Http\Controllers\Voyager;
 
 use App\User;
 use DataTables;
+use App\Donatur;
+use App\Midtran;
 use App\Jobs\Exs;
 use App\DonaturGroup;
 use App\Jobs\ImidtransJobs;
@@ -515,10 +517,17 @@ class VoyagerUserController extends BaseVoyagerUserController
     {
         // $data = User::with('role','AmilDonaturGroup')->whereIn('parent_id', [$parent_id])->whereIn('role_id', [3])->get();
 
-        // dd($data);
-        if ($request->ajax()) {
-        $data = User::with('role','AmilDonaturGroup')->whereIn('parent_id', [$parent_id])->whereIn('role_id', [3])->get();
 
+            // foreach ($data as $key => $value) {
+            //     # code...
+            //     $namapetugas[] = $value->name;
+            // }
+            // $data = DonaturGroup::whereIn('id_parent', [$namapetugas])->count();
+            // dd($data);
+
+        if ($request->ajax()) {
+        $data = User::with('role','usersDonatur')->whereIn('parent_id', [$parent_id])->whereIn('role_id', [3])->get();
+            
             return Datatables::of($data)
                     ->addIndexColumn()
                     ->addColumn('action', function($row){
@@ -538,6 +547,24 @@ class VoyagerUserController extends BaseVoyagerUserController
                         // $btn = '<a class="btn btn-primary btn-lg button-confirmation" href="' . route('donaturs.sub.amil.history', ['group_id'=> $row->users_id]) .'">'.$row->users_id.'</a>';
                         // $btn = '<a href="{{ route("donaturs.sub.amil.history",  ["group_id"=> $row->id]) }}" class="btn btn-primary btn-lg button-confirmation">Detail group</a>';
                             return $btn;
+                    }) 
+                    ->addColumn('asd', function ($query) use($parent_id){
+                        $name = $query->name;
+                        $da = Donatur::whereIn('added_by_user_id', [$name])->get();
+
+                        foreach ($da as $key => $value) {
+                            # code...
+                            $namadonatur[] = $value->nama;
+                        }
+                        
+                        $daonturgroups = DonaturGroup::whereIn('donatur_group_name', $namadonatur)->get();
+                        
+                        foreach ($daonturgroups as $key => $value) {
+                            # code...
+                            $sdsad[] = $value->donatur_group_name;
+                        }
+                        return Midtran::whereIn('added_by_user_id', $sdsad)->sum('amount');
+                        // dd($sdsad);
                     })
                     // ->addColumn('action_petugas', function($row){
                     //     if($row->payment_gateway !== "offline"){

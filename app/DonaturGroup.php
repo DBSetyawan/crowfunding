@@ -19,7 +19,7 @@ class DonaturGroup extends Model
 
     public function hasManyToUserRelationship()
     {
-        return $this->hasMany('App\User', 'id');
+        return $this->hasMany(User::class, 'add_by_user_id');
     }
 
 }
