@@ -254,7 +254,46 @@
                                                     @else
                                                         {{ trans_choice('voyager::media.files', 0) }}
                                                     @endif
-                                                       
+                                                       {{--     $collection = collect($data->name);
+                                                    $collection = $collection->splice(2);
+
+                                                        $merged = $collection->merge($loops);
+                                                        $merged->all();
+                                                        $cabang = $merged->toArray();
+
+                                                          $countpetugas = $user->whereIn('parent_id', [$data->name])->whereIn('role_id', [3])->count();
+                                                    $caripetugas = $user->whereIn('parent_id', [$data->name])->whereIn('role_id', [3])->get();
+                                                    foreach ($caripetugas as $key => $value) {
+                                                        // # code...
+                                                        //     $namaDonatur[] = $value->name;
+
+                                                        progress deploy :
+                                                         $countpetugas = $user->whereIn('parent_id', [$data->name])->whereIn('role_id', [3])->count();
+                                                    $caripetugas = $user->whereIn('role_id', [2])->get();
+                                                    
+                                                    foreach ($caripetugas as $key => $value) {
+                                                        // # code...
+                                                        $loops[] = $value->name;
+                                                        $caripetugasdaricabang = $user->whereIn('parent_id', [$value->name])->whereIn('role_id', [3])->get();
+
+                                                    }
+                                                 
+                                                    foreach ($caripetugasdaricabang as $key => $value) {
+                                                        # code...
+                                                        $carinamadonaturgroup[] = $value->name;
+                                                        $caridonaturgroups = $donaturgroup->whereIn('id_parent', [$value->name])->get();
+
+                                                    }
+
+
+                                                    foreach ($caridonaturgroups as $key => $value) {
+                                                        # code...
+                                                        $carigroupname[] = $value->donatur_group_name;
+                                                    $amount = $midtrans->whereIn('added_by_user_id', [$carigroupname])->sum('amount');
+                                                            
+                                                    }
+
+                                                    --}}
                                                 @else
                                                     @include('voyager::multilingual.input-hidden-bread-browse')
                                                     @inject('user','App\User')
@@ -262,33 +301,29 @@
                                                     @inject('donaturgroup','App\DonaturGroup') 
                                                     @inject('midtrans','App\Midtran')
                                                     @php
-                                                    $countpetugas = $user->whereIn('parent_id', [$data->name])->whereIn('role_id', [3])->count();
-                                                    $caripetugas = $user->whereIn('role_id', [2])->get();
+                                                     $countpetugas = $user->whereIn('parent_id', [$data->name])->whereIn('role_id', [3])->count();
+                                                    $caripetugas = $user->whereIn('name', [$data->name])->whereIn('role_id', [2])->get();
                                                     
                                                     foreach ($caripetugas as $key => $value) {
                                                         // # code...
                                                         $loops[] = $value->name;
                                                     }
-                                                        $caridonaturgroup = $user->whereIn('parent_id', [$data->name])->whereIn('role_id', [3])->get();
+                                                        $caridonaturgroup = $user->whereIn('parent_id', $loops)->whereIn('role_id', [3])->get();
 
                                                     foreach ($caridonaturgroup as $key => $value) {
                                                         # code...
-                                                        $carinamadonaturgroup[] = $value->users_id;
-
-
+                                                        $carinamadonaturgroup[] = $value->name;
                                                     }
-                                                           $caridonaturgroups = $donaturgroup->whereIn('id_petugas', [$carinamadonaturgroup])->get();
 
-
+                                                           $caridonaturgroups = $donaturgroup->whereIn('id_parent', $carinamadonaturgroup)->get();
                                                     foreach ($caridonaturgroups as $key => $value) {
                                                         # code...
                                                         $groupidHasParentGroupDonatur[] = $value->donatur_group_name;
                                                             
                                                     }
 
-                                                    $amount = $midtrans->whereIn('added_by_user_id', [$groupidHasParentGroupDonatur])->sum('amount');
+                                                    $amount = $midtrans->whereIn('added_by_user_id', $groupidHasParentGroupDonatur)->sum('amount');
                                         
-
                                                     @endphp
                                                     {{--  <span>{{ $data->{$row->field} }}</span>  --}}
                                                      @if ($row->display_name == 'NAMA PETUGAS')
