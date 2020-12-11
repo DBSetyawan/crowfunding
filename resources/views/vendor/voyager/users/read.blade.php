@@ -33,7 +33,7 @@
 @stop
 
 @section('content')
-    <div class="page-content read container-fluid">
+    <div class="page-content browse container-fluid">
         <div class="row">
             <div class="col-md-12">
                 
@@ -53,7 +53,7 @@
                                     <th>NAMA USER</th>
                                     <th>DONASI</th>
                                     @if(Auth::user()->role->name == "admin-pusat" || Auth::user()->role->name == "admin-cabang"|| Auth::user()->role->name == "petugas" )
-                                    <th>Actions</th>
+                                    <th class="actions text-right no-sort no-click bread-actions">Actions</th>
                                     @endif
                                 </tr>
                             </thead>

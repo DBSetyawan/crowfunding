@@ -543,7 +543,10 @@ class VoyagerUserController extends BaseVoyagerUserController
                         //     $btn = '<button type="button" class="btn btn-primary btn-lg button-confirmation" data-toggle="modal" data-target="#myModal" data-id="'.$row->id.'" '.$disable.'>Konfirmasi</button>';
                         //     return $btn;
                         // }
-                        $btn = '<a class="btn btn-primary btn-lg button-confirmation icofont-box" href="' . route('donaturs.sub.amil.history', ['group_id'=> $row->users_id]) .'"><span class="glyphicon glyphicon-list"></span> View | Donatur Groups</a>';
+                        $btn = '<a class="btn btn-sm btn-primary pull-right" href="' .'/admin/users/'.$row->id .'/edit"> Edit </a>';
+                        $btn = $btn.'<a class="btn btn-sm btn-danger pull-right" href="' .'/admin/users/'.$row->id.'"> Delete </a>';
+                        // $btn = $btn.'<a class="btn btn-danger btn-sm  pull-right" href="' . route('donaturs.sub.amil.history', ['group_id'=> $row->id]) .'"> Delete </a>';
+                        $btn = $btn.'<a class="btn btn-success btn-lg button-confirmation pull-right icofont-box" href="' . route('donaturs.sub.amil.history', ['group_id'=> $row->users_id]) .'"><span class="glyphicon glyphicon-list"></span> View</a>';
                         // $btn = '<a class="btn btn-primary btn-lg button-confirmation" href="' . route('donaturs.sub.amil.history', ['group_id'=> $row->users_id]) .'">'.$row->users_id.'</a>';
                         // $btn = '<a href="{{ route("donaturs.sub.amil.history",  ["group_id"=> $row->id]) }}" class="btn btn-primary btn-lg button-confirmation">Detail group</a>';
                             return $btn;
@@ -563,20 +566,20 @@ class VoyagerUserController extends BaseVoyagerUserController
                             # code...
                             $sdsad[] = $value->donatur_group_name;
                         }
-                        return Midtran::whereIn('added_by_user_id', $sdsad)->sum('amount');
+                        $numbers = Midtran::whereIn('added_by_user_id', $sdsad)->sum('amount');return"Rp " . number_format($numbers,2,',','.');
                         // dd($sdsad);
                     })
-                    // ->addColumn('action_petugas', function($row){
-                    //     if($row->payment_gateway !== "offline"){
-                    //         return "";
-                    //     }else{
-                    //         $disable="";
-                    //         if($row->payment_status == "kwitansi" && Auth::user()->id == $row->added_by_user_id){
-                    //             $btn = '<button type="button" class="btn btn-primary btn-lg button-confirmation" data-toggle="modal" data-target="#myModal" data-id="'.$row->id.'" '.$disable.'>Konfirmasi</button>';
+                    // ->addColumn('action_edit', function($row){
+                    //     // if($row->payment_gateway !== "offline"){
+                    //     //     return "";
+                    //     // }else{
+                    //     //     $disable="";
+                    //     //     if($row->payment_status == "kwitansi" && Auth::user()->id == $row->added_by_user_id){
+                    //             $btn = '<button type="button" class="btn btn-primary btn-lg button-confirmation">Edit</button>';
                     //             return $btn;
-                    //         }
-                    //         return "";
-                    //     }
+                    //         // }
+                    //         // return "";
+                    //     // }
                            
                     // })
                     ->rawColumns(['action'])
