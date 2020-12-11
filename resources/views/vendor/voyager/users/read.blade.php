@@ -53,7 +53,7 @@
                                     <th>NAMA USER</th>
                                     <th>DONASI</th>
                                     @if(Auth::user()->role->name == "admin-pusat" || Auth::user()->role->name == "admin-cabang"|| Auth::user()->role->name == "petugas" )
-                                    <th class="actions text-right no-sort no-click bread-actions">Actions</th>
+                                    <th class="no-sort no-click bread-actions">Actions</th>
                                     @endif
                                 </tr>
                             </thead>
