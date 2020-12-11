@@ -259,33 +259,35 @@
                                                     @include('voyager::multilingual.input-hidden-bread-browse')
                                                     @inject('user','App\User')
                                                     @inject('donatur','App\Donatur')
-                                                    @inject('donaturgroup','App\DonaturGroup')
+                                                    @inject('donaturgroup','App\DonaturGroup') 
                                                     @inject('midtrans','App\Midtran')
                                                     @php
                                                     $countpetugas = $user->whereIn('parent_id', [$data->name])->whereIn('role_id', [3])->count();
-                                                    $caripetugas = $user->whereIn('parent_id', [$data->name])->whereIn('role_id', [3])->get();
+                                                    $caripetugas = $user->whereIn('role_id', [2])->get();
+                                                    
                                                     foreach ($caripetugas as $key => $value) {
                                                         // # code...
-                                                        //     $namaDonatur[] = $value->name;
-                                                    $caridonaturgroup = $donaturgroup->whereIn('id_parent', [$value->name])->get();
+                                                        $loops[] = $value->name;
                                                     }
-
+                                                        $caridonaturgroup = $user->whereIn('parent_id', [$data->name])->whereIn('role_id', [3])->get();
 
                                                     foreach ($caridonaturgroup as $key => $value) {
                                                         # code...
-                                                    $caridonatur = $donatur->whereIn('added_by_user_id',[ $value->id_parent])->get();
+                                                        $carinamadonaturgroup[] = $value->users_id;
+
 
                                                     }
+                                                           $caridonaturgroups = $donaturgroup->whereIn('id_petugas', [$carinamadonaturgroup])->get();
 
-                                                    foreach ($caridonatur as $key => $value) {
+
+                                                    foreach ($caridonaturgroups as $key => $value) {
                                                         # code...
-                                                        $amount = $midtrans->whereIn('added_by_user_id', [$value->nama])->sum('amount');
+                                                        $groupidHasParentGroupDonatur[] = $value->donatur_group_name;
+                                                            
                                                     }
-                                                    // foreach ($amount as $key => $value) {
-                                                    //     # code...
-                                                    //     $o[] = $value;
-                                                    // }
-                                                    // // dd($amount);
+
+                                                    $amount = $midtrans->whereIn('added_by_user_id', [$groupidHasParentGroupDonatur])->sum('amount');
+                                        
 
                                                     @endphp
                                                     {{--  <span>{{ $data->{$row->field} }}</span>  --}}
@@ -295,7 +297,7 @@
                                                          
                                                     @else
                                                     @if ($row->display_name == 'DONASI')
-                                                        <span>{{ $amount  }}</span>
+                                                        <span>{{ "Rp " . number_format($amount,2,',','.') }}</span>
                                                         @endif
                                                         <span>{{ $data->{$row->field} }}</span>
                                                     @endif
