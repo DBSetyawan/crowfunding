@@ -256,6 +256,9 @@
                                                 @else
                                                     @include('voyager::multilingual.input-hidden-bread-browse')
                                                     <span>{{ $data->{$row->field} }}</span>
+                                                    @if ($row->display_name == 'ROLE')
+                                                    <span>{{ __("DONATUR") }}</span>
+                                                @endif
                                                 @endif
                                             </td>
                                         @endforeach

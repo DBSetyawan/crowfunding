@@ -251,7 +251,33 @@
                                                     @endif
                                                 @else
                                                     @include('voyager::multilingual.input-hidden-bread-browse')
-                                                    <span>{{ $data->{$row->field} }}</span>
+                                                    @inject('user','App\User')
+                                                    @inject('midtrans','App\Midtran')
+                                                            @php
+                                                                $caricabang = $user->whereIn('name', [$data->id_parent])->get();
+                                                                $caripetugas = $user->whereIn('id', [$data->add_by_user_id])->get();
+                                                                $amount = $midtrans->whereIn('added_by_user_id', [$data->donatur_group_name])->sum('amount');
+                                                            
+                                                            @endphp
+                                                @if ($row->display_name == 'ROLE')
+                                                     
+                                                    <span class="badge badge-secondary">{{ __("Unknown")  }}</span>
+                                                     @else 
+                                                        @if ($row->display_name == 'NAMA CABANG')
+                                                     
+                                                        <span>{{ $caricabang[0]["parent_id"]  }}</span>
+                                                            @else 
+                                                                @if ($row->display_name == 'NAMA PETUGAS')
+                                                        
+                                                                <span>{{ $caripetugas[0]["name"]  }}</span>
+                                                                    @else 
+                                                                    @if ($row->display_name == 'DONASI')
+                                                                        <span>{{ "Rp " . number_format($amount,2,',','.') }}</span>
+                                                                    @endif
+                                                                @endif
+                                                        @endif
+                                                @endif
+
                                                 @endif
                                             </td>
                                         @endforeach
