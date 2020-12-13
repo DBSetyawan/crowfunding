@@ -20,7 +20,7 @@ class ViewDonatorAction extends VoyagerViewAction
     {
         // Action button class
         return [
-            'class' => 'btn btn-sm btn-warning pull-right sm',
+            'class' => 'btn btn-sm btn-success pull-right',
         ];
     }
     
