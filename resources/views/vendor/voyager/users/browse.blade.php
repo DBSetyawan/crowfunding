@@ -10,7 +10,7 @@
             {{-- <i class="{{ $dataType->icon }}"></i> {{ $dataType->getTranslatedAttribute('display_name_plural') }} --}}
         </h1>
         @can('add', app($dataType->model_name))
-            <a href="{{ route('voyager.'.$dataType->slug.'.create') }}" class="btn btn-success btn-add-new">
+                <a href="{{ route('voyager.'.$dataType->slug.'.create') }}" class="btn btn-success btn-add-new">
                 <i class="voyager-plus"></i> <span>{{ __('voyager::generic.add_new') }}</span>
             </a>
         @endcan
@@ -331,6 +331,11 @@
                                                         <span>{{ $countpetugas  }}</span>
                                                          
                                                     @else
+                                                @if ($row->display_name == 'NAMA')
+                                                     
+                                                    <span>({{ $data->email }}) {{ $data->nama  }}</span>
+                                                     
+                                                @endif
                                                     @if ($row->display_name == 'DONASI')
                                                         <span>{{ "Rp " . number_format($amount,2,',','.') }}</span>
                                                         @endif

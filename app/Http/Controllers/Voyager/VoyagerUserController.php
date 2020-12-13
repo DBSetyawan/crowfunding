@@ -44,6 +44,37 @@ class VoyagerUserController extends BaseVoyagerUserController
 
     use BreadRelationshipParser, Importable;
 
+    public function store(Request $request)
+    {
+        $slug = $this->getSlug($request);
+
+        $dataType = Voyager::model('DataType')->where('slug', '=', $slug)->first();
+
+        // Check permission
+        $this->authorize('add', app($dataType->model_name));
+
+        // Validate fields with ajax
+        $val = $this->validateBread($request->all(), $dataType->addRows)->validate();
+        $data = $this->insertUpdateData($request, $slug, $dataType->addRows, new $dataType->model_name());
+
+        event(new BreadDataAdded($dataType, $data));
+
+        if (!$request->has('_tagging')) {
+            if (auth()->user()->can('browse', $data)) {
+                $redirect = redirect()->route("voyager.{$dataType->slug}.index");
+            } else {
+                $redirect = redirect()->back();
+            }
+
+            return $redirect->with([
+                'message'    => __('voyager::generic.successfully_added_new')." {$dataType->getTranslatedAttribute('display_name_singular')}",
+                'alert-type' => 'success',
+            ]);
+        } else {
+            return response()->json(['success' => true, 'data' => $data]);
+        }
+    }
+
     public function import(Request $request) 
     {
         // Excel::import(new donaturGroups, $request->file('file')->store('temp'));
@@ -289,6 +320,129 @@ class VoyagerUserController extends BaseVoyagerUserController
             'showCheckboxColumn',
             'namacabang'
         ));
+    }
+
+    public function relation(Request $request)
+    {
+        $slug = $this->getSlug($request);
+        $page = $request->input('page');
+        $on_page = 50;
+        $search = $request->input('search', false);
+        $dataType = Voyager::model('DataType')->where('slug', '=', $slug)->first();
+
+        $method = $request->input('method', 'add');
+
+        $model = app($dataType->model_name);
+        if ($method != 'add') {
+            $model = $model->find($request->input('id'));
+        }
+
+        $this->authorize($method, $model);
+
+        $rows = $dataType->{$method.'Rows'};
+        foreach ($rows as $key => $row) {
+            if ($row->field === $request->input('type')) {
+                $options = $row->details;
+                $model = app($options->model);
+                $skip = $on_page * ($page - 1);
+
+                // Apply local scope if it is defined in the relationship-options
+                if (isset($options->scope) && $options->scope != '' && method_exists($model, 'scope'.ucfirst($options->scope))) {
+                    $model = $model->{$options->scope}();
+                }
+
+                // If search query, use LIKE to filter results depending on field label
+                if ($search) {
+                    // If we are using additional_attribute as label
+                    if (in_array($options->label, $model->additional_attributes ?? [])) {
+                        $relationshipOptions = $model->all();
+                        $relationshipOptions = $relationshipOptions->filter(function ($model) use ($search, $options) {
+                            return stripos($model->{$options->label}, $search) !== false;
+                        });
+                        $total_count = $relationshipOptions->count();
+                        $relationshipOptions = $relationshipOptions->forPage($page, $on_page);
+                    } else {
+                        $total_count = $model->where($options->label, 'LIKE', '%'.$search.'%')->count();
+                        $relationshipOptions = $model->take($on_page)->skip($skip)
+                            ->where($options->label, 'LIKE', '%'.$search.'%')
+                            ->get();
+                    }
+                } else {
+                    $total_count = $model->count();
+                    $relationshipOptions = $model->take($on_page)->skip($skip)->get();
+                }
+
+                $results = [];
+
+                if (!$row->required && !$search && $page == 1) {
+                    $results[] = [
+                        'id'   => '',
+                        'text' => __('voyager::generic.none'),
+                    ];
+                }
+
+                // Sort results
+                if (!empty($options->sort->field)) {
+                    if (!empty($options->sort->direction) && strtolower($options->sort->direction) == 'desc') {
+                        $relationshipOptions = $relationshipOptions->sortByDesc($options->sort->field);
+                    } else {
+                        $relationshipOptions = $relationshipOptions->sortBy($options->sort->field);
+                    }
+                }
+
+                foreach ($relationshipOptions as $relationshipOption) {
+                    $results[] = [
+                        'id'   => $relationshipOption->{$options->key},
+                        'text' => $relationshipOption->{$options->label},
+                    ];
+                }
+
+                return response()->json([
+                    'results'    => $results,
+                    'pagination' => [
+                        'more' => ($total_count > ($skip + $on_page)),
+                    ],
+                ]);
+            }
+        }
+
+        // No result found, return empty array
+        return response()->json([], 404);
+    }
+
+    public function create(Request $request)
+    {
+        $slug = $this->getSlug($request);
+
+        $dataType = Voyager::model('DataType')->where('slug', '=', $slug)->first();
+
+        // Check permission
+        $this->authorize('add', app($dataType->model_name));
+
+        $dataTypeContent = (strlen($dataType->model_name) != 0)
+                            ? new $dataType->model_name()
+                            : false;
+
+        foreach ($dataType->addRows as $key => $row) {
+            $dataType->addRows[$key]['col_width'] = $row->details->width ?? 100;
+        }
+
+        // If a column has a relationship associated with it, we do not want to show that field
+        $this->removeRelationshipField($dataType, 'add');
+
+        // Check if BREAD is Translatable
+        $isModelTranslatable = is_bread_translatable($dataTypeContent);
+
+        // Eagerload Relations
+        $this->eagerLoadRelations($dataTypeContent, $dataType, 'add', $isModelTranslatable);
+
+        $view = 'voyager::bread.edit-add';
+
+        if (view()->exists("voyager::$slug.edit-add")) {
+            $view = "voyager::$slug.edit-add";
+        }
+
+        return Voyager::view($view, compact('dataType', 'dataTypeContent', 'isModelTranslatable'));
     }
 
     public function show(Request $request, $id){
