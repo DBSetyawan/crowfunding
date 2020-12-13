@@ -257,7 +257,7 @@
                                                     @include('voyager::multilingual.input-hidden-bread-browse')
                                                     <span>{{ $data->{$row->field} }}</span>
                                                     @if ($row->display_name == 'ROLE')
-                                                    <span>{{ __("DONATUR") }}</span>
+                                                    <span>{{ __("donatur") }}</span>
                                                 @endif
                                                 @endif
                                             </td>
