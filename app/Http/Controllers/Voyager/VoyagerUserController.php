@@ -543,10 +543,10 @@ class VoyagerUserController extends BaseVoyagerUserController
                         //     $btn = '<button type="button" class="btn btn-primary btn-lg button-confirmation" data-toggle="modal" data-target="#myModal" data-id="'.$row->id.'" '.$disable.'>Konfirmasi</button>';
                         //     return $btn;
                         // }
-                        $btn = '<a class="btn btn-sm btn-primary pull-right" href="' .'/admin/users/'.$row->id .'/edit"><span class="voyager-edit"></span> Edit </a>';
-                        $btn = $btn.'<a class="btn btn-sm btn-danger pull-right" href="' .'/admin/users/'.$row->id.'"><span class="voyager-trash"></span> Delete </a>';
+                        $btn = '<div class="col-md-12"><span class="no-sort no-click bread-actions"><a class="btn btn-sm btn-primary pull-right edit" href="' .'/admin/users/'.$row->id .'/edit"><span class="voyager-edit"></span> Edit </a>';
+                        $btn = $btn.'&nbsp;<a class="btn btn-sm btn-danger pull-right delete" href="' .'/admin/users/'.$row->id.'"><span class="voyager-trash"></span> Delete </a>';
                         // $btn = $btn.'<a class="btn btn-danger btn-sm  pull-right" href="' . route('donaturs.sub.amil.history', ['group_id'=> $row->id]) .'"> Delete </a>';
-                        $btn = $btn.'<a class="btn btn-success btn-sm pull-right icofont-box" href="' . route('donaturs.sub.amil.history', ['group_id'=> $row->users_id]) .'"><span class="glyphicon glyphicon-list"></span> View</a>';
+                        $btn = $btn.'&nbsp;<a class="btn btn-success btn-sm pull-right icofont-box view" href="' . route('donaturs.sub.amil.history', ['group_id'=> $row->users_id]) .'"><span class="glyphicon glyphicon-list"></span> View</a></span></div>';
                         // $btn = '<a class="btn btn-primary btn-lg button-confirmation" href="' . route('donaturs.sub.amil.history', ['group_id'=> $row->users_id]) .'">'.$row->users_id.'</a>';
                         // $btn = '<a href="{{ route("donaturs.sub.amil.history",  ["group_id"=> $row->id]) }}" class="btn btn-primary btn-lg button-confirmation">Detail group</a>';
                             return $btn;
@@ -582,7 +582,7 @@ class VoyagerUserController extends BaseVoyagerUserController
                     //     // }
                            
                     // })
-                    ->rawColumns(['action'])
+                    ->rawColumns(['action','asd'])
                     // ->rawColumns(['action','action_petugas'])
                     ->make(true);
         }

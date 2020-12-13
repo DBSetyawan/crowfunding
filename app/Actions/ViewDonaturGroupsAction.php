@@ -24,7 +24,7 @@ class ViewDonaturGroupsAction extends AbstractAction
     {
         // Action button class
         return [
-            'class' => 'btn btn-sm btn-primary pull-sm-right',
+            'class' => 'btn btn-sm btn-primary pull-right',
         ];
     }
 

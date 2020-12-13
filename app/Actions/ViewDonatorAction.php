@@ -15,6 +15,14 @@ class ViewDonatorAction extends VoyagerViewAction
     {
         return $this->dataType->slug == 'donaturs';
     }
+
+    public function getAttributes()
+    {
+        // Action button class
+        return [
+            'class' => 'btn btn-sm btn-warning pull-right sm',
+        ];
+    }
     
 
 }

@@ -4,27 +4,27 @@ namespace App\Actions;
 
 use TCG\Voyager\Actions\AbstractAction;
 
-class AddDonationAction extends AbstractAction
+class AddDeleteDonaturAction extends AbstractAction
 {
     public function getTitle()
     {
         // Action title which display in button based on current status
         // return $this->data->{'status'}=="PUBLISHED"?'Pending':'Publish';
-        return 'Add Donation';
+        return 'delete';
     }
 
     public function getIcon()
     {
         // Action icon which display in left of button based on current status
         // return $this->data->{'status'}=="PUBLISHED"?'voyager-x':'voyager-external';
-        return 'voyager-plus';
+        return 'voyager-trash';
     }
 
     public function getAttributes()
     {
         // Action button class
         return [
-            'class' => 'btn btn-sm btn-primary pull-right',
+            'class' => 'btn btn-sm btn-danger pull-right',
         ];
     }
 
@@ -37,6 +37,6 @@ class AddDonationAction extends AbstractAction
     public function getDefaultRoute()
     {
         // URL for action button when click
-        return route('donaturs.add_donation', array("id"=>$this->data->{$this->data->getKeyName()}));
+        return route('voyager.donaturs.destroy', array("id"=>$this->data->{$this->data->getKeyName()}));
     }
 }
