@@ -255,10 +255,39 @@
                                                     @endif
                                                 @else
                                                     @include('voyager::multilingual.input-hidden-bread-browse')
+                                                    @inject('user','App\User')
+                                                    @inject('donaturs','App\Donatur')
+                                                    @inject('DonaturGroup','App\DonaturGroup')
+                                                            @php
+
+                                                                $caricabangs = $user->whereIn('id', [$data->user_id])->get();
+
+                                                                foreach($caricabangs as $FromPetugas){
+                                                                    $namacabang[] = $FromPetugas->id;
+                                                                }
+
+                                                                $caricabangsd = $donaturs->whereIn('user_id', [$namacabang])->get();
+
+                                                                 foreach($caricabangsd as $FromPetugas){
+                                                                    $namacabangx[] = $FromPetugas->added_by_user_id;
+                                                                }
+
+                                                                $groups = $DonaturGroup->whereIn('donatur_group_name', [$namacabangx])->get();
+                                                                
+                                                                foreach($groups as $FromPetugas){
+                                                                    $idUsers[] = $FromPetugas->add_by_user_id;
+                                                                }
+
+                                                                $namacabangforDonaturs = $user->whereIn('id', [$idUsers])->get();
+                                                            
+                                                            @endphp
                                                     <span>{{ $data->{$row->field} }}</span>
                                                     @if ($row->display_name == 'ROLE')
-                                                    <span>{{ __("donatur") }}</span>
-                                                @endif
+                                                        <span>{{ __("donatur") }}</span>
+                                                    @endif
+                                                     @if ($row->display_name == 'NAMA CABANG')
+                                                        <span>{{ $namacabangforDonaturs[0]["parent_id"] }}</span>
+                                                    @endif
                                                 @endif
                                             </td>
                                         @endforeach

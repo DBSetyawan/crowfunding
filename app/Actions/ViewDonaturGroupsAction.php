@@ -10,14 +10,14 @@ class ViewDonaturGroupsAction extends AbstractAction
     {
         // Action title which display in button based on current status
         // return $this->data->{'status'}=="PUBLISHED"?'Pending':'Publish';
-        return 'View | Detail Donatur';
+        return 'VIEW';
     }
 
     public function getIcon()
     {
         // Action icon which display in left of button based on current status
         // return $this->data->{'status'}=="PUBLISHED"?'voyager-x':'voyager-external';
-        return 'voyager-plus';
+        return 'voyager-window-list';
     }
 
     public function getAttributes()
