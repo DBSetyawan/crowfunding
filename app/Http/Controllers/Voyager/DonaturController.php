@@ -277,6 +277,7 @@ class DonaturController extends VoyagerBaseController
         if (view()->exists("voyager::$slug.browse")) {
             $view = "voyager::$slug.browse";
         }
+        $donatur_groups = DonaturGroup::all();
 
         return Voyager::view($view, compact(
             'actions',
@@ -292,7 +293,8 @@ class DonaturController extends VoyagerBaseController
             'defaultSearchKey',
             'usesSoftDeletes',
             'showSoftDeleted',
-            'showCheckboxColumn'
+            'showCheckboxColumn',
+            'donatur_groups'
         ));
     }
 
