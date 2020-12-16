@@ -27,14 +27,51 @@
         // if()
           
     });
+    async function GenerateKwintansi(bulan, tahun) {
+                      
+                      let dataGenerateDonatur = {
+                              bulan:bulan,
+                              tahun: tahun
+                          }
 
+                  const AsyncGenerateKwintansiDonatur = "{{ route('donaturs.generate_and_print_last_month') }}";
+                          
+                      const settings = {
+                                method: 'POST',
+                                headers: {
+                                    'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content'),
+                                    'Content-Type': 'application/json;charset=utf-8',
+                                    'Accept': 'application/json'
+                                    },
+                                body: JSON.stringify(dataGenerateDonatur)
+                          }
+
+                  try {
+                        
+                        const fetchResponse = await fetch(`${AsyncGenerateKwintansiDonatur}`, settings);
+                        const data = await fetchResponse.json();
+                        return data;
+                    } catch (e) {
+                        return JSON.stringify(e);
+                    }    
+
+              }
 
     $('#submit-generate-print').click(function(){
-        var group_id = $('#donatur_group_id').val();
-        $("<iframe>")                             // create a new iframe element
-        .hide()                               // make it invisible
-        .attr("src", "{{route('donaturs.generate_and_print_last_month')}}?group_id="+group_id) // point the iframe to the page you want to print
-        .appendTo("body");                    // add iframe to the DOM to cause it to load the page
+        var bulan = $('#start_date').val();
+        var tahun = $('#end_date').val();
+        GenerateKwintansi(bulan,tahun).then(function(results){
+
+                console.log(results)
+                
+                });
+       
+        // alert("asdas")
+        // var group_id = $('#donatur_group_id').val();
+        // $("<iframe>")                             // create a new iframe element
+        // .hide()                               // make it invisible
+        // .attr("src", "{{route('donaturs.generate_and_print_last_month')}}?group_id="+group_id) // point the iframe to the page you want to print
+        // .appendTo("body");                    // add iframe to the DOM to cause it to load the page
         // if()
           
     });
@@ -56,7 +93,7 @@
                 <div class="col-md-6 mb-3">
                     <div class="form-group">
                         <label for="validationTooltip03">Mulai</label>
-                        <input type="date" class="form-control" id="start_date" name="start_date" placeholder="City" required>
+                        <input type="date" class="form-control" name="start_date" placeholder="City" required>
                         <div class="invalid-tooltip">
                             {{-- Please provide a valid city. --}}
                         </div>
@@ -65,7 +102,7 @@
                 <div class="col-md-6  mb-3">
                     <div class="form-group">
                         <label for="validationTooltip04">Hingga</label>
-                        <input type="date" class="form-control" id="end_date" name="end_date" placeholder="State" required>
+                        <input type="date" class="form-control" name="end_date" placeholder="State" required>
                         <div class="invalid-tooltip">
                           {{-- Please provide a valid state. --}}
                         </div>
@@ -99,8 +136,8 @@
         <div class="form-row" >
             <div class="col-md-6 mb-3">
                 <div class="form-group">
-                    <label for="validationTooltip03">Mulai</label>
-                    <input type="text" class="form-control"  value="{{date('d/m/Y', strtotime('first day of last month'))}}" required="true" disabled="true">
+                    <label for="validationTooltip03">Bulan</label>
+                    <input type="text" class="form-control" id="start_date" required="true">
                     <div class="invalid-tooltip">
                         {{-- Please provide a valid city. --}}
                     </div>
@@ -108,8 +145,8 @@
             </div>
             <div class="col-md-6  mb-3">
                 <div class="form-group">
-                    <label for="validationTooltip04">Hingga</label>
-                    <input type="text" class="form-control"  value="{{date('d/m/Y', strtotime('last day of last month'))}}"  required="true"  disabled="true">
+                    <label for="validationTooltip04">Tahun</label>
+                    <input type="text" class="form-control" id="end_date"  required="true">
                     <div class="invalid-tooltip">
                       {{-- Please provide a valid state. --}}
                     </div>

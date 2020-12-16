@@ -1185,6 +1185,7 @@ class DonaturController extends VoyagerBaseController
 
 
     public function generate_and_print_last_month(Request $request){
+        dd($request->all());
         $validator = Validator::make($request->all(), [
             'group_id'=>'required',
         ]);
