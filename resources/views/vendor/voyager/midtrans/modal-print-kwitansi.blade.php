@@ -161,9 +161,10 @@
         var tahun = $('#end_date').val();
         GenerateKwintansi(hari,bulan,tahun).then(function(results){
             setTimeout(() => {
+                        $('#submit-generate-print').text("mohon menunggu..");
                         $(".load").fadeIn( "slow" );
                         $(".text").fadeIn( "slow" );
-                    }, 1000);
+                    }, 2000);
                 if(results.status == true){
                     setTimeout(() => {
                             $("#alert-bulk-kwitansi").fadeIn( "slow" );
@@ -172,9 +173,13 @@
                         let R = [results.success];
                         $.each(R, function(s, f){
                             $("#alert-bulk-kwitansi").html(f);
-                            $("#alert-bulk-kwitansi").fadeOut( "slow" );
+                            setInterval(() => {
+                                $("#alert-bulk-kwitansi").fadeOut( "slow" );
+                                $('#submit-generate-print').text("Generate");
+                            }, 2500);
                         })
-                    }, 3000);HandleRefresh();
+                    }, 4000);
+                    HandleRefresh();
                 }
                 if(results.status == false){
                         setTimeout(() => {
@@ -184,10 +189,12 @@
                         let R = [results.failed];
                             $.each(R, function(s, f){
                                 $("#alert-bulk-kwitansi").html(f);
-                                $("#alert-bulk-kwitansi").fadeOut( "slow" );
+                                setInterval(() => {
+                                    $("#alert-bulk-kwitansi").fadeOut( "slow" );
+                                    $('#submit-generate-print').text("Generate");
+                                }, 2500);
                             })
-                        }, 3000);
-                       
+                        }, 4000);
                     }
                 });
        
@@ -338,7 +345,7 @@
                 {{-- {{ csrf_field() }} --}}
             <button type="button" class="btn btn-default" data-dismiss="modal">Tutup</button>
             {{-- <input type="hidden" value="" name="donation_id" id="confirmation-donation-id" /> --}}
-            <button type="button" id="submit-generate-print" class="btn btn-primary">Generate dan Print Kwitansi Bulanan</button>
+            <button type="button" id="submit-generate-print" id="pressclick" class="btn btn-primary">Generate</button>
         {{-- </form> --}}
         
         </div>
