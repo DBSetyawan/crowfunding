@@ -11,6 +11,7 @@ use App\Midtran;
 use App\Program;
 use \go2hi\go2hi;
 use App\Kelurahan;
+use Carbon\Carbon;
 use App\DonaturGroup;
 use Illuminate\Http\Request;
 use App\Imports\donaturgImports;
@@ -1183,9 +1184,52 @@ class DonaturController extends VoyagerBaseController
         
     }
 
-
+    //Deploy searching kwitansi donaturs
     public function generate_and_print_last_month(Request $request){
-        dd($request->all());
+        // dd($request->all());
+        $dt = Carbon::now();
+        $hari = $dt->day($request->hari)->toDateTimeString();
+        $bulan = $dt->month($request->bulan)->toDateTimeString();
+        $tahun = $dt->year($request->tahun)->toDateTimeString();
+        // dd($hari);
+        $kloningDonaturs = Midtran::whereYear('created_at', '=', $request->tahun)
+              ->whereDay('created_at', '=', $request->hari)
+              ->whereMonth('created_at', '=', $request->bulan)
+              ->get();
+
+            //   foreach ($kloningDonaturs as $key => $valueDonaturGenerate) {
+            //       # code...
+            //       $DataNameGenerateKwitansi[] = $valueDonaturGenerate;
+            //   }
+            try{
+                // DB::transaction(function() use ($kloningDonaturs) {
+                //     foreach ($kloningDonaturs as $BulkHistory){
+                //         DB::table('midtrans')
+                //             ->insert([
+                //                         'ref' => $stock
+                //                     ]
+                //             );
+                //     }
+                // });
+                // dd($kloningDonaturs->isEmpty());
+                if($kloningDonaturs->isEmpty() == true) {
+                    $failed = "<div class='alert alert-danger'>gagal menyimpan data.</div>";
+                    return response()->json(['failed' => $failed, 'status' => false]);
+                } else {
+                    $success = "<div class='alert alert-success'>Berhasil menyimpan data.</div>";
+                    return response()->json(['success'=> $success, 'status' => true]);
+                }
+
+
+            }catch(\Throwable $e){
+                // send mail with error
+                    echo json_encode(
+                        array('status'=> $e->getMessage()),
+                        JSON_PRETTY_PRINT
+                    );
+            };
+die;
+        // dd($);
         $validator = Validator::make($request->all(), [
             'group_id'=>'required',
         ]);
