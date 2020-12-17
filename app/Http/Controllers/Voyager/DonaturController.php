@@ -1217,35 +1217,37 @@ class DonaturController extends VoyagerBaseController
                 } else {
                     // $success = "<div class='alert alert-success'>Berhasil menyimpan data.</div>";
                     // return response()->json(['success'=> $success, 'status' => true]);
-                    $bulkAction = DB::transaction(function() use ($kloningDonaturs, $nextMonthTransaction) {
-                        foreach (array_chunk($kloningDonaturs->toArray(), 1000) as $responseChunk)
-                        {
-                            $insertableArray = [];
-                            foreach($responseChunk as $BulkHistory) {
-                                $insertableArray[] = [
-                                    'created_at' => $nextMonthTransaction,
-                                    'amount' => $BulkHistory['amount'],
-                                    'donatur_id' => $BulkHistory['donatur_id'],
-                                    'id_cabang' => $BulkHistory['id_cabang'],
-                                    'group_id' => $BulkHistory['group_id'],
-                                    'transaction_id' => $BulkHistory['transaction_id'],
-                                    'transaction_time' => $BulkHistory['transaction_time'],
-                                    'payment_gateway' => $BulkHistory['payment_gateway'],
-                                    'payment_status' => "kwitansi",
-                                    'program_id' => $BulkHistory['program_id'],
-                                    'updated_at' => $nextMonthTransaction,
-                                    'added_by_user_id' => $BulkHistory['added_by_user_id']
-                                ];
-                            }
-                            $response = DB::table('midtrans')->insert($insertableArray);
-                        }
+                    // $bulkAction = DB::transaction(function() use ($kloningDonaturs, $nextMonthTransaction) {
+                    //     foreach (array_chunk($kloningDonaturs->toArray(), 1000) as $responseChunk)
+                    //     {
+                    //         $insertableArray = [];
+                    //         foreach($responseChunk as $BulkHistory) {
+                    //             $insertableArray[] = [
+                    //                 'created_at' => $nextMonthTransaction,
+                    //                 'amount' => $BulkHistory['amount'],
+                    //                 'donatur_id' => $BulkHistory['donatur_id'],
+                    //                 'id_cabang' => $BulkHistory['id_cabang'],
+                    //                 'group_id' => $BulkHistory['group_id'],
+                    //                 'transaction_id' => $BulkHistory['transaction_id'],
+                    //                 'transaction_time' => $BulkHistory['transaction_time'],
+                    //                 'payment_gateway' => $BulkHistory['payment_gateway'],
+                    //                 'payment_status' => "kwitansi",
+                    //                 'program_id' => $BulkHistory['program_id'],
+                    //                 'updated_at' => $nextMonthTransaction,
+                    //                 'added_by_user_id' => $BulkHistory['added_by_user_id']
+                    //             ];
+                    //         }
+                    //         $response = DB::table('midtrans')->insert($insertableArray);
+                    //     }
 
-                        return $response;
+                    //     return $response;
 
-                    });
+                    // });
+                    $bulkAction = true;
 
                     if($bulkAction == true){
-                        $success = "<div class='alert alert-success'>Berhasil menyimpan data.</div>";
+                        // $success = "<div class='alert alert-success'>Berhasil menyimpan data.</div>";
+                        $success = "<div class='alert alert-success'>Data pernah disimpan sebelumnya !</div>";
                         return response()->json(['success'=> $success, 'status' => true]);
                     } else {
                         $failed = "<div class='alert alert-danger'>gagal menyimpan data.</div>";
