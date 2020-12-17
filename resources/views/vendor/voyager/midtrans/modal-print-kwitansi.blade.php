@@ -148,12 +148,10 @@
         var bulan = $('#start_date').val();
         var tahun = $('#end_date').val();
         GenerateKwintansi(hari,bulan,tahun).then(function(results){
-
             setTimeout(() => {
                         $(".load").fadeIn( "slow" );
                         $(".text").fadeIn( "slow" );
                     }, 1000);
-                // console.log(results)
                 if(results.status == true){
                     setTimeout(() => {
                             $("#alert-bulk-kwitansi").fadeIn( "slow" );
@@ -166,7 +164,6 @@
                         })
                     }, 3000);
                 }
-                    
                 if(results.status == false){
                         setTimeout(() => {
                             $("#alert-bulk-kwitansi").fadeIn( "slow" );

@@ -1187,11 +1187,14 @@ class DonaturController extends VoyagerBaseController
     //Deploy searching kwitansi donaturs
     public function generate_and_print_last_month(Request $request){
         // dd($request->all());
-        $dt = Carbon::now();
-        $hari = $dt->day($request->hari)->toDateTimeString();
-        $bulan = $dt->month($request->bulan)->toDateTimeString();
-        $tahun = $dt->year($request->tahun)->toDateTimeString();
-        // dd($hari);
+        // $dt = Carbon::now();
+        // $bulan = $dt->month($request->bulan)->toDateTimeString();
+        // $dts = Carbon::parse($bulan);
+        // $bulan = $dt->month($request->bulan)->toDateTimeString();
+        // $tahun = $dt->year($request->tahun)->toDateTimeString();
+        $dt = Carbon::create($request->tahun, $request->bulan, $request->hari, 0);
+        $nextMonthTransaction = $dt->addMonth()->toDateTimeString();
+        // dd($addmonth);die;
         $kloningDonaturs = Midtran::whereYear('created_at', '=', $request->tahun)
               ->whereDay('created_at', '=', $request->hari)
               ->whereMonth('created_at', '=', $request->bulan)
@@ -1202,27 +1205,50 @@ class DonaturController extends VoyagerBaseController
             //       $DataNameGenerateKwitansi[] = $valueDonaturGenerate;
             //   }
             try{
-                // DB::transaction(function() use ($kloningDonaturs) {
-                //     foreach ($kloningDonaturs as $BulkHistory){
-                //         DB::table('midtrans')
-                //             ->insert([
-                //                         'ref' => $stock
-                //                     ]
-                //             );
-                //     }
-                // });
-                // dd($kloningDonaturs->isEmpty());
+
                 if($kloningDonaturs->isEmpty() == true) {
                     $failed = "<div class='alert alert-danger'>gagal menyimpan data.</div>";
                     return response()->json(['failed' => $failed, 'status' => false]);
                 } else {
-                    $success = "<div class='alert alert-success'>Berhasil menyimpan data.</div>";
-                    return response()->json(['success'=> $success, 'status' => true]);
+                    // $success = "<div class='alert alert-success'>Berhasil menyimpan data.</div>";
+                    // return response()->json(['success'=> $success, 'status' => true]);
+                    $bulkAction = DB::transaction(function() use ($kloningDonaturs, $nextMonthTransaction) {
+                        foreach (array_chunk($kloningDonaturs->toArray(), 1000) as $responseChunk)
+                        {
+                            $insertableArray = [];
+                            foreach($responseChunk as $BulkHistory) {
+                                $insertableArray[] = [
+                                    'created_at' => $nextMonthTransaction,
+                                    'amount' => $BulkHistory['amount'],
+                                    'donatur_id' => $BulkHistory['donatur_id'],
+                                    'id_cabang' => $BulkHistory['id_cabang'],
+                                    'group_id' => $BulkHistory['group_id'],
+                                    'transaction_id' => $BulkHistory['transaction_id'],
+                                    'transaction_time' => $BulkHistory['transaction_time'],
+                                    'payment_gateway' => $BulkHistory['payment_gateway'],
+                                    'payment_status' => "kwitansi",
+                                    'program_id' => $BulkHistory['program_id'],
+                                    'updated_at' => $nextMonthTransaction,
+                                    'added_by_user_id' => $BulkHistory['added_by_user_id']
+                                ];
+                            }
+                            $response = DB::table('midtrans')->insert($insertableArray);
+                        }
+
+                        return $response;
+
+                    });
+
+                    if($bulkAction == true){
+                        $success = "<div class='alert alert-success'>Berhasil menyimpan data.</div>";
+                        return response()->json(['success'=> $success, 'status' => true]);
+                    } else {
+                        $failed = "<div class='alert alert-danger'>gagal menyimpan data.</div>";
+                        return response()->json(['failed' => $failed, 'status' => false]);
+                    }
                 }
 
-
             }catch(\Throwable $e){
-                // send mail with error
                     echo json_encode(
                         array('status'=> $e->getMessage()),
                         JSON_PRETTY_PRINT
