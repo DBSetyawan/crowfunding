@@ -143,6 +143,18 @@
             $(".text").hide();
         });
 
+        function HandleRefresh() {
+            let detailDonaturs = "{{ $donaturdetailid }}";
+                                                    let link = '{!! route("voyager.donaturs.index", ":detailDonaturs")  !!}';
+                                                    let redirect = link.replace(":detailDonaturs",detailDonaturs)
+
+                                    setTimeout(function(){ 
+
+                                        window.location.href = redirect;
+
+                        }, 5000);
+        }
+
     $('#submit-generate-print').click(function(){
         var hari = $('#hari').val();
         var bulan = $('#start_date').val();
@@ -162,7 +174,7 @@
                             $("#alert-bulk-kwitansi").html(f);
                             $("#alert-bulk-kwitansi").fadeOut( "slow" );
                         })
-                    }, 3000);
+                    }, 3000);HandleRefresh();
                 }
                 if(results.status == false){
                         setTimeout(() => {
@@ -175,6 +187,7 @@
                                 $("#alert-bulk-kwitansi").fadeOut( "slow" );
                             })
                         }, 3000);
+                       
                     }
                 });
        

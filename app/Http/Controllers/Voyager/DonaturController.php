@@ -279,6 +279,7 @@ class DonaturController extends VoyagerBaseController
             $view = "voyager::$slug.browse";
         }
         $donatur_groups = DonaturGroup::all();
+        $donaturdetailid = $group_id;
 
         return Voyager::view($view, compact(
             'actions',
@@ -295,7 +296,8 @@ class DonaturController extends VoyagerBaseController
             'usesSoftDeletes',
             'showSoftDeleted',
             'showCheckboxColumn',
-            'donatur_groups'
+            'donatur_groups',
+            'donaturdetailid'
         ));
     }
 
@@ -1071,6 +1073,9 @@ class DonaturController extends VoyagerBaseController
             $data = Midtran::select('midtrans.*','programs.program_name')->leftjoin('programs','midtrans.program_id','programs.id')->where('donatur_id',$donatur_id)->latest()->get();
             return Datatables::of($data)
                     ->addIndexColumn()
+                    ->addColumn('tr_date', function($row){
+                        return $row->created_at;
+                    })
                     ->addColumn('action', function($row){
 
                         if($row->payment_gateway !== "offline"){
@@ -1098,7 +1103,7 @@ class DonaturController extends VoyagerBaseController
                         }
                            
                     })
-                    ->rawColumns(['action','action_petugas'])
+                    ->rawColumns(['action','action_petugas','tr_date'])
                     ->make(true);
         }
       

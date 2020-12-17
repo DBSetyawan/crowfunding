@@ -50,8 +50,9 @@
                                     <th>Payment Status</th>
                                     <th>Program</th>
                                     <th>Jumlah(Rp)</th>
+                                    <th>Tanggal Transaksi</th>
                                     @if(Auth::user()->role->name == "admin-pusat" || Auth::user()->role->name == "admin-cabang"|| Auth::user()->role->name == "petugas" )
-                                    <th>Aksi</th>
+                                    {{-- <th>Aksi</th> --}}
                                     @endif
                                 </tr>
                             </thead>
@@ -315,6 +316,7 @@
             {data: 'payment_status', name: 'payment_status'},
             {data: 'program_id', name: 'program_id'},
             {data: 'amount', name: 'amount'},
+            {data: 'tr_date', name: 'tr_date'},
             // {
             //     data: null, 
             //     render: function ( data, type, row ) {
@@ -323,10 +325,10 @@
             // },
             
             @if(Auth::user()->role->name == "admin-pusat" || Auth::user()->role->name == "admin-cabang")
-              {data: 'action', name: 'action', orderable: false, searchable: false},
+            //   {data: 'action', name: 'action', orderable: false, searchable: false},
             @endif 
             @if(Auth::user()->role->name == "petugas")
-              {data: 'action_petugas', name: 'action_petugas', orderable: false, searchable: false},
+            //   {data: 'action_petugas', name: 'action_petugas', orderable: false, searchable: false},
             @endif
           ],
           "columnDefs":[
