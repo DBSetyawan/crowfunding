@@ -161,6 +161,8 @@ class ProgramGroupsController extends BaseVoyagerMenuController
 
     public function index(Request $request, $id = null)
     {
+
+        
         // GET THE SLUG, ex. 'posts', 'pages', etc.
         $slug = $this->getSlug($request);
 
@@ -212,7 +214,7 @@ class ProgramGroupsController extends BaseVoyagerMenuController
             }
 
             if(Auth::user()->role->id == 2){
-                $query = $model->whereIn('id', [(Int) Auth::user()->groups_id]);
+                $query = $model->whereIn('add_by_user_id', [(Int) $id]);
             }
 
             if ($dataType->scope && $dataType->scope != '' && method_exists($model, 'scope'.ucfirst($dataType->scope))) {

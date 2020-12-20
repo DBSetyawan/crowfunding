@@ -184,7 +184,15 @@ class DonaturController extends VoyagerBaseController
             }
 
             if(Auth::user()->role->id == 2){
-                $query = $model->whereIn('donatur_group_id', [(Int) $group_id]);
+                $query_donatur_group = DonaturGroup::whereIn('id', [(Int) $group_id])->get();
+                    foreach ($query_donatur_group as $key => $value) {
+                        # code...
+                        $queryIngroupName[$key] = $value->donatur_group_name;
+                    }
+                    // dd($queryIngroupName);
+                    $query = isset($queryIngroupName) 
+                    ? $model->whereIn('added_by_user_id', [$queryIngroupName]) 
+                    : $model->select('*');
             }
 
             if ($dataType->scope && $dataType->scope != '' && method_exists($model, 'scope'.ucfirst($dataType->scope))) {
