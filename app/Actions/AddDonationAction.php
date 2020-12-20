@@ -2,6 +2,7 @@
 
 namespace App\Actions;
 
+use Illuminate\Support\Facades\Auth;
 use TCG\Voyager\Actions\AbstractAction;
 
 class AddDonationAction extends AbstractAction
@@ -38,5 +39,14 @@ class AddDonationAction extends AbstractAction
     {
         // URL for action button when click
         return route('donaturs.add_donation', array("id"=>$this->data->{$this->data->getKeyName()}));
+        // if(Auth::user()->role->id == 3) {
+        // }   
+        //     else {
+
+        //         return redirect()->back()->with([
+        //             'message'    => "donasi tidak ditemukan",
+        //             'alert-type' => 'error',
+        //         ]);
+        // }
     }
 }

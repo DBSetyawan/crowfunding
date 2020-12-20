@@ -162,6 +162,7 @@ class VoyagerUserController extends BaseVoyagerUserController
 
     public function index(Request $request)
     {
+
         $slug = $this->getSlug($request);
 
         // GET THE DataType based on the slug
@@ -209,8 +210,21 @@ class VoyagerUserController extends BaseVoyagerUserController
             }
 
             if(Auth::user()->role->id == 2){
-                $query = $model->whereIn('id', [Auth::user()->id]);
-            }
+                // $query = $model->whereIn('role_id', [Auth::user()->role->id]);
+                //     // dd($query);
+                //     foreach ($query->get() as $key => $value) {
+                //         # code...
+                //         $namacabang[] = $value->name;
+                //     }
+
+                    return $this->show($request, Auth::user()->id);
+                
+    
+                }
+
+            // if(Auth::user()->role->id == 2){
+            //     $query = $model->whereIn('id', [Auth::user()->id]);
+            // }
 
             if ($dataType->scope && $dataType->scope != '' && method_exists($model, 'scope'.ucfirst($dataType->scope))) {
                 $query = $model->{$dataType->scope}();
