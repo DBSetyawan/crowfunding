@@ -1089,34 +1089,59 @@ class DonaturController extends VoyagerBaseController
                     ->addColumn('tr_date', function($row){
                         return $row->created_at;
                     })
-                    ->addColumn('action', function($row){
-
-                        if($row->payment_gateway !== "offline"){
-                            return "";
-                        }else{
-                            $disable="";
-                            if($row->payment_status == "settlement"){
-                                return "";
-                            }
-                            $btn = '<button type="button" class="btn btn-primary btn-lg button-confirmation" data-toggle="modal" data-target="#myModal" data-id="'.$row->id.'" '.$disable.'>Konfirmasi</button>';
-                            return $btn;
-                        }
-                           
-                    })
                     ->addColumn('action_petugas', function($row){
-                        if($row->payment_gateway !== "offline"){
-                            return "";
-                        }else{
-                            $disable="";
-                            if($row->payment_status == "kwitansi" && Auth::user()->id == $row->added_by_user_id){
-                                $btn = '<button type="button" class="btn btn-primary btn-lg button-confirmation" data-toggle="modal" data-target="#myModal" data-id="'.$row->id.'" '.$disable.'>Konfirmasi</button>';
-                                return $btn;
+
+                        if(Auth::user()->role->id == 1 || Auth::user()->role->id == 2){
+                            $disable="hidden";
+                            if($row->payment_status == "kwitansi"){
+                                $btn = '<button type="button" class="btn btn-primary btn-lg '.$disable.' button-confirmation" data-toggle="modal" data-target="#myModal" data-id="'.$row->id.'">Konfirmasi</button>';
                             }
-                            return "";
+                                else{
+                                    if($row->payment_status == "on_funding"){
+                                         $btn = '<button type="button" class="btn btn-primary btn-lg button-confirmation" data-toggle="modal" data-target="#myModal" data-id="'.$row->id.'">Konfirmasi</button>';
+                                    } else {
+                                        if($row->payment_status == "settlement"){
+                                            $btn = '<button type="button" class="btn btn-primary btn-lg '.$disable.' button-confirmation" data-toggle="modal" data-target="#myModal" data-id="'.$row->id.'">Konfirmasi</button>';
+                                       }
+                                    }
+                                }
                         }
+                        if(Auth::user()->role->id == 3){
+                            $disable="hidden";
+                            if($row->payment_status == "kwitansi"){
+                                $btn = '<button type="button" class="btn btn-primary btn-lg button-confirmation" data-toggle="modal" data-target="#myModal" data-id="'.$row->id.'">Konfirmasi</button>';
+                            }
+                                else    
+                                    {
+                                        if($row->payment_status == "settlement"){
+                                            $btn = '<button type="button" class="btn btn-primary btn-lg '.$disable.' button-confirmation" data-toggle="modal" data-target="#myModal" data-id="'.$row->id.'">Konfirmasi</button>';
+                                        } 
+                                            else {
+                                                if($row->payment_status == "on_funding"){
+                                                    $btn = '<button type="button" class="btn btn-primary btn-lg '.$disable.' button-confirmation" data-toggle="modal" data-target="#myModal" data-id="'.$row->id.'">Konfirmasi</button>';
+                                                }
+                                        }
+                                }
+                        }
+
+                      
+                        return $btn;
                            
                     })
-                    ->rawColumns(['action','action_petugas','tr_date'])
+                    // ->addColumn('action_petugas', function($row){
+                    //     if($row->payment_gateway !== "offline"){
+                    //         return "";
+                    //     }else{
+                    //         $disable="";
+                    //         if($row->payment_status == "kwitansi" && Auth::user()->id == $row->added_by_user_id){
+                    //             $btn = '<button type="button" class="btn btn-primary btn-lg button-confirmation" data-toggle="modal" data-target="#myModal" data-id="'.$row->id.'" '.$disable.'>Konfirmasi</button>';
+                    //             return $btn;
+                    //         }
+                    //         return "";
+                    //     }
+                           
+                    // })
+                    ->rawColumns(['action_petugas','tr_date'])
                     ->make(true);
         }
       
@@ -1132,17 +1157,17 @@ class DonaturController extends VoyagerBaseController
                 'alert-type' => 'error',
             ]);
         }
-        if(Auth::user()->role->name == "admin" || Auth::user()->role->name == "admincabang"){
-            $status = "settlement";
-        }else if(Auth::user()->role->name == "petugas" ){
-            if(Auth::user()->id !== $midtran->added_by_user_id){
-                return redirect()->back()->with([
-                    'message'    => "anda tidak memiliki hak untuk menkonfirmasi donasi ini.",
-                    'alert-type' => 'error',
-                ]);
-            }
+        if(Auth::user()->role->id == 3){
             $status="on_funding";
+        }else if(Auth::user()->role->id == 2 || Auth::user()->role->id == 1){
+            $status="settlement";
+
+            // return redirect()->back()->with([
+            //     'message'    => "anda tidak memiliki hak untuk menkonfirmasi donasi ini.",
+            //     'alert-type' => 'error',
+            // ]);
         }
+
         if($status){
             Midtran::where('id',$donation_id)->update([
                 'payment_status'=>$status
@@ -1153,7 +1178,7 @@ class DonaturController extends VoyagerBaseController
             ]);
         }else{
             return redirect()->back()->with([
-                'message'    => "anda tidak memiliki akses untuk menkonfirmasi",
+                'message'    => "hak akses dibatasi untuk user ini.",
                 'alert-type' => 'error',
             ]);
         }

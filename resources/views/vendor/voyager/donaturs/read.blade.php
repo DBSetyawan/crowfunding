@@ -51,8 +51,8 @@
                                     <th>Program</th>
                                     <th>Jumlah(Rp)</th>
                                     <th>Tanggal Transaksi</th>
-                                    @if(Auth::user()->role->name == "admin-pusat" || Auth::user()->role->name == "admin-cabang"|| Auth::user()->role->name == "petugas" )
-                                    {{-- <th>Aksi</th> --}}
+                                    @if(Auth::user()->role->id == 1 || Auth::user()->role->id == 2|| Auth::user()->role->id == 3)
+                                    <th>Actions</th>
                                     @endif
                                 </tr>
                             </thead>
@@ -323,12 +323,8 @@
             //         return '<button class="btn btn-primary">Edit</button>';
             //     }
             // },
-            
-            @if(Auth::user()->role->name == "admin-pusat" || Auth::user()->role->name == "admin-cabang")
-            //   {data: 'action', name: 'action', orderable: false, searchable: false},
-            @endif 
-            @if(Auth::user()->role->name == "petugas")
-            //   {data: 'action_petugas', name: 'action_petugas', orderable: false, searchable: false},
+            @if(Auth::user()->role->id == 3 || Auth::user()->role->id == 1 || Auth::user()->role->id == 2)
+              {data: 'action_petugas', name: 'action_petugas', orderable: false, searchable: false},
             @endif
           ],
           "columnDefs":[
