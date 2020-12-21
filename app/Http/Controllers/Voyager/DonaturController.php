@@ -166,20 +166,15 @@ class DonaturController extends VoyagerBaseController
         // Next Get or Paginate the actual content from the MODEL that corresponds to the slug DataType
         if (strlen($dataType->model_name) != 0) {
             $model = app($dataType->model_name);
-            // dd(Auth::user()->role->id);
-            // dd($group_id);
             if(Auth::user()->role->id == 1){
                 $query_donatur_group = DonaturGroup::whereIn('id', [(Int) $group_id])->get();
                     foreach ($query_donatur_group as $key => $value) {
                         # code...
                         $queryIngroupName[$key] = $value->donatur_group_name;
                     }
-                    // dd($queryIngroupName);
                     $query = isset($queryIngroupName) 
                     ? $model->whereIn('added_by_user_id', [$queryIngroupName]) 
                     : $model->select('*');
-                // $query = $model->select('*');
-                // $query = $model->whereIn('donatur_group_id', [(Int) $group_id]);
 
             }
 
@@ -189,7 +184,17 @@ class DonaturController extends VoyagerBaseController
                         # code...
                         $queryIngroupName[$key] = $value->donatur_group_name;
                     }
-                    // dd($queryIngroupName);
+                    $query = isset($queryIngroupName) 
+                    ? $model->whereIn('added_by_user_id', [$queryIngroupName]) 
+                    : $model->select('*');
+            }
+
+            if(Auth::user()->role->id == 3){
+                $query_donatur_group = DonaturGroup::whereIn('id', [(Int) $group_id])->get();
+                    foreach ($query_donatur_group as $key => $value) {
+                        # code...
+                        $queryIngroupName[$key] = $value->donatur_group_name;
+                    }
                     $query = isset($queryIngroupName) 
                     ? $model->whereIn('added_by_user_id', [$queryIngroupName]) 
                     : $model->select('*');

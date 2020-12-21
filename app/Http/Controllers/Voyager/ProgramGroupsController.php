@@ -200,29 +200,26 @@ class ProgramGroupsController extends BaseVoyagerMenuController
             $model = app($dataType->model_name);
             // dd(Auth::user());
             if(Auth::user()->role->id == 1){
-                // $query = $model->select("*");
-                // dd($id);
                 $query = $model->whereIn('add_by_user_id', [(Int) $id]);
-                // foreach ($query_donatur_group as $key => $value) {
-                //     # code...
-                //     $queryIngroupName[$key] = $value->id_parent;
-                // }
-                // // dd($queryIngroupName);
-                // $query = isset($queryIngroupName) 
-                // ? 
-                // : $model->select('*');
             }
 
+            /**
+             * @method $id for admin cabang
+             */
             if(Auth::user()->role->id == 2){
+                $query = $model->whereIn('add_by_user_id', [(Int) $id]);
+            }
+
+            /**
+             * @method $id for petugas
+             */
+            if(Auth::user()->role->id == 3){
                 $query = $model->whereIn('add_by_user_id', [(Int) $id]);
             }
 
             if ($dataType->scope && $dataType->scope != '' && method_exists($model, 'scope'.ucfirst($dataType->scope))) {
                 $query = $model->{$dataType->scope}();
             }
-            //  else {
-            //     $query = $model::select('*');
-            // }
 
             // Use withTrashed() if model uses SoftDeletes and if toggle is selected
             if ($model && in_array(SoftDeletes::class, class_uses_recursive($model)) && Auth::user()->can('delete', app($dataType->model_name))) {
