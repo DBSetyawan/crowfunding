@@ -36,6 +36,7 @@ use TCG\Voyager\Events\BreadImagesDeleted;
 use TCG\Voyager\Database\Schema\SchemaManager;
 use App\Jobs\UserAutomaticallyInsertImportJobs;
 use TCG\Voyager\Http\Controllers\VoyagerBaseController;
+use App\Http\Controllers\Voyager\ProgramGroupsController;
 use TCG\Voyager\Http\Controllers\Traits\BreadRelationshipParser;
 use TCG\Voyager\Http\Controllers\VoyagerUserController as BaseVoyagerUserController;
 
@@ -162,6 +163,13 @@ class VoyagerUserController extends BaseVoyagerUserController
 
     public function index(Request $request)
     {
+
+        if(Auth::user()->role->id == 3){
+    
+            return redirect()->route('voyager.donatur-groups.index.detail', ['id'=> Auth::user()->id ]); 
+            
+        }
+
         $slug = $this->getSlug($request);
 
         // GET THE DataType based on the slug
@@ -209,7 +217,9 @@ class VoyagerUserController extends BaseVoyagerUserController
             }
 
             if(Auth::user()->role->id == 2){
-                $query = $model->whereIn('id', [Auth::user()->id]);
+
+                return $this->show($request, Auth::user()->id);
+                
             }
 
             if ($dataType->scope && $dataType->scope != '' && method_exists($model, 'scope'.ucfirst($dataType->scope))) {

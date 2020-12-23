@@ -51,8 +51,8 @@ class DonaturDimmer extends BaseDimmer
         ->where('users.id',Auth::user()->id)
         ->where('permissions.key','browse_donaturs')
         ->count();
-        // dd(Auth::user()->id);
-        if($count > 0 || Auth::user()->id == 1){
+        // dd(Auth::user()->role);
+        if(Auth::user()->role->id == 1){
             return true;
         }else{
             return false;

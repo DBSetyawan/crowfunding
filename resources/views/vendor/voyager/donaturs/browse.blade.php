@@ -38,6 +38,10 @@
             @endif
         @endforeach
         @include('voyager::multilingual.language-selector')
+        <button class="btn btn-primary  btn-add-new" type="button" data-toggle="modal" data-target="#modal-print-last-month" >
+            <i class="voyager-file-text"></i>
+            Print Kwitansi Bulanan
+        </button>
         {{-- <button class="btn btn-primary  btn-add-new">
             <i class="voyager-file-text"></i>
             Print Kwitansi
@@ -352,7 +356,8 @@
         </div><!-- /.modal-dialog -->
     </div><!-- /.modal -->
 
-    @include('vendor.voyager.donaturs.modal-import-donaturs');
+    {{-- @include('vendor.voyager.donaturs.modal-import-donaturs'); --}}
+    @include('vendor.voyager.midtrans.modal-print-kwitansi');
 
 @stop
 

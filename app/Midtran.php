@@ -9,6 +9,10 @@ class Midtran extends Model
 {
     protected $guarded = [];  
 
+    protected $dates = [
+        'created_at',
+    ];
+    
     public function donaturs()
     {
         return $this->hasMany('App\Donatur', 'donatur_id');

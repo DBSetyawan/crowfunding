@@ -2,9 +2,10 @@
 
 namespace App\Providers;
 
-use Illuminate\Support\ServiceProvider;
 use TCG\Voyager\Facades\Voyager;
 use TCG\Voyager\Actions\ViewAction;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\ServiceProvider;
 
 class AppServiceProvider extends ServiceProvider
 {
@@ -15,7 +16,7 @@ class AppServiceProvider extends ServiceProvider
      */
     public function register()
     {
-        //
+       
     }
 
     /**
@@ -25,6 +26,7 @@ class AppServiceProvider extends ServiceProvider
      */
     public function boot()
     {
+
         Voyager::replaceAction(ViewAction::class,\App\Actions\ViewDonatorAction::class);
         Voyager::addAction(\App\Actions\AddDonationAction::class);
         Voyager::addAction(\App\Actions\AddDeleteDonaturgroupsAction::class);

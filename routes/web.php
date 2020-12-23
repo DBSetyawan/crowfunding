@@ -34,7 +34,7 @@ Route::group(['prefix' => 'admin'], function () {
     Route::get('domisili/get-json','DomisiliController@get_json')->name('domisili.get_json');
     Route::get('donaturs/print','Voyager\DonaturController@print')->name('donaturs.print');
     Route::get('donaturs/reset/{table_name}','Voyager\DonaturController@testResetIncrement')->name('donaturs.resets');
-    Route::get('donaturs/generate_and_print_last_month','Voyager\DonaturController@generate_and_print_last_month')->name('donaturs.generate_and_print_last_month');
+    Route::post('donaturs/generate_and_print_last_month','Voyager\DonaturController@generate_and_print_last_month')->name('donaturs.generate_and_print_last_month');
     Route::post('konfirmasi-donasi','Voyager\DonaturController@confirm_donation')->name('donaturs.confirm_donation');
     Route::post('file-import', [ProgramGroupsController::class, 'fileImport'])->name('file-import');
     Route::post('file-import-users-allow', [VoyagerUserController::class, 'import'])->name('file-import-users');

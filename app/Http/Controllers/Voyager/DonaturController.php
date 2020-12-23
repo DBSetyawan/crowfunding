@@ -11,6 +11,7 @@ use App\Midtran;
 use App\Program;
 use \go2hi\go2hi;
 use App\Kelurahan;
+use Carbon\Carbon;
 use App\DonaturGroup;
 use Illuminate\Http\Request;
 use App\Imports\donaturgImports;
@@ -165,25 +166,38 @@ class DonaturController extends VoyagerBaseController
         // Next Get or Paginate the actual content from the MODEL that corresponds to the slug DataType
         if (strlen($dataType->model_name) != 0) {
             $model = app($dataType->model_name);
-            // dd(Auth::user()->role->id);
-            // dd($group_id);
             if(Auth::user()->role->id == 1){
                 $query_donatur_group = DonaturGroup::whereIn('id', [(Int) $group_id])->get();
                     foreach ($query_donatur_group as $key => $value) {
                         # code...
                         $queryIngroupName[$key] = $value->donatur_group_name;
                     }
-                    // dd($queryIngroupName);
                     $query = isset($queryIngroupName) 
                     ? $model->whereIn('added_by_user_id', [$queryIngroupName]) 
                     : $model->select('*');
-                // $query = $model->select('*');
-                // $query = $model->whereIn('donatur_group_id', [(Int) $group_id]);
 
             }
 
             if(Auth::user()->role->id == 2){
-                $query = $model->whereIn('donatur_group_id', [(Int) $group_id]);
+                $query_donatur_group = DonaturGroup::whereIn('id', [(Int) $group_id])->get();
+                    foreach ($query_donatur_group as $key => $value) {
+                        # code...
+                        $queryIngroupName[$key] = $value->donatur_group_name;
+                    }
+                    $query = isset($queryIngroupName) 
+                    ? $model->whereIn('added_by_user_id', [$queryIngroupName]) 
+                    : $model->select('*');
+            }
+
+            if(Auth::user()->role->id == 3){
+                $query_donatur_group = DonaturGroup::whereIn('id', [(Int) $group_id])->get();
+                    foreach ($query_donatur_group as $key => $value) {
+                        # code...
+                        $queryIngroupName[$key] = $value->donatur_group_name;
+                    }
+                    $query = isset($queryIngroupName) 
+                    ? $model->whereIn('added_by_user_id', [$queryIngroupName]) 
+                    : $model->select('*');
             }
 
             if ($dataType->scope && $dataType->scope != '' && method_exists($model, 'scope'.ucfirst($dataType->scope))) {
@@ -277,6 +291,8 @@ class DonaturController extends VoyagerBaseController
         if (view()->exists("voyager::$slug.browse")) {
             $view = "voyager::$slug.browse";
         }
+        $donatur_groups = DonaturGroup::all();
+        $donaturdetailid = $group_id;
 
         return Voyager::view($view, compact(
             'actions',
@@ -292,7 +308,9 @@ class DonaturController extends VoyagerBaseController
             'defaultSearchKey',
             'usesSoftDeletes',
             'showSoftDeleted',
-            'showCheckboxColumn'
+            'showCheckboxColumn',
+            'donatur_groups',
+            'donaturdetailid'
         ));
     }
 
@@ -1068,34 +1086,62 @@ class DonaturController extends VoyagerBaseController
             $data = Midtran::select('midtrans.*','programs.program_name')->leftjoin('programs','midtrans.program_id','programs.id')->where('donatur_id',$donatur_id)->latest()->get();
             return Datatables::of($data)
                     ->addIndexColumn()
-                    ->addColumn('action', function($row){
-
-                        if($row->payment_gateway !== "offline"){
-                            return "";
-                        }else{
-                            $disable="";
-                            if($row->payment_status == "settlement"){
-                                return "";
-                            }
-                            $btn = '<button type="button" class="btn btn-primary btn-lg button-confirmation" data-toggle="modal" data-target="#myModal" data-id="'.$row->id.'" '.$disable.'>Konfirmasi</button>';
-                            return $btn;
-                        }
-                           
+                    ->addColumn('tr_date', function($row){
+                        return $row->created_at;
                     })
                     ->addColumn('action_petugas', function($row){
-                        if($row->payment_gateway !== "offline"){
-                            return "";
-                        }else{
-                            $disable="";
-                            if($row->payment_status == "kwitansi" && Auth::user()->id == $row->added_by_user_id){
-                                $btn = '<button type="button" class="btn btn-primary btn-lg button-confirmation" data-toggle="modal" data-target="#myModal" data-id="'.$row->id.'" '.$disable.'>Konfirmasi</button>';
-                                return $btn;
+
+                        if(Auth::user()->role->id == 1 || Auth::user()->role->id == 2){
+                            $disable="hidden";
+                            if($row->payment_status == "kwitansi"){
+                                $btn = '<button type="button" class="btn btn-primary btn-lg '.$disable.' button-confirmation" data-toggle="modal" data-target="#myModal" data-id="'.$row->id.'">Konfirmasi</button>';
                             }
-                            return "";
+                                else{
+                                    if($row->payment_status == "on_funding"){
+                                         $btn = '<button type="button" class="btn btn-primary btn-lg button-confirmation" data-toggle="modal" data-target="#myModal" data-id="'.$row->id.'">Konfirmasi</button>';
+                                    } else {
+                                        if($row->payment_status == "settlement"){
+                                            $btn = '<button type="button" class="btn btn-primary btn-lg '.$disable.' button-confirmation" data-toggle="modal" data-target="#myModal" data-id="'.$row->id.'">Konfirmasi</button>';
+                                       }
+                                    }
+                                }
                         }
+                        if(Auth::user()->role->id == 3){
+                            $disable="hidden";
+                            if($row->payment_status == "kwitansi"){
+                                $btn = '<button type="button" class="btn btn-primary btn-lg button-confirmation" data-toggle="modal" data-target="#myModal" data-id="'.$row->id.'">Konfirmasi</button>';
+                            }
+                                else    
+                                    {
+                                        if($row->payment_status == "settlement"){
+                                            $btn = '<button type="button" class="btn btn-primary btn-lg '.$disable.' button-confirmation" data-toggle="modal" data-target="#myModal" data-id="'.$row->id.'">Konfirmasi</button>';
+                                        } 
+                                            else {
+                                                if($row->payment_status == "on_funding"){
+                                                    $btn = '<button type="button" class="btn btn-primary btn-lg '.$disable.' button-confirmation" data-toggle="modal" data-target="#myModal" data-id="'.$row->id.'">Konfirmasi</button>';
+                                                }
+                                        }
+                                }
+                        }
+
+                      
+                        return $btn;
                            
                     })
-                    ->rawColumns(['action','action_petugas'])
+                    // ->addColumn('action_petugas', function($row){
+                    //     if($row->payment_gateway !== "offline"){
+                    //         return "";
+                    //     }else{
+                    //         $disable="";
+                    //         if($row->payment_status == "kwitansi" && Auth::user()->id == $row->added_by_user_id){
+                    //             $btn = '<button type="button" class="btn btn-primary btn-lg button-confirmation" data-toggle="modal" data-target="#myModal" data-id="'.$row->id.'" '.$disable.'>Konfirmasi</button>';
+                    //             return $btn;
+                    //         }
+                    //         return "";
+                    //     }
+                           
+                    // })
+                    ->rawColumns(['action_petugas','tr_date'])
                     ->make(true);
         }
       
@@ -1111,17 +1157,17 @@ class DonaturController extends VoyagerBaseController
                 'alert-type' => 'error',
             ]);
         }
-        if(Auth::user()->role->name == "admin" || Auth::user()->role->name == "admincabang"){
-            $status = "settlement";
-        }else if(Auth::user()->role->name == "petugas" ){
-            if(Auth::user()->id !== $midtran->added_by_user_id){
-                return redirect()->back()->with([
-                    'message'    => "anda tidak memiliki hak untuk menkonfirmasi donasi ini.",
-                    'alert-type' => 'error',
-                ]);
-            }
+        if(Auth::user()->role->id == 3){
             $status="on_funding";
+        }else if(Auth::user()->role->id == 2 || Auth::user()->role->id == 1){
+            $status="settlement";
+
+            // return redirect()->back()->with([
+            //     'message'    => "anda tidak memiliki hak untuk menkonfirmasi donasi ini.",
+            //     'alert-type' => 'error',
+            // ]);
         }
+
         if($status){
             Midtran::where('id',$donation_id)->update([
                 'payment_status'=>$status
@@ -1132,7 +1178,7 @@ class DonaturController extends VoyagerBaseController
             ]);
         }else{
             return redirect()->back()->with([
-                'message'    => "anda tidak memiliki akses untuk menkonfirmasi",
+                'message'    => "hak akses dibatasi untuk user ini.",
                 'alert-type' => 'error',
             ]);
         }
@@ -1181,8 +1227,80 @@ class DonaturController extends VoyagerBaseController
         
     }
 
-
+    //Deploy searching kwitansi donaturs
     public function generate_and_print_last_month(Request $request){
+        // dd($request->all());
+        // $dt = Carbon::now();
+        // $bulan = $dt->month($request->bulan)->toDateTimeString();
+        // $dts = Carbon::parse($bulan);
+        // $bulan = $dt->month($request->bulan)->toDateTimeString();
+        // $tahun = $dt->year($request->tahun)->toDateTimeString();
+        $dt = Carbon::create($request->tahun, $request->bulan, $request->hari, 0);
+        $nextMonthTransaction = $dt->addMonth()->toDateTimeString();
+        // dd($addmonth);die;
+        $kloningDonaturs = Midtran::whereYear('created_at', '=', $request->tahun)
+              ->whereDay('created_at', '=', $request->hari)
+              ->whereMonth('created_at', '=', $request->bulan)
+              ->get();
+
+            //   foreach ($kloningDonaturs as $key => $valueDonaturGenerate) {
+            //       # code...
+            //       $DataNameGenerateKwitansi[] = $valueDonaturGenerate;
+            //   }
+            try{
+
+                if($kloningDonaturs->isEmpty() == true) {
+                    $failed = "<div class='alert alert-danger'>gagal menyimpan data.</div>";
+                    return response()->json(['failed' => $failed, 'status' => false]);
+                } else {
+                    // $success = "<div class='alert alert-success'>Berhasil menyimpan data.</div>";
+                    // return response()->json(['success'=> $success, 'status' => true]);
+                    // $bulkAction = DB::transaction(function() use ($kloningDonaturs, $nextMonthTransaction) {
+                    //     foreach (array_chunk($kloningDonaturs->toArray(), 1000) as $responseChunk)
+                    //     {
+                    //         $insertableArray = [];
+                    //         foreach($responseChunk as $BulkHistory) {
+                    //             $insertableArray[] = [
+                    //                 'created_at' => $nextMonthTransaction,
+                    //                 'amount' => $BulkHistory['amount'],
+                    //                 'donatur_id' => $BulkHistory['donatur_id'],
+                    //                 'id_cabang' => $BulkHistory['id_cabang'],
+                    //                 'group_id' => $BulkHistory['group_id'],
+                    //                 'transaction_id' => $BulkHistory['transaction_id'],
+                    //                 'transaction_time' => $BulkHistory['transaction_time'],
+                    //                 'payment_gateway' => $BulkHistory['payment_gateway'],
+                    //                 'payment_status' => "kwitansi",
+                    //                 'program_id' => $BulkHistory['program_id'],
+                    //                 'updated_at' => $nextMonthTransaction,
+                    //                 'added_by_user_id' => $BulkHistory['added_by_user_id']
+                    //             ];
+                    //         }
+                    //         $response = DB::table('midtrans')->insert($insertableArray);
+                    //     }
+
+                    //     return $response;
+
+                    // });
+                    $bulkAction = true;
+
+                    if($bulkAction == true){
+                        // $success = "<div class='alert alert-success'>Berhasil menyimpan data.</div>";
+                        $success = "<div class='alert alert-success'>Data pernah disimpan sebelumnya !</div>";
+                        return response()->json(['success'=> $success, 'status' => true]);
+                    } else {
+                        $failed = "<div class='alert alert-danger'>gagal menyimpan data.</div>";
+                        return response()->json(['failed' => $failed, 'status' => false]);
+                    }
+                }
+
+            }catch(\Throwable $e){
+                    echo json_encode(
+                        array('status'=> $e->getMessage()),
+                        JSON_PRETTY_PRINT
+                    );
+            };
+die;
+        // dd($);
         $validator = Validator::make($request->all(), [
             'group_id'=>'required',
         ]);

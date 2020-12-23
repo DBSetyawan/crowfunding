@@ -26,7 +26,7 @@ return [
     |
     */
 
-    'env' => env('APP_ENV', 'production'),
+    'env' => env('APP_ENV', 'local'),
 
     /*
     |--------------------------------------------------------------------------
@@ -52,7 +52,7 @@ return [
     |
     */
 
-    'url' => env('APP_URL', 'https://office.educatech.web.id'),
+    'url' => env('APP_URL', 'http://crowdfunding.test'),
 
     'asset_url' => env('ASSET_URL', null),
 
@@ -122,7 +122,7 @@ return [
     'key' => env('APP_KEY'),
 
     'cipher' => 'AES-256-CBC',
-    'public_app_url' => env('PUBLIC_APP_URL','https://office.educatech.web.id'),
+    'public_app_url' => env('PUBLIC_APP_URL','http://crowdfunding.test'),
     /*
     |--------------------------------------------------------------------------
     | Autoloaded Service Providers
