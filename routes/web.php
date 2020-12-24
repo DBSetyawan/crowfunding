@@ -18,6 +18,12 @@ use App\Http\Controllers\Voyager\VoyagerPetugasController;
 | contains the "web" middleware group. Now create something great!
 |
 */
+Route::get('reset', function (){
+    Artisan::call('route:clear');
+    Artisan::call('cache:clear');
+    Artisan::call('config:clear');
+    Artisan::call('config:cache');
+});
 
 Route::group(['prefix' => 'admin'], function () {
     Route::get('donaturs/add-donation','Voyager\DonaturController@add_donation')->name('donaturs.add_donation');
