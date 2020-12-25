@@ -1106,7 +1106,7 @@ class DonaturController extends VoyagerBaseController
                                     }
                                 }
                         }
-                        if(Auth::user()->role->id == 3){
+                        if(Auth::user()->role->id == 3 || Auth::user()->role->id == 2 || Auth::user()->role->id == 1){
                             $disable="hidden";
                             if($row->payment_status == "kwitansi"){
                                 $btn = '<button type="button" class="btn btn-primary btn-lg button-confirmation" data-toggle="modal" data-target="#myModal" data-id="'.$row->id.'">Konfirmasi</button>';
@@ -1161,6 +1161,7 @@ class DonaturController extends VoyagerBaseController
             $status="on_funding";
         }else if(Auth::user()->role->id == 2 || Auth::user()->role->id == 1){
             $status="settlement";
+            $cash="cash";
 
             // return redirect()->back()->with([
             //     'message'    => "anda tidak memiliki hak untuk menkonfirmasi donasi ini.",
@@ -1170,7 +1171,8 @@ class DonaturController extends VoyagerBaseController
 
         if($status){
             Midtran::where('id',$donation_id)->update([
-                'payment_status'=>$status
+                'payment_status'=>$status,
+                'payment_gateway'=>$cash
             ]);
             return redirect()->back()->with([
                 'message'    => "Donation telah di konfirmasi",
