@@ -84,8 +84,8 @@
 @section('javascript')
 <script>
     $('#submit-print').click(function(){
-        var start_date = $('#start_date').val();
-        var end_date = $('#end_date').val();
+        var start_date = $('#starts').val();
+        var end_date = $('#ends').val();
         if(!validator.isDate(start_date)){
             alert('Tanggal Mulai Harus Diisi!');
             return 0;
@@ -225,7 +225,7 @@
                 <div class="col-md-6 mb-3">
                     <div class="form-group">
                         <label for="validationTooltip03">Mulai</label>
-                        <input type="date" class="form-control" name="start_date" placeholder="City" required>
+                        <input type="date" class="form-control" id="starts" name="start_date" placeholder="City" required>
                         <div class="invalid-tooltip">
                             {{-- Please provide a valid city. --}}
                         </div>
@@ -234,7 +234,7 @@
                 <div class="col-md-6  mb-3">
                     <div class="form-group">
                         <label for="validationTooltip04">Hingga</label>
-                        <input type="date" class="form-control" name="end_date" placeholder="State" required>
+                        <input type="date" class="form-control" id="ends" name="end_date" placeholder="State" required>
                         <div class="invalid-tooltip">
                           {{-- Please provide a valid state. --}}
                         </div>

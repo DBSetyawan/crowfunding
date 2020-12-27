@@ -41,7 +41,11 @@
      
         <button class="btn btn-primary  btn-add-new" type="button" data-toggle="modal" data-target="#modal-print-last-month" >
             <i class="voyager-file-text"></i>
-            Print Kwitansi Bulanan
+            Generate Kwitansi X
+        </button>
+        <button class="btn btn-primary  btn-add-new" type="button" data-toggle="modal" data-target="#modal-transaction-import-history" >
+            <i class="voyager-file-text"></i>
+            Print Kwitansi
         </button>
     </div>
 @stop

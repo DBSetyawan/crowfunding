@@ -40,7 +40,11 @@
         @include('voyager::multilingual.language-selector')
         <button class="btn btn-primary  btn-add-new" type="button" data-toggle="modal" data-target="#modal-print-last-month" >
             <i class="voyager-file-text"></i>
-            Print Kwitansi Bulanan
+            Generate Kwitansi
+        </button>
+        <button class="btn btn-primary  btn-add-new" type="button" data-toggle="modal" data-target="#modal-print" >
+            <i class="voyager-file-text"></i>
+            Print Kwitansi
         </button>
         {{-- <button class="btn btn-primary  btn-add-new">
             <i class="voyager-file-text"></i>
@@ -358,6 +362,7 @@
 
     {{-- @include('vendor.voyager.donaturs.modal-import-donaturs'); --}}
     @include('vendor.voyager.midtrans.modal-print-kwitansi');
+    @include('vendor.voyager.midtrans.modal-import-history-okt');
 
 @stop
 

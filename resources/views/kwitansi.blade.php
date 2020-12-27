@@ -26,6 +26,11 @@ body {
 table{
     margin-left:auto; margin-right:auto;
     page-break-after: always;
+    border-collapse: separate;
+    border-spacing: 10px;
+    padding: 5px;
+    border: 1px solid black;
+
 }
 
 </style>
@@ -34,7 +39,8 @@ table{
 <body>
 
 @foreach ($data as $d)
-<table >
+<table style="position: relative;
+bottom: -240px;">
     <tr>
         <td>NID</td>
         <td>:&nbsp;{{$d->id}}</td>
@@ -44,12 +50,12 @@ table{
         <td>:&nbsp;{{$d->donatur->nama}}</td>
     </tr>
     <tr>
-        <td>Alamat</td>
-        <td>:&nbsp;{{$d->donatur->alamat}}, {{$d->donatur->domisili}}</td>
+        {{-- <td>Alamat</td> --}}
+        {{-- <td>:&nbsp;{{$d->donatur->alamat}}, {{$d->donatur->domisili}}</td> --}}
     </tr>
     <tr>
-        <td>Program</td>
-        <td>:&nbsp;{{$d->program->program_name}}</td>
+        {{-- <td>Program</td> --}}
+        {{-- <td>:&nbsp;{{$d->program->program_name}}</td> --}}
     </tr>
     <tr>
         <td>Jumlah</td>

@@ -1159,6 +1159,7 @@ class DonaturController extends VoyagerBaseController
         }
         if(Auth::user()->role->id == 3){
             $status="on_funding";
+            $cash="pending";
         }else if(Auth::user()->role->id == 2 || Auth::user()->role->id == 1){
             $status="settlement";
             $cash="cash";
@@ -1191,6 +1192,7 @@ class DonaturController extends VoyagerBaseController
 
     public function print(Request $request){
         
+        // dd($request->all());
         $validator = Validator::make($request->all(), [
             'start_date'=>'required|date|before:end_date',
             'end_date'=>'required|date|after:start_date',
@@ -1200,16 +1202,18 @@ class DonaturController extends VoyagerBaseController
             return response()->json($validator->messages(), 400);
         }
 
-        $data = Midtran::where('payment_gateway','offline')->whereBetween('updated_at',[$request->start_date,$request->end_date])->get();
+        $data = Midtran::whereBetween('updated_at',[$request->start_date,$request->end_date])->limit(100)->get();
+        // $data = Midtran::where('payment_gateway','offline')->whereBetween('updated_at',[$request->start_date,$request->end_date])->get();
+        // dd($data);
         foreach ($data as $key => $d) {
             $data[$key]->donatur = Donatur::where('id',$d->donatur_id)->first();
             $data[$key]->program = Program::where('id',$d->program_id)->first();
 
-            $kelurahan = Kelurahan::where('id',$data[$key]->donatur->kelurahan_id)->first();
-            $data[$key]->donatur->domisili = "";
-            if($kelurahan){
-                $data[$key]->donatur->domisili = $kelurahan->kelurahan.', '.$kelurahan->kecamatan->kecamatan.', '.$kelurahan->kecamatan->kabkot->kabupaten_kota.', '.$kelurahan->kecamatan->kabkot->provinsi->provinsi.', '.$kelurahan->kd_pos;
-            }
+            // $kelurahan = Kelurahan::where('id',$data[$key]->donatur->kelurahan_id)->first();
+            // $data[$key]->donatur->domisili = "";
+            // if($kelurahan){
+            //     $data[$key]->donatur->domisili = $kelurahan->kelurahan.', '.$kelurahan->kecamatan->kecamatan.', '.$kelurahan->kecamatan->kabkot->kabupaten_kota.', '.$kelurahan->kecamatan->kabkot->provinsi->provinsi.', '.$kelurahan->kd_pos;
+            // }
 
             if($d->updated_at){
                 $data[$key]->tanggal_masehi = date('Y-m-d', strtotime($d->updated_at));
