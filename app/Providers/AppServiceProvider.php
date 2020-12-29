@@ -26,7 +26,7 @@ class AppServiceProvider extends ServiceProvider
      */
     public function boot()
     {
-
+        Voyager::addAction(\App\Actions\AddPrintKwitansiAction::class);
         Voyager::replaceAction(ViewAction::class,\App\Actions\ViewDonatorAction::class);
         Voyager::addAction(\App\Actions\AddDonationAction::class);
         Voyager::addAction(\App\Actions\AddDeleteDonaturgroupsAction::class);

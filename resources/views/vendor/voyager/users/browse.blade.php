@@ -501,5 +501,32 @@
             });
             $('.selected_ids').val(ids);
         });
+
+        $('#submit-print-kwitansi-cabang').click(function(){
+            alert("asdasd");
+        // var start_date = $('#starts').val();
+        // var end_date = $('#ends').val();
+        // if(!validator.isDate(start_date)){
+        //     alert('Tanggal Mulai Harus Diisi!');
+        //     return 0;
+        // }
+        // if(!validator.isDate(end_date)){
+        //     alert('Tanggal Hingga Harus Diisi!');
+        //     return 0;
+        // }
+
+        // if(!validator.isAfter(end_date,start_date)){
+        //     alert('Tanggal Hingga tidak boleh sebelum tanggal Mulai!');
+        //     return 0;
+        // }
+
+        // $("<iframe>")                             // create a new iframe element
+        // .hide()                               // make it invisible
+        // .attr("src", "{{route('donaturs.print')}}?start_date="+start_date+'&end_date='+end_date) // point the iframe to the page you want to print
+        // .appendTo("body");                    // add iframe to the DOM to cause it to load the page
+
+        // if()
+          
+    });
     </script>
 @stop

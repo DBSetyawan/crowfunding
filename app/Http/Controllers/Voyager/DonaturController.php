@@ -1190,9 +1190,55 @@ class DonaturController extends VoyagerBaseController
     }
 
 
-    public function print(Request $request){
+    public function print(Request $request, String $cabang = null){
         
-        // dd($request->all());
+        // dd($id);
+        // $validator = Validator::make($request->all(), [
+        //     'start_date'=>'required|date|before:end_date',
+        //     'end_date'=>'required|date|after:start_date',
+        // ]);
+
+        // if ($validator->fails()) {    
+        //     return response()->json($validator->messages(), 400);
+        // }
+
+        $data = Midtran::whereIn('added_by_user_id',[$cabang])
+                ->where('payment_status', 'kwitansi')->get();
+                // dd($data);
+        // $data = Midtran::whereBetween('updated_at',[$request->start_date,$request->end_date])->limit(100)->get();
+        // $data = Midtran::where('payment_gateway','offline')->whereBetween('updated_at',[$request->start_date,$request->end_date])->get();
+        // dd($data);
+        foreach ($data as $key => $d) {
+            $data[$key]->donatur = Donatur::where('id',$d->donatur_id)->first();
+            $data[$key]->program = Program::where('id',$d->program_id)->first();
+
+            // $kelurahan = Kelurahan::where('id',$data[$key]->donatur->kelurahan_id)->first();
+            // $data[$key]->donatur->domisili = "";
+            // if($kelurahan){
+            //     $data[$key]->donatur->domisili = $kelurahan->kelurahan.', '.$kelurahan->kecamatan->kecamatan.', '.$kelurahan->kecamatan->kabkot->kabupaten_kota.', '.$kelurahan->kecamatan->kabkot->provinsi->provinsi.', '.$kelurahan->kd_pos;
+            // }
+
+            if($d->updated_at){
+                $data[$key]->tanggal_masehi = date('Y-m-d', strtotime($d->updated_at));
+                // dd(date('Y-m-d',strtotime($d->updated_at)));
+                $strdate = date('Y-m-d',strtotime($d->updated_at));
+                $arr_date = explode('-',$strdate);
+                $hij = $this->GregorianToHijriah($arr_date[0],$arr_date[1],$arr_date[2]);
+                $data[$key]->tanggal_hijiriah = $hij['day'].' '.$this->month_hij($hij['month']).' '.$hij['year']; 
+                $data[$key]->terbilang = ucwords($this->terbilang($d->amount))." Rupiah";
+                $data[$key]->rupiah = $this->rupiah($data[$key]->amount);
+                
+            } 
+        }
+
+        return view('kwitansi',compact('data'));
+        
+        
+    }
+
+    public function prints(Request $request){
+        
+        // dd($request->start_date);
         $validator = Validator::make($request->all(), [
             'start_date'=>'required|date|before:end_date',
             'end_date'=>'required|date|after:start_date',
@@ -1202,7 +1248,10 @@ class DonaturController extends VoyagerBaseController
             return response()->json($validator->messages(), 400);
         }
 
-        $data = Midtran::whereBetween('updated_at',[$request->start_date,$request->end_date])->limit(100)->get();
+        // $data = Midtran::whereIn('added_by_user_id',[$cabang])
+        //         ->where('payment_status', 'kwitansi')->get();
+        //         dd($data);
+        $data = Midtran::whereBetween('updated_at',[$request->start_date,$request->end_date])->limit(1000)->get(); //original 5k
         // $data = Midtran::where('payment_gateway','offline')->whereBetween('updated_at',[$request->start_date,$request->end_date])->get();
         // dd($data);
         foreach ($data as $key => $d) {

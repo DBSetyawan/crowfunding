@@ -23,6 +23,10 @@ Route::get('reset', function (){
     Artisan::call('cache:clear');
     Artisan::call('config:clear');
     Artisan::call('config:cache');
+    
+});
+Route::get('/symlink_create', function () {
+    Artisan::call('storage:link');
 });
 
 Route::group(['prefix' => 'admin'], function () {
@@ -38,7 +42,8 @@ Route::group(['prefix' => 'admin'], function () {
     Route::get('users/{id}','Voyager\VoyagerUserController@destroy')->name('users.sub.donaturgroups.destroy');
     Route::get('donaturs/donatur-groups/{group_id}','Voyager\VoyagerUserController@donaturDetailTransaction')->name('donaturs.sub.amil.history');
     Route::get('domisili/get-json','DomisiliController@get_json')->name('domisili.get_json');
-    Route::get('donaturs/print','Voyager\DonaturController@print')->name('donaturs.print');
+    Route::get('donaturs/print','Voyager\DonaturController@prints')->name('donaturs.print');
+    Route::get('donaturs/print/{cabang}','Voyager\DonaturController@print')->name('donaturs.print.prcabang');
     Route::get('donaturs/reset/{table_name}','Voyager\DonaturController@testResetIncrement')->name('donaturs.resets');
     Route::post('donaturs/generate_and_print_last_month','Voyager\DonaturController@generate_and_print_last_month')->name('donaturs.generate_and_print_last_month');
     Route::post('konfirmasi-donasi','Voyager\DonaturController@confirm_donation')->name('donaturs.confirm_donation');
