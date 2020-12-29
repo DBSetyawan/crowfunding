@@ -44,6 +44,7 @@ Route::group(['prefix' => 'admin'], function () {
     Route::get('domisili/get-json','DomisiliController@get_json')->name('domisili.get_json');
     Route::get('donaturs/print','Voyager\DonaturController@prints')->name('donaturs.print');
     Route::get('donaturs/print/{cabang}','Voyager\DonaturController@print')->name('donaturs.print.prcabang');
+    Route::get('donaturs/print/petugas/{petugas}','Voyager\DonaturController@printperpetugas')->name('donaturs.print.prpetugas');
     Route::get('donaturs/reset/{table_name}','Voyager\DonaturController@testResetIncrement')->name('donaturs.resets');
     Route::post('donaturs/generate_and_print_last_month','Voyager\DonaturController@generate_and_print_last_month')->name('donaturs.generate_and_print_last_month');
     Route::post('konfirmasi-donasi','Voyager\DonaturController@confirm_donation')->name('donaturs.confirm_donation');
