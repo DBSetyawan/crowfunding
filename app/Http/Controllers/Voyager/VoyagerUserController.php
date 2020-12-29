@@ -711,7 +711,7 @@ class VoyagerUserController extends BaseVoyagerUserController
                         $btn = $btn.'&nbsp;<a class="btn btn-sm btn-danger pull-right delete" href="' .'/admin/users/'.$row->id.'"><span class="voyager-trash"></span> Delete </a>';
                         // $btn = $btn.'<a class="btn btn-danger btn-sm  pull-right" href="' . route('donaturs.sub.amil.history', ['group_id'=> $row->id]) .'"> Delete </a>';
                         $btn = $btn.'<a class="btn btn-success btn-sm pull-right icofont-box view" href="' . route('donaturs.sub.amil.history', ['group_id'=> $row->users_id]) .'"><span class="voyager-window-list"></span> VIEW</a>';
-                        $btn = $btn.'&nbsp;<a class="btn btn-dark btn-sm pull-right icofont-box view" href="' . route('donaturs.print.prpetugas', ['petugas'=> $row->name]) .'"><span class="voyager-window-list"></span> kwitansi</a></span></div>';
+                        $btn = $btn.'&nbsp;<a class="btn btn-dark btn-sm pull-right icofont-box view" target="_blank" href="' . route('donaturs.print.prpetugas', ['petugas'=> $row->name]) .'"><span class="voyager-window-list"></span> kwitansi</a></span></div>';
                         // $btn = '<a class="btn btn-primary btn-lg button-confirmation" href="' . route('donaturs.sub.amil.history', ['group_id'=> $row->users_id]) .'">'.$row->users_id.'</a>';
                         // $btn = '<a href="{{ route("donaturs.sub.amil.history",  ["group_id"=> $row->id]) }}" class="btn btn-primary btn-lg button-confirmation">Detail group</a>';
                             return $btn;

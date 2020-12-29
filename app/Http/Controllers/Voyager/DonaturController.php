@@ -1188,7 +1188,52 @@ class DonaturController extends VoyagerBaseController
         
 
     }
+    
+    public function printgroupnames(Request $request, String $group_name = null){
+        
+        // $validator = Validator::make($request->all(), [
+        //     'start_date'=>'required|date|before:end_date',
+        //     'end_date'=>'required|date|after:start_date',
+        // ]);
 
+        // if ($validator->fails()) {    
+        //     return response()->json($validator->messages(), 400);
+        // }
+        $donatur_name = DonaturGroup::findOrFail($group_name)->donatur_group_name;
+
+        $data = Midtran::whereIn('added_by_user_id',[$donatur_name])
+                ->where('payment_status', 'kwitansi')->get();
+                // dd($data);
+        // $data = Midtran::whereBetween('updated_at',[$request->start_date,$request->end_date])->limit(100)->get();
+        // $data = Midtran::where('payment_gateway','offline')->whereBetween('updated_at',[$request->start_date,$request->end_date])->get();
+        // dd($data);
+        foreach ($data as $key => $d) {
+            $data[$key]->donatur = Donatur::where('id',$d->donatur_id)->first();
+            $data[$key]->program = Program::where('id',$d->program_id)->first();
+
+            // $kelurahan = Kelurahan::where('id',$data[$key]->donatur->kelurahan_id)->first();
+            // $data[$key]->donatur->domisili = "";
+            // if($kelurahan){
+            //     $data[$key]->donatur->domisili = $kelurahan->kelurahan.', '.$kelurahan->kecamatan->kecamatan.', '.$kelurahan->kecamatan->kabkot->kabupaten_kota.', '.$kelurahan->kecamatan->kabkot->provinsi->provinsi.', '.$kelurahan->kd_pos;
+            // }
+
+            if($d->updated_at){
+                $data[$key]->tanggal_masehi = date('Y-m-d', strtotime($d->updated_at));
+                // dd(date('Y-m-d',strtotime($d->updated_at)));
+                $strdate = date('Y-m-d',strtotime($d->updated_at));
+                $arr_date = explode('-',$strdate);
+                $hij = $this->GregorianToHijriah($arr_date[0],$arr_date[1],$arr_date[2]);
+                $data[$key]->tanggal_hijiriah = $hij['day'].' '.$this->month_hij($hij['month']).' '.$hij['year']; 
+                $data[$key]->terbilang = ucwords($this->terbilang($d->amount))." Rupiah";
+                $data[$key]->rupiah = $this->rupiah($data[$key]->amount);
+                
+            } 
+        }
+
+        return view('kwitansi',compact('data'));
+        
+        
+    }
     
     public function printperpetugas(Request $request, String $petugas = null){
         
