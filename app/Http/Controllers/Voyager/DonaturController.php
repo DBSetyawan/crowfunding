@@ -1158,10 +1158,10 @@ class DonaturController extends VoyagerBaseController
             ]);
         }
         if(Auth::user()->role->id == 3){
-            $status="_on_funding"." *".Auth::user()->name."*";
+            $status="on_funding"." *".Auth::user()->name."*";
             $cash="pending";
         }else if(Auth::user()->role->id == 2 || Auth::user()->role->id == 1){
-            $status="_settlement_"." *".Auth::user()->name."*";
+            $status="settlement"." *".Auth::user()->name."*";
             $cash="cash";
 
             // return redirect()->back()->with([
