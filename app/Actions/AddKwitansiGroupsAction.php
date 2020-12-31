@@ -24,7 +24,7 @@ class AddKwitansiGroupsAction extends AbstractAction
     {
         // Action button class
         return [
-            'class' => 'btn btn-sm btn-success pull-right',
+            'class' => 'btn btn-sm btn-dark pull-right',
             'target' => '_blank'
         ];
     }
