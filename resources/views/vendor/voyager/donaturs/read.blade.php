@@ -228,14 +228,14 @@
       <div class="modal-content">
         <div class="modal-header">
           <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-          <h4 class="modal-title" id="myModalLabel">Konfirmasi Penerimaan Donasi</h4>
+          <h4 class="modal-title" id="myModalLabel">Konfirmasi status pendonasian</h4>
         </div>
         <div class="modal-body">
-        Dengan melakukan ini anda akan merubah status donasi menjadi di terima. status "<?php 
-             if(Auth::user()->role->name == "admin" || Auth::user()->role->name == "admincabang"){
-                echo "Settlement";
-             }else if(Auth::user()->role->name == "petugas"){
-                echo "On Funding";
+        Dengan melakukan ini anda akan merubah status donasi, menjadi <?php echo "<br/>" ?> status "<?php 
+             if(Auth::user()->role->id == 1 || Auth::user()->role->id == 2){
+                 echo " <b>Settlement</b> ";
+            }else if(Auth::user()->role->id == 3){
+                echo " <b>On Funding</b> ";
              }
         ?>"
         </div>
@@ -245,7 +245,7 @@
             <button type="button" class="btn btn-default" data-dismiss="modal">Tutup</button>
         
             <input type="hidden" value="" name="donation_id" id="confirmation-donation-id" />
-            <button type="submit" class="btn btn-success">Konfirmasi Donasi Telah Diterima</button>
+            <button type="submit" class="btn btn-success">Konfirmasi Donasi</button>
           </form>
           
         </div>

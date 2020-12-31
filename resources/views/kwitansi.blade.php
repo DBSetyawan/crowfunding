@@ -34,7 +34,7 @@ table{
 }
 
 </style>
-<title>Landscape To Fit Paper Page</title>
+<title>Kotak Amal Indonesia</title>
 </head>
 <body>
 
