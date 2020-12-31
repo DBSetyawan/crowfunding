@@ -55,7 +55,6 @@
 
         
             <div class="scrolling-wrapper">
-
                 @foreach ($program_categories as $item)
                     <a href="{{route('search')}}?category={{$item->id}}">
             
