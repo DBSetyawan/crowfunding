@@ -13,7 +13,12 @@
     <link href="https://fonts.googleapis.com/css2?family=Open+Sans&display=swap" rel="stylesheet">
     <link rel="stylesheet" type="text/css" href="{{asset('slick-1.8.1/slick/slick.css')}}"/>
     <link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-beta.1/dist/css/select2.min.css" rel="stylesheet" />
-    
+    <link href="https://api.mapbox.com/mapbox-gl-js/v1.12.0/mapbox-gl.css" rel="stylesheet" />
+    <link
+        rel="stylesheet"
+        href="https://api.mapbox.com/mapbox-gl-js/plugins/mapbox-gl-geocoder/v4.5.1/mapbox-gl-geocoder.css"
+        type="text/css"
+    />
 </head>
 <body>
 <header class="mainbar">
@@ -83,16 +88,25 @@
                     <small class="form-text text-danger">{{ $message }}</small>
                 @enderror
             </div>
-
+                <div class="form-group">
+                    {{-- <label for="exampleInputEmail1">Alamats</label> --}}
+                    <textarea class="form-control" id="alamat" name="alamat"></textarea>
+                    @error('alamat')
+                        <small class="form-text text-danger">{{ $message }}</small>
+                    @enderror
+                </div>
             <div class="form-group">
-                <label for="exampleInputEmail1">Alamat</label>
-                <textarea class="form-control" name="alamat"></textarea>
-                @error('alamat')
-                    <small class="form-text text-danger">{{ $message }}</small>
-                @enderror
+                <label for="urban">Alamat</label>
+                {{--  <select class="form-control select2" id="urban" name="urban_id">  --}}
+                    {{--  <select class="form-control" id="urban_id">  --}}
+                     {{--  <div class="col-md-3">  --}}
+                            {{--  <label>Origin</label>  --}}
+                            <div id="urban_id" name="urban_id" style="width: 500px;padding: 5px 10px;"></div>
+                        {{--  </div>  --}}
+                {{--  </select>  --}}
             </div>
 
-            <div class="form-group">
+            {{-- <div class="form-group">
                 <label for="exampleInputEmail1">Domisili</label>
                 <select class="form-control select2" id="kelurahan_id" name="urban_id">
                     @if(isset($selected_domisili))
@@ -102,7 +116,7 @@
                 @error('urban_id')
                     <small class="form-text text-danger">{{ $message }}</small>
                 @enderror
-            </div>
+            </div> --}}
 
             <button type="submit" class="btn btn-block btn-primary">REGISTER</button>
 
@@ -119,7 +133,34 @@
 <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous"></script>
 
 <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-beta.1/dist/js/select2.min.js"></script>
+<script src="https://api.mapbox.com/mapbox-gl-js/plugins/mapbox-gl-geocoder/v4.5.1/mapbox-gl-geocoder.min.js"></script>
+<script src="https://api.mapbox.com/mapbox-gl-js/v1.12.0/mapbox-gl.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/es6-promise@4/dist/es6-promise.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/es6-promise@4/dist/es6-promise.auto.min.js"></script>
 <script>
+      $('document').ready(function () {
+        $('#alamat').hide();
+
+mapboxgl.accessToken = 'pk.eyJ1IjoiZGFuaWVsZWlucyIsImEiOiJja2ZjMWl6aWQwOGk4MnhxMmwwbTh3cTFtIn0.ZUzOVi8FYutY0rqra1s7tQ';
+    var geocoder = new MapboxGeocoder({
+    accessToken: mapboxgl.accessToken,
+    types: 'place, address, poi, postcode, district, neighborhood'
+    });
+    geocoder.addTo('#urban_id');
+
+ geocoder.on('results', function(results) {
+     var textfield = document.createElement("select");
+        if(results.query[0]){
+            textfield.name = "urban_id";
+            textfield.value = results.query[0];
+            $.each(results, function(key, value) {  
+                $('#alamat').val(value.query);
+            });
+        
+        }
+    })
+});
+
     $('document').ready(function () {
         // $('.toggleswitch').bootstrapToggle();
 

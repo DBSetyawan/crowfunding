@@ -64,7 +64,7 @@ class AuthController extends Controller {
             'no_hp'=>'required',
             'pekerjaan'=>'required',
             'alamat'=>'required',
-            'urban_id'=>'required',
+            // 'urban_id'=>'required',
         ]);
 
         if ($validator->fails()) {
@@ -81,7 +81,7 @@ class AuthController extends Controller {
         $user->avatar="users/default.png";
         $user->settings='{"locale":"en"}';
         $user->alamat=$request->alamat;
-        $user->urban_id=$request->urban_id;
+        // $user->urban_id=$request->urban_id;
         $user->pekerjaan=$request->pekerjaan;
         $user->no_whatsapp=$request->no_hp;
         $user->save();
@@ -116,13 +116,13 @@ class AuthController extends Controller {
         $user = Auth::user();
         // dd($user);
 
-        $kelurahan = \App\Kelurahan::where('id',$user->urban_id)->first();
-        $selected_domisili = (object)array('value'=>'','text'=>'');
-        if($kelurahan){
-            $selected_domisili->value = $kelurahan->id;
-            $selected_domisili->text = $kelurahan->kelurahan.', '.$kelurahan->kecamatan->kecamatan.', '.$kelurahan->kecamatan->kabkot->kabupaten_kota.', '.$kelurahan->kecamatan->kabkot->provinsi->provinsi.', '.$kelurahan->kd_pos;
-        }
-        return view('auth.edit-profile',compact('user','selected_domisili'));
+        // $kelurahan = \App\Kelurahan::where('id',$user->urban_id)->first();
+        // $selected_domisili = (object)array('value'=>'','text'=>'');
+        // if($kelurahan){
+        //     $selected_domisili->value = $kelurahan->id;
+        //     $selected_domisili->text = $kelurahan->kelurahan.', '.$kelurahan->kecamatan->kecamatan.', '.$kelurahan->kecamatan->kabkot->kabupaten_kota.', '.$kelurahan->kecamatan->kabkot->provinsi->provinsi.', '.$kelurahan->kd_pos;
+        // }
+        return view('auth.edit-profile',compact('user'));
     }
 
     public function profile_edit_post(Request $request){

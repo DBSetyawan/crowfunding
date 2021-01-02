@@ -136,7 +136,7 @@ class PageController extends Controller
     }
 
     public function donations(Request $request){
-        $donatur = Donatur::where('user_id',Auth::user()->id)->first();
+        $donatur = Donatur::where('nama',Auth::user()->name)->first();
 
 
         $data = Midtran::where('donatur_id',$donatur->id)->orderBy('created_at','desc')->get();

@@ -76,7 +76,7 @@
                 @enderror
             </div>
 
-            <div class="form-group" style="border-bottom: 0.5px solid rgb(216, 216, 216);padding-bottom:20px;">
+            {{-- <div class="form-group" style="border-bottom: 0.5px solid rgb(216, 216, 216);padding-bottom:20px;">
                 <label for="exampleInputEmail1">Domisili</label>
                 <select class="form-control select2" id="kelurahan_id" name="urban_id">
                     @if(isset($selected_domisili))
@@ -86,7 +86,7 @@
                 @error('urban_id')
                     <small class="form-text text-danger">{{ $message }}</small>
                 @enderror
-            </div>
+            </div> --}}
 
             <span style="font-weight:600;margin-bottom:20px;">Ubah Password Baru</span>
             <span style="margin-bottom:20px;font-size:12px;color:red;">*Biarkan Kosong jika tidak dirubah</span>
