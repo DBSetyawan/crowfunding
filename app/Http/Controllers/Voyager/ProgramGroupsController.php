@@ -162,7 +162,7 @@ class ProgramGroupsController extends BaseVoyagerMenuController
     public function index(Request $request, $id = null)
     {
 
-        
+        // dd(Auth::user()->role->id);
         // GET THE SLUG, ex. 'posts', 'pages', etc.
         $slug = $this->getSlug($request);
 

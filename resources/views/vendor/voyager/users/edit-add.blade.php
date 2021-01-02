@@ -89,13 +89,13 @@ type="text/css"
                             </div>
 
                             <div class="form-group">
-                                <label for="alamat">Alamat</label>
-                                <textarea class="form-control" id="alamat" name="alamat" placeholder="alamat">{{ old('alamat', $dataTypeContent->alamat ?? '') }}</textarea>
+                                {{-- <label for="alamat">Alamat</label> --}}
+                                <textarea class="form-control hidden" id="alamat" name="alamat" placeholder="alamat">{{ old('alamat', $dataTypeContent->alamat ?? '') }}</textarea>
                             </div>
 
                             
                             <div class="form-group">
-                                <label for="urban">Kelurahan</label>
+                                <label for="urban">Alamat</label>
                                 {{--  <select class="form-control select2" id="urban" name="urban_id">  --}}
                                     {{--  <select class="form-control" id="urban_id">  --}}
                                      {{--  <div class="col-md-3">  --}}
@@ -235,8 +235,7 @@ type="text/css"
 <script src="https://cdn.jsdelivr.net/npm/es6-promise@4/dist/es6-promise.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/es6-promise@4/dist/es6-promise.auto.min.js"></script>
     <script>
-        $('document').ready(function () {
-
+$('document').ready(function () {
     mapboxgl.accessToken = 'pk.eyJ1IjoiZGFuaWVsZWlucyIsImEiOiJja2ZjMWl6aWQwOGk4MnhxMmwwbTh3cTFtIn0.ZUzOVi8FYutY0rqra1s7tQ';
         var geocoder = new MapboxGeocoder({
         accessToken: mapboxgl.accessToken,
@@ -249,7 +248,9 @@ type="text/css"
             if(results.query[0]){
                 textfield.name = "urban_id";
                 textfield.value = results.query[0];
-
+                $.each(results, function(key, value) {  
+                    $('#alamat').val(value.query);
+                });
             
             }
         })

@@ -256,7 +256,17 @@
                                                             @php
                                                                 $caricabang = $user->whereIn('name', [$data->id_parent])->get();
                                                                 $caripetugas = $user->whereIn('id', [$data->add_by_user_id])->get();
-                                                                $amount = $midtrans->whereIn('added_by_user_id', [$data->donatur_group_name])->sum('amount');
+                                                                $date = \Carbon\Carbon::parse($data->updated_at, 'UTC');
+                                                                $s = $date->isoFormat('MMMM YYYY'); 
+                                                                // dd($s);
+                                                                $amount = $midtrans
+                                                                        ->whereIn('added_by_user_id', [$data->donatur_group_name])
+                                                                        ->whereIn('payment_status',['settlement'])->sum('amount');
+                                                                        // $updated = ->format('M, Y');
+                                                                    $amountloss = $midtrans
+                                                                        ->whereIn('added_by_user_id', [$data->donatur_group_name])
+                                                                        ->where('payment_status', 'kwitansi')->sum('amount');
+                                                                        $updated = $data->updated_at;
                                                             
                                                             @endphp
                                                 @if ($row->display_name == 'ROLE')
@@ -274,6 +284,13 @@
                                                                     @if ($row->display_name == 'DONASI')
                                                                         <span>{{ "Rp " . number_format($amount,2,',','.') }}</span>
                                                                     @endif
+                                                                   
+                                                                    @if ($row->display_name == 'DONASI LOSS')
+                                                                    <span>{{ "Rp " . number_format($amountloss,2,',','.') }}</span>
+                                                                @endif
+                                                                @if ($row->display_name == 'TANGGAL DONASI')
+                                                                <span> {{ $s }}</span>
+                                                            @endif
                                                                 @endif
                                                         @endif
                                                 @endif
