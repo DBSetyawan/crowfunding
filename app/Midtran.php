@@ -18,6 +18,11 @@ class Midtran extends Model
         return $this->hasMany('App\Donatur', 'donatur_id');
     }
 
+    public function donatursFK()
+    {
+        return $this->belongsTo('App\Donatur', 'donatur_id');
+    }
+
     public function usersDonatur()
     {
         return $this->hasMany('App\User', 'id');

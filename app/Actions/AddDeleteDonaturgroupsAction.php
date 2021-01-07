@@ -24,7 +24,7 @@ class AddDeleteDonaturgroupsAction extends AbstractAction
     {
         // Action button class
         return [
-            'class' => 'btn btn-sm btn-danger pull-right',
+            'class' => 'hidden btn btn-sm btn-danger pull-right',
         ];
     }
 

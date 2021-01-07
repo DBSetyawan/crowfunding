@@ -12,15 +12,16 @@
                 {{ __('voyager::generic.edit') }}
             </a>
         @endcan
+  
         @can('delete', $dataTypeContent)
             @if($isSoftDeleted)
-                <a href="{{ route('voyager.'.$dataType->slug.'.restore', $dataTypeContent->getKey()) }}" title="{{ __('voyager::generic.restore') }}" class="btn btn-default restore" data-id="{{ $dataTypeContent->getKey() }}" id="restore-{{ $dataTypeContent->getKey() }}">
+                {{-- <a href="{{ route('voyager.'.$dataType->slug.'.restore', $dataTypeContent->getKey()) }}" title="{{ __('voyager::generic.restore') }}" class="btn btn-default restore" data-id="{{ $dataTypeContent->getKey() }}" id="restore-{{ $dataTypeContent->getKey() }}">
                     <i class="voyager-trash"></i> <span class="hidden-xs hidden-sm">{{ __('voyager::generic.restore') }}</span>
-                </a>
+                </a> --}}
             @else
-                <a href="javascript:;" title="{{ __('voyager::generic.delete') }}" class="btn btn-danger delete" data-id="{{ $dataTypeContent->getKey() }}" id="delete-{{ $dataTypeContent->getKey() }}">
+                {{-- <a href="javascript:;" title="{{ __('voyager::generic.delete') }}" class="btn btn-danger delete" data-id="{{ $dataTypeContent->getKey() }}" id="delete-{{ $dataTypeContent->getKey() }}">
                     <i class="voyager-trash"></i> <span class="hidden-xs hidden-sm">{{ __('voyager::generic.delete') }}</span>
-                </a>
+                </a> --}}
             @endif
         @endcan
 
@@ -30,6 +31,7 @@
         </a>
     </h1>
     @include('voyager::multilingual.language-selector')
+    
 @stop
 
 @section('content')
@@ -223,7 +225,6 @@
         </div>
     </div>
 
-
     <!-- Modal -->
 <div class="modal fade modal-confirmation" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
     <div class="modal-dialog" role="document">
@@ -352,4 +353,6 @@
 
     
   </script>
+  
 @stop
+

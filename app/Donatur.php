@@ -31,6 +31,11 @@ class Donatur extends Model
         return $this->belongsTo('App\Midtran', 'id');
     }
 
+    public function midtransPK()
+    {
+        return $this->hasMany('App\Midtran', 'id');
+    }
+
     public function getUserFullNameAttribute()
     {
         return "uwotm8bayonetkarambit";

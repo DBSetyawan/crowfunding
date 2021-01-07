@@ -708,7 +708,7 @@ class VoyagerUserController extends BaseVoyagerUserController
                         //     return $btn;
                         // }
                         $btn = '<div class="col-md-12"><span class="no-sort no-click bread-actions"><a class="btn btn-sm btn-primary pull-right edit" href="' .'/admin/users/'.$row->id .'/edit"><span class="voyager-edit"></span> Edit </a>';
-                        $btn = $btn.'&nbsp;<a class="btn btn-sm btn-danger pull-right delete" href="' .'/admin/users/'.$row->id.'"><span class="voyager-trash"></span> Delete </a>';
+                        // $btn = $btn.'&nbsp;<a class="btn btn-sm btn-danger pull-right delete" href="' .'/admin/users/'.$row->id.'"><span class="voyager-trash"></span> Delete </a>';
                         // $btn = $btn.'<a class="btn btn-danger btn-sm  pull-right" href="' . route('donaturs.sub.amil.history', ['group_id'=> $row->id]) .'"> Delete </a>';
                         $btn = $btn.'<a class="btn btn-success btn-sm pull-right icofont-box view" href="' . route('donaturs.sub.amil.history', ['group_id'=> $row->users_id]) .'"><span class="voyager-window-list"></span> VIEW</a>';
                         $btn = $btn.'&nbsp;<a class="btn btn-dark btn-sm pull-right icofont-box view" target="_blank" href="' . route('donaturs.print.prpetugas', ['petugas'=> $row->name]) .'"><span class="voyager-window-list"></span> kwitansi</a></span></div>';

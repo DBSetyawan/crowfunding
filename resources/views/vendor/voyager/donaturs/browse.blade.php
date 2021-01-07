@@ -18,7 +18,7 @@
             Import
         </button> --}}
         @can('delete', app($dataType->model_name))
-            @include('voyager::partials.bulk-delete')
+            {{-- @include('voyager::partials.bulk-delete') --}}
         @endcan
         @can('edit', app($dataType->model_name))
             @if(isset($dataType->order_column) && isset($dataType->order_display_column))
@@ -29,7 +29,7 @@
         @endcan
         @can('delete', app($dataType->model_name))
             @if($usesSoftDeletes)
-                <input type="checkbox" @if ($showSoftDeleted) checked @endif id="show_soft_deletes" data-toggle="toggle" data-on="{{ __('voyager::bread.soft_deletes_off') }}" data-off="{{ __('voyager::bread.soft_deletes_on') }}">
+                {{-- <input type="checkbox" @if ($showSoftDeleted) checked @endif id="show_soft_deletes" data-toggle="toggle" data-on="{{ __('voyager::bread.soft_deletes_off') }}" data-off="{{ __('voyager::bread.soft_deletes_on') }}"> --}}
             @endif
         @endcan
         @foreach($actions as $action)
@@ -38,14 +38,14 @@
             @endif
         @endforeach
         @include('voyager::multilingual.language-selector')
-        <button class="btn btn-primary  btn-add-new" type="button" data-toggle="modal" data-target="#modal-print-last-month" >
+        {{-- <button class="btn btn-primary  btn-add-new" type="button" data-toggle="modal" data-target="#modal-print-last-month" >
             <i class="voyager-file-text"></i>
             Generate Kwitansi
         </button>
         <button class="btn btn-primary  btn-add-new" type="button" data-toggle="modal" data-target="#modal-print" >
             <i class="voyager-file-text"></i>
             Print Kwitansi
-        </button>
+        </button> --}}
         {{-- <button class="btn btn-primary  btn-add-new">
             <i class="voyager-file-text"></i>
             Print Kwitansi
@@ -265,6 +265,7 @@
                                                     @include('voyager::multilingual.input-hidden-bread-browse')
                                                     @inject('user','App\User')
                                                     @inject('donaturs','App\Donatur')
+                                                    @inject('midtrans','App\Midtran')
                                                     @inject('DonaturGroup','App\DonaturGroup')
                                                             @php
 
@@ -272,12 +273,14 @@
 
                                                                 foreach($caricabangs as $FromPetugas){
                                                                     $namacabang[] = $FromPetugas->id;
+                                                                    $email[] = $FromPetugas->email;
                                                                 }
 
                                                                 $caricabangsd = $donaturs->whereIn('user_id', [$namacabang])->get();
 
                                                                  foreach($caricabangsd as $FromPetugas){
                                                                     $namacabangx[] = $FromPetugas->added_by_user_id;
+                                                                    $idx[] = $FromPetugas->user_id;
                                                                 }
 
                                                                 $groups = $DonaturGroup->whereIn('donatur_group_name', [$namacabangx])->get();
@@ -287,6 +290,31 @@
                                                                 }
 
                                                                 $namacabangforDonaturs = $user->whereIn('id', [$idUsers])->get();
+                                                                $kwitansi = $midtrans
+                                                                        ->whereIn('donatur_id', [$data->user_id])
+                                                                        ->whereNotIn('payment_status', ['settlement'])
+                                                                        ->whereYear('updated_at','=','2021')
+                                                                            ->whereMonth('updated_at','=','01')
+                                                                        ->sum('amount');
+                                                                $sudahlunas = $midtrans
+                                                                    ->whereIn('donatur_id', [$data->user_id])->whereIn('payment_status', ['settlement'])
+                                                                    ->whereYear('updated_at','=','2021')
+                                                                            ->whereMonth('updated_at','=','01')->
+                                                                            sum('amount');
+                                                                        
+                                                                        $sts = $midtrans
+                                                                        ->whereIn('donatur_id', [$data->user_id])->whereNotIn('payment_status', ['settlement'])->first();
+                                                                //         foreach($status as $statusx){
+                                                                    // $idxs = $sts-;
+                                                                //     $sts[] = $statusx->payment_status;
+                                                                // }
+                                                                        // ->where(function($querys) {
+                                                                        //     $querys
+                                                                        //    ; 
+                                                                        // })->get();
+
+                                                                        // dd($sts);
+
                                                             
                                                             @endphp
                                                     <span>{{ $data->{$row->field} }}</span>
@@ -296,6 +324,15 @@
                                                      @if ($row->display_name == 'NAMA CABANG')
                                                         <span>{{ $namacabangforDonaturs[0]["parent_id"] }}</span>
                                                     @endif
+                                                    @if ($row->display_name == 'NAMA DONATUR')
+                                                        <span>{{ $caricabangs[0]["name"] }}, {{ $caricabangs[0]["email"] }}</span>
+                                                    @endif
+                                                    @if ($row->display_name == 'JUMLAH DONASI')
+                                                        <span>{{ $kwitansi === 0 ? $sudahlunas : $kwitansi }}</span>
+                                                    @endif
+                                                @if ($row->display_name == 'STATUS')
+                                                <span>{{ isset($sts) ? $sts["payment_status"] : 'settlement' }}</span>
+                                            @endif
                                                 @endif
                                             </td>
                                         @endforeach

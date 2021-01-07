@@ -1201,9 +1201,8 @@ class DonaturController extends VoyagerBaseController
         // }
         $donatur_name = DonaturGroup::findOrFail($group_name)->donatur_group_name;
 
-        $data = Midtran::whereIn('added_by_user_id',[$donatur_name])
+        $data = Midtran::with('donatursFK')->whereIn('added_by_user_id',[$donatur_name])
                 ->where('payment_status', 'kwitansi')->get();
-                // dd($data);
         // $data = Midtran::whereBetween('updated_at',[$request->start_date,$request->end_date])->limit(100)->get();
         // $data = Midtran::where('payment_gateway','offline')->whereBetween('updated_at',[$request->start_date,$request->end_date])->get();
         // dd($data);

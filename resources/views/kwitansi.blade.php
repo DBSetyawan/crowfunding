@@ -41,28 +41,43 @@ table{
 @foreach ($data as $d)
 <table style="position: relative;
 bottom: -240px;">
+@php
+      $date = \Carbon\Carbon::parse($d->updated_at, 'UTC');
+    $s = $date->isoFormat('MMMM YYYY');    
+@endphp
+<div>
+    {{-- {{ $d-> }} --}}
+</div>
     <tr>
-        <td>NID</td>
+        <td>ID Donasi</td>
         <td>:&nbsp;{{$d->id}}</td>
+    </tr>
+    <tr>
+        <td>Bulan-Tahun</td>
+        <td>:&nbsp;{{$s}}</td>
+    </tr>
+    <tr>
+        <td>ID donatur</td>
+        <td>:&nbsp;{{$d->donatursFK->id}}</td>
     </tr>
     <tr>
         <td>Nama</td>
         <td>:&nbsp;{{$d->donatur->nama}}</td>
     </tr>
     <tr>
-        {{-- <td>Alamat</td> --}}
-        {{-- <td>:&nbsp;{{$d->donatur->alamat}}, {{$d->donatur->domisili}}</td> --}}
+        <td>Alamat</td>
+        <td>:&nbsp;{{$d->donatursFK->alamat}}</td>
     </tr>
     <tr>
-        {{-- <td>Program</td> --}}
-        {{-- <td>:&nbsp;{{$d->program->program_name}}</td> --}}
+        <td>Program</td>
+        <td>:&nbsp;{{$d->program->program_name}}</td>
     </tr>
     <tr>
-        <td>Jumlah</td>
+        <td>Nominal</td>
         <td>:&nbsp;{{$d->rupiah}} {{$d->terbilang}}</td>
     </tr>
     <tr>
-        <td>Bulan</td>
+        <td>bulan/tahun Hijriah</td>
         <td>:&nbsp;{{$d->tanggal_masehi}} / {{$d->tanggal_hijiriah}}</td>
     </tr>
 </table>

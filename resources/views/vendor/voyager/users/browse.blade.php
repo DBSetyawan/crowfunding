@@ -19,7 +19,7 @@
             Import
         </button> --}}
         @can('delete', app($dataType->model_name))
-            @include('voyager::partials.bulk-delete')
+            {{-- @include('voyager::partials.bulk-delete') --}}
         @endcan
         @can('edit', app($dataType->model_name))
             @if(isset($dataType->order_column) && isset($dataType->order_display_column))
@@ -28,9 +28,13 @@
                 </a>
             @endif
         @endcan
+        <button class="btn btn-primary  btn-add-new" type="button" data-toggle="modal" data-target="#modal-print-last-month" >
+            <i class="voyager-file-text"></i>
+            Generate Kwitansi
+        </button>
         @can('delete', app($dataType->model_name))
             @if($usesSoftDeletes)
-                <input type="checkbox" @if ($showSoftDeleted) checked @endif id="show_soft_deletes" data-toggle="toggle" data-on="{{ __('voyager::bread.soft_deletes_off') }}" data-off="{{ __('voyager::bread.soft_deletes_on') }}">
+                {{-- <input type="checkbox" @if ($showSoftDeleted) checked @endif id="show_soft_deletes" data-toggle="toggle" data-on="{{ __('voyager::bread.soft_deletes_off') }}" data-off="{{ __('voyager::bread.soft_deletes_on') }}"> --}}
             @endif
         @endcan
         @foreach($actions as $action)
@@ -323,10 +327,42 @@
                                                     }
 
                                                     $amount = $midtrans->whereIn('added_by_user_id', $groupidHasParentGroupDonatur)->sum('amount');
-                                        
+
+                                                        //total seluruh donasi loss
+                                                        // $caricabang = $user->whereIn('name', [$data->id_parent])->get();
+                                                        //         $caripetugas = $user->whereIn('id', [$data->add_by_user_id])->get();
+                                                               
+                                                                // dd($s);
+                                                                // $amountlunas = $midtrans
+                                                                //         ->whereIn('added_by_user_id', [$groupidHasParentGroupDonatur])
+                                                                //         ->where('payment_status',['settlement'])->sum('amount');
+                                                                //         $amountIDloss = $midtrans
+                                                                //         ->whereIn('added_by_user_id', [$groupidHasParentGroupDonatur])
+                                                                //         ->where(function($query) {
+                                                                //             $query->whereYear('updated_at','=','2021')
+                                                                //             ->whereMonth('updated_at','=','01');
+                                                                //         })->sum('amount');
+                                                    $kwitansi = $midtrans
+                                                                        ->whereIn('added_by_user_id', [$loops])
+                                                                        // ->whereIn('payment_status',['kwitansi'])->get();
+                                                                        ->where(function($querys) {
+                                                                            $querys->whereYear('updated_at','=','2021')
+                                                                            ->whereMonth('updated_at','=','01')
+                                                                            ->where('payment_status', 'kwitansi'); 
+                                                                        })->sum('amount');
+                                                                        // dd($kwitansi);
+
+                                                                        // dd()
+                                                                        // $settlement = $midtrans
+                                                                        // ->whereIn('added_by_user_id', [$data->donatur_group_name])
+                                                                        // ->where(function($querys) {
+                                                                        //     $querys->whereYear('updated_at','=','2021')
+                                                                        //     ->whereMonth('updated_at','=','01')
+                                                                        //     ->where('payment_status','settlement'); 
+                                                                        // })->sum('amount');
                                                     @endphp
                                                     {{--  <span>{{ $data->{$row->field} }}</span>  --}}
-                                                     @if ($row->display_name == 'NAMA PETUGAS')
+                                                     @if ($row->display_name == 'JUMLAH PETUGAS')
                                                      
                                                         <span>{{ $countpetugas  }}</span>
                                                          
@@ -340,6 +376,9 @@
                                                         <span>{{ "Rp " . number_format($amount,2,',','.') }}</span>
                                                         @endif
                                                         <span>{{ $data->{$row->field} }}</span>
+                                                    @endif
+                                                      @if ($row->display_name == 'DONASI LOSS')
+                                                        <span>{{ $kwitansi }} asdasd</span>
                                                     @endif
                                                       {{--  @if ($data->amil_id == "amil_id)
                                                       {{ __('241412312') }}
@@ -419,7 +458,9 @@
         </div><!-- /.modal-dialog -->
     </div><!-- /.modal -->
 
-    @include('vendor.voyager.users.modal-import-users');
+    {{-- @include('vendor.voyager.users.modal-import-users'); --}}
+@include('vendor.voyager.midtrans.modal-print-kwitansi');
+
 
 @stop
 

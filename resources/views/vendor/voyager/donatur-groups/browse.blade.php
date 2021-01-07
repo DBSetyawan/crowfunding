@@ -256,22 +256,69 @@
                                                             @php
                                                                 $caricabang = $user->whereIn('name', [$data->id_parent])->get();
                                                                 $caripetugas = $user->whereIn('id', [$data->add_by_user_id])->get();
-                                                                $date = \Carbon\Carbon::parse($data->updated_at, 'UTC');
-                                                                $s = $date->isoFormat('MMMM YYYY'); 
+                                                               
                                                                 // dd($s);
-                                                                $amount = $midtrans
+                                                                $amountlunas = $midtrans
                                                                         ->whereIn('added_by_user_id', [$data->donatur_group_name])
-                                                                        ->whereIn('payment_status',['settlement'])->sum('amount');
-                                                                        // $updated = ->format('M, Y');
-                                                                    $amountloss = $midtrans
+                                                                        ->where('payment_status',['settlement'])->sum('amount');
+                                                                        $amountIDloss = $midtrans
                                                                         ->whereIn('added_by_user_id', [$data->donatur_group_name])
-                                                                        ->where('payment_status', 'kwitansi')->sum('amount');
-                                                                        $updated = $data->updated_at;
+                                                                        ->where(function($query) {
+                                                                            $query->whereYear('updated_at','=','2021')
+                                                                            ->whereMonth('updated_at','=','1');
+                                                                        })->sum('amount');
+                                                                        $kwitansi = $midtrans
+                                                                        ->whereIn('added_by_user_id', [$data->donatur_group_name])
+                                                                        ->where(function($querys) {
+                                                                            $querys->whereYear('updated_at','=','2021')
+                                                                            ->whereMonth('updated_at','=','01')
+                                                                            ->where('payment_status','kwitansi'); 
+                                                                        })->sum('amount');
+                                                                        // dd($data->donatur_group_name);die;
+                                                                        $settlement = $midtrans
+                                                                        ->whereIn('added_by_user_id', [$data->donatur_group_name])
+                                                                        ->where(function($querys) {
+                                                                            $querys->whereYear('updated_at','=','2021')
+                                                                            ->whereMonth('updated_at','=','01')
+                                                                            ->where('payment_status','settlement'); 
+                                                                        })->sum('amount');
+                                                                        // dd($amountIDtestPay);
+                                                                        $tglamounted = $midtrans
+                                                                        ->whereIn('added_by_user_id', [$data->donatur_group_name])
+                                                                        ->where(function($query) {
+                                                                            $query->whereYear('updated_at','=','2021')
+                                                                            ->whereMonth('updated_at','=','1') 
+                                                                            ->select('updated_at');
+                                                                        })->get();
+                                                                        // dd($tglamounted);
+                                                                        foreach ($tglamounted as $key => $value) {
+                                                                            # code...
+                                                                            $date = \Carbon\Carbon::parse($value->updated_at, 'UTC');
+                                                                            $s = $date->isoFormat('MMMM YYYY'); 
+                                                                        }
+                                                                    // $amountloss = $midtrans
+                                                                    //     ->whereIn('added_by_user_id', [$data->donatur_group_name])
+                                                                    //     ->whereIn('updated_at', [$amount->])->sum('amount');
+                                                                    //     $updated = $data->updated_at;
                                                             
                                                             @endphp
                                                 @if ($row->display_name == 'ROLE')
-                                                     
+                                                            
+                                                @if(Auth::user()->role->id == 1)
+                                                    <span class="badge badge-success">{{ __("PUSAT")  }}</span>
+                                                @endif
+                                                @if(Auth::user()->role->id == 2)
+                                                <span class="badge badge-warning">{{ __("ADMIN CABANG")  }}</span>
+                                                @endif
+                                                @if(Auth::user()->role->id == 3)
+                                                    <span class="badge badge-primary">{{ __("PETUGAS")  }}</span>
+                                                @endif
+                                                @if(Auth::user()->role->id == 4)
+                                                    <span class="badge badge-dark">{{ __("DONATUR")  }}</span>
+                                                @endif
+                                                @if(Auth::user()->role->id == null || [])
                                                     <span class="badge badge-secondary">{{ __("Unknown")  }}</span>
+                                                @endif
                                                      @else 
                                                         @if ($row->display_name == 'NAMA CABANG')
                                                      
@@ -282,11 +329,11 @@
                                                                 <span>{{ $caripetugas[0]["name"]  }}</span>
                                                                     @else 
                                                                     @if ($row->display_name == 'DONASI')
-                                                                        <span>{{ "Rp " . number_format($amount,2,',','.') }}</span>
+                                                                        <span>{{ "Rp " . number_format($settlement,2,',','.') }}</span>
                                                                     @endif
                                                                    
                                                                     @if ($row->display_name == 'DONASI LOSS')
-                                                                    <span>{{ "Rp " . number_format($amountloss,2,',','.') }}</span>
+                                                                    <span>{{ "Rp " . number_format($kwitansi,2,',','.') }}</span>
                                                                 @endif
                                                                 @if ($row->display_name == 'TANGGAL DONASI')
                                                                 <span> {{ $s }}</span>

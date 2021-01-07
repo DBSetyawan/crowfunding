@@ -143,18 +143,6 @@
             $(".text").hide();
         });
 
-        function HandleRefresh() {
-            let detailDonaturs = "{{ $donaturdetailid }}";
-                                                    let link = '{!! route("voyager.donaturs.index", ":detailDonaturs")  !!}';
-                                                    let redirect = link.replace(":detailDonaturs",detailDonaturs)
-
-                                    setTimeout(function(){ 
-
-                                        window.location.href = redirect;
-
-                        }, 5000);
-        }
-
     $('#submit-generate-print').click(function(){
         var hari = $('#hari').val();
         var bulan = $('#start_date').val();
@@ -179,7 +167,7 @@
                             }, 2500);
                         })
                     }, 4000);
-                    HandleRefresh();
+                    // HandleRefresh();
                 }
                 if(results.status == false){
                         setTimeout(() => {
