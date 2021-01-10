@@ -1079,6 +1079,14 @@ class DonaturController extends VoyagerBaseController
         return response()->json([], 404);
     }
 
+    public function listHistoryGroupDonatur(Request $request, $donatur_id)
+    {
+        dd($donatur_id);
+        $data = Midtran::select('midtrans.*','programs.program_name')->leftjoin('programs','midtrans.program_id','programs.id')->where('donatur_id',$donatur_id)->latest()->get();
+
+
+    }
+
 
     public function donation_history_index(Request $request,$donatur_id)
     {

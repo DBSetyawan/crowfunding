@@ -266,6 +266,7 @@
                                                     @inject('user','App\User')
                                                     @inject('donaturs','App\Donatur')
                                                     @inject('midtrans','App\Midtran')
+                                                    @inject('confirmation','App\Actions\AddCOnfirmationAction')
                                                     @inject('DonaturGroup','App\DonaturGroup')
                                                             @php
 
@@ -289,7 +290,7 @@
                                                                     $idUsers[] = $FromPetugas->add_by_user_id;
                                                                 }
 
-                                                                $namacabangforDonaturs = $user->whereIn('id', [$idUsers])->get();
+                                                                $namacabangforDonaturs = $user->whereIn('id', [isset($idUsers) ? $idUsers : $data->user_id])->get();
                                                                 $kwitansi = $midtrans
                                                                         ->whereIn('donatur_id', [$data->user_id])
                                                                         ->whereNotIn('payment_status', ['settlement'])
@@ -314,7 +315,7 @@
                                                                         // })->get();
 
                                                                         // dd($sts);
-
+                                                                $confirmation->getAttributes(isset($sts) ? $sts["payment_status"] : 'settlement');
                                                             
                                                             @endphp
                                                     <span>{{ $data->{$row->field} }}</span>
