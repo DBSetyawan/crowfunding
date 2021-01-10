@@ -108,36 +108,36 @@
         // if()
           
     });
-    async function GenerateKwintansi(hari, bulan, tahun) {
+    // async function GenerateKwintansi(hari, bulan, tahun) {
                       
-                      let dataGenerateDonatur = {
-                              hari:hari,
-                              bulan:bulan,
-                              tahun: tahun
-                          }
+    //                   let dataGenerateDonatur = {
+    //                           hari:hari,
+    //                           bulan:bulan,
+    //                           tahun: tahun
+    //                       }
 
-                  const AsyncGenerateKwintansiDonatur = "{{ route('donaturs.generate_and_print_last_month') }}";
+    //             //   const AsyncGenerateKwintansiDonatur = "{{ route('voyager.users.filter.bulan.tahun') }}";
                           
-                      const settings = {
-                                method: 'POST',
-                                headers: {
-                                    'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content'),
-                                    'Content-Type': 'application/json;charset=utf-8',
-                                    'Accept': 'application/json'
-                                    },
-                                body: JSON.stringify(dataGenerateDonatur)
-                          }
+    //                   const settings = {
+    //                             method: 'POST',
+    //                             headers: {
+    //                                 'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content'),
+    //                                 'Content-Type': 'application/json;charset=utf-8',
+    //                                 'Accept': 'application/json'
+    //                                 },
+    //                             body: JSON.stringify(dataGenerateDonatur)
+    //                       }
 
-                  try {
+    //               try {
                         
-                        const fetchResponse = await fetch(`${AsyncGenerateKwintansiDonatur}`, settings);
-                        const data = await fetchResponse.json();
-                        return data;
-                    } catch (e) {
-                        return JSON.stringify(e);
-                    }    
+    //                     const fetchResponse = await fetch(`${AsyncGenerateKwintansiDonatur}`, settings);
+    //                     const data = await fetchResponse.json();
+    //                     return data;
+    //                 } catch (e) {
+    //                     return JSON.stringify(e);
+    //                 }    
 
-              }
+    //           }
         $(document).ready(function(){
             $(".load").hide();
             $(".text").hide();
@@ -193,19 +193,23 @@
     
 </script>
 @stop
-<div class="modal fade modal-confirmation" id="modal-print" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+<div class="modal fade modal-confirmation" id="modal-status" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
     <div class="modal-dialog" role="document">
     <div class="modal-content">
         <div class="modal-header">
         <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-        <h4 class="modal-title" id="myModalLabel">Print Kwitansi Donatur</h4>
+        <h4 class="modal-title" id="myModalLabel">Filter Status Pembayaran</h4>
         </div>
+        <form method="POST" action="{{route('voyager.users.filter.bulan.tahun')}}">
+            @csrf
+            <input type="hidden" name="_token" value="{{ csrf_token() }}">
+
         <div class="modal-body" >
             <div class="form-row" style="margin-bottom:20px;">
                 <div class="col-md-6 mb-3">
                     <div class="form-group">
-                        <label for="validationTooltip03">Mulai</label>
-                        <input type="date" class="form-control" id="starts" name="start_date" placeholder="City" required>
+                        <label for="validationTooltip03">bulan</label>
+                        <input type="date" class="form-control"  name="bulan" placeholder="City" required>
                         <div class="invalid-tooltip">
                             {{-- Please provide a valid city. --}}
                         </div>
@@ -213,8 +217,8 @@
                 </div>
                 <div class="col-md-6  mb-3">
                     <div class="form-group">
-                        <label for="validationTooltip04">Hingga</label>
-                        <input type="date" class="form-control" id="ends" name="end_date" placeholder="State" required>
+                        <label for="validationTooltip04">tahun</label>
+                        <input type="date" class="form-control" name="tahun" placeholder="State" required>
                         <div class="invalid-tooltip">
                           {{-- Please provide a valid state. --}}
                         </div>
@@ -224,15 +228,13 @@
         </div>
         
         <div class="modal-footer">
-            {{-- <form method="POST" action="{{route('donaturs.confirm_donation')}}"> --}}
-                {{-- {{ csrf_field() }} --}}
-            <button type="button" class="btn btn-default" data-dismiss="modal">Tutup</button>
-        
+            {{-- <button type="button" class="btn btn-default" data-dismiss="modal">Tutup</button> --}}
+            <input type="submit" class="btn btn-primary" value="Filter"/>
             {{-- <input type="hidden" value="" name="donation_id" id="confirmation-donation-id" /> --}}
-            <button type="button" id="submit-print" class="btn btn-primary">Print</button>
-        {{-- </form> --}}
-        
+            
         </div>
+    </form>
+
     </div>
     </div>
 </div>
