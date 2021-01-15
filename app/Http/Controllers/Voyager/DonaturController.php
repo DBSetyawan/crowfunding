@@ -547,6 +547,13 @@ class DonaturController extends VoyagerBaseController
         return Voyager::view($view, compact('dataType', 'dataTypeContent', 'isModelTranslatable','donatur_groups'));
     }
 
+    public function form_confirmation_referer(Request $request)
+    {
+        $programs = Program::all();
+        $donatur = Donatur::where('id',$request->id)->first();
+        return view('vendor.voyager.donaturs.form_confirmation_donasi',compact('donatur','programs'));
+    }
+
     /**
      * POST BRE(A)D - Store data.
      *
