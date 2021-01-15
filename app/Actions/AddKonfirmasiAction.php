@@ -33,14 +33,14 @@ class AddKonfirmasiAction extends AbstractAction
             if($checks->payment_status == "kwitansi" || "on_funding"){
 
                 return [
-                    'class' => "btn btn-sm btn-success pull-right",
+                    'class' => "btn btn-sm btn-warning pull-right",
                     'data-id' => $this->data->{$this->data->getKeyName()}
                 ];
 
             }else{}
         } else {
             return [
-                'class' => "btn btn-sm btn-success pull-right hidden",
+                'class' => "btn btn-sm hidden",
                 'data-id' => $this->data->{$this->data->getKeyName()}
             ];
         }
