@@ -16,7 +16,7 @@
         @endcan
            <button class="btn btn-primary btn-add-new" type="button" data-toggle="modal" data-target="#modal-status" >
             <i class="voyager-file-text"></i>
-            Filter Status
+            Filter Status s
         </button>
         @can('delete', app($dataType->model_name))
             {{-- @include('voyager::partials.bulk-delete') --}}
@@ -370,15 +370,20 @@
                                                                 //             $query->whereYear('updated_at','=','2021')
                                                                 //             ->whereMonth('updated_at','=','01');
                                                                 //         })->sum('amount');
-                                                    $kwitansi = $midtrans->groupBy('group_id')
-                                                                        ->where('group_id', [$group_id])
-                                                                        // ->whereIn('payment_status',['kwitansi'])->get();
-                                                                        ->where(function($querys) {
+                                                    // $kwitansi = $midtrans
+                                                    //                     ->whereIn('group_id', [$group_id])
+                                                    //                     // dd($kwitansi);
+                                                    //                     ->where(function($querys) {
+                                                    //                         $querys
+                                                    //                         // ->whereMonth('updated_at','=','01')
+                                                    //                         ->whereIn('payment_status', ['kwitansi']); 
+                                                    //                     })->sum('amount');
+
+                                                                        $kwitansi = $midtrans->whereIn('added_by_user_id', $groupidHasParentGroupDonatur)
+                                                                            ->where(function($querys) {
                                                                             $querys
-                                                                            // ->whereMonth('updated_at','=','01')
                                                                             ->whereIn('payment_status', ['kwitansi']);
-                                                                            // ->orWhereNotIn('payment_status', ['settlement']); 
-                                                                        })->get();
+                                                                        })->sum('amount');
                                                                         // dd($kwitansi);
 
                                                                         // dd($kwitansi)
@@ -407,7 +412,8 @@
                                                         <span>{{ $data->{$row->field} }}</span>
                                                     @endif
                                                       @if ($row->display_name == 'DONASI LOSS')
-                                                        <span>{{ $kwitansi }} asdasd</span>
+                                                        <span>{{ "Rp " . number_format($kwitansi,2,',','.') }}</span>
+
                                                     @endif
                                                       {{--  @if ($data->amil_id == "amil_id)
                                                       {{ __('241412312') }}
