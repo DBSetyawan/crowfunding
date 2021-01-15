@@ -16,8 +16,6 @@
 
 @section('content')
     <div class="page-content container-fluid">
-
-
         <form class="form-edit-add" role="form"
             action="{{route('donaturs.confirm_donation')}}"
             method="POST">
@@ -26,7 +24,6 @@
             <div class="row">
                 <div class="col-md-8">
                     <div class="panel panel-bordered">
-                    {{-- <div class="panel"> --}}
                         @if (count($errors) > 0)
                             <div class="alert alert-danger">
                                 <ul>
@@ -40,64 +37,19 @@
                         <div class="panel-body">
                             <div class="contanier">
                             <?php if(Auth::user()->role->id == 1 || Auth::user()->role->id == 2){ 
-                                        echo " Dengan melakukan ini anda akan merubah status donasi, menjadi, status <b>Settlement</b>";
+                                        echo " Dengan melakukan ini anda akan merubah status menjadi <b>Settlements</b>";
                                     }else if(Auth::user()->role->id == 3){
-                                        echo "Dengan melakukan ini anda akan merubah status donasi menjadi, status  <b>On Funding</b> ";
+                                        echo " Dengan melakukan ini anda akan merubah status menjadi <b>On Funding</b>";
                                 }
-                            ?>
+                            ?>  
+                            {{-- &nbsp;<button type="submit" class="btn btn-primary pull-right save">LUNASI</button>&nbsp; --}}
                             </div>
                         </div>
                     </div>
-                </div>
-                <div class="col-md-4">
-                    <div class="panel panel-bordered">
-                    <div class="panel-body">
-                        <h3>Data Donatur</h3>
-
-                        
-                        <div class="row">
-                            <div class="col-md-4">
-                                <span>Nama</span>
-                            </div>
-                            <div class="col-md-8">
-                                {{-- <span>{{$donatur->nama}}</span> --}}
-                            </div>
-                        </div>
-
-                        <div class="row">
-                            <div class="col-md-4">
-                                <span>No. Hp</span>
-                            </div>
-                            <div class="col-md-8">
-                                {{-- <span>{{$donatur->no_hp}}</span> --}}
-                            </div>
-                        </div>
-
-                        <div class="row">
-                            <div class="col-md-4">
-                                <span>Pekerjaan</span>
-                            </div>
-                            <div class="col-md-8">
-                                {{-- <span>{{$donatur->pekerjaan}}</span> --}}
-                            </div>
-                        </div>
-
-                        <div class="row">
-                            <div class="col-md-4">
-                                <span>Alamat</span>
-                            </div>
-                            <div class="col-md-8">
-                                {{-- <span>{{$donatur->alamat}}</span> --}}
-                            </div>
-                        </div>
-                    </div>
-                </div>
                 </div>
             </div>
-
-            <button type="submit" class="btn btn-primary pull-right save">
-            LUNASI
-            </button>
+            </div>
+        </div>
         </form>
     </div>
 @stop

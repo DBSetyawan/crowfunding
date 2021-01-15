@@ -320,10 +320,10 @@
                                                     @endif
                                                 @if ($row->display_name == 'STATUS')
                                                 <span>{{ isset($sts) ? $sts["payment_status"] : 'settlement' }}</span>
+                                                <script>
+                                                    $('.stats_pembayaran').hide()
+                                                </script>
                                             @endif
-                                            @if ($row->display_name == 'Aksi')
-                                            <span>{{ isset($sts) ? $sts["payment_status"] : 'settlement' }}</span>
-                                        @endif
                                                 @endif
                                             </td>
                                         @endforeach

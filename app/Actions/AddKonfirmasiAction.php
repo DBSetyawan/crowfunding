@@ -2,7 +2,9 @@
 
 namespace App\Actions;
 
+use App\Midtran;
 use TCG\Voyager\Actions\AbstractAction;
+use Illuminate\Support\Facades\Auth;
 
 class AddKonfirmasiAction extends AbstractAction
 {
@@ -20,12 +22,29 @@ class AddKonfirmasiAction extends AbstractAction
 
     public function getAttributes()
     {
-        // Action button class
-        return [
-            'class' => "btn btn-sm btn-success pull-right",
-            'data-id' => $this->data->{$this->data->getKeyName()},
-            'id'      => 'daniel',
-        ];
+        $checks = Midtran::whereNotIn('payment_status', ['settlement'])->first();
+        // return [
+        //     'class' => "btn btn-sm btn-success pull-right stats_pembayaran",
+        //     'data-id' => $this->data->{$this->data->getKeyName()}
+        // ];
+
+        // // dd(Auth::user()->role->id);
+        if(Auth::user()->role->id == 2 || Auth::user()->role->id == 3){
+            if($checks->payment_status == "kwitansi" || "on_funding"){
+
+                return [
+                    'class' => "btn btn-sm btn-success pull-right",
+                    'data-id' => $this->data->{$this->data->getKeyName()}
+                ];
+
+            }else{}
+        } else {
+            return [
+                'class' => "btn btn-sm btn-success pull-right hidden",
+                'data-id' => $this->data->{$this->data->getKeyName()}
+            ];
+        }
+       
     }
 
     public function shouldActionDisplayOnDataType()
