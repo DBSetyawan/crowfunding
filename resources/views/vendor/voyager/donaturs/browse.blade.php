@@ -32,11 +32,11 @@
                 {{-- <input type="checkbox" @if ($showSoftDeleted) checked @endif id="show_soft_deletes" data-toggle="toggle" data-on="{{ __('voyager::bread.soft_deletes_off') }}" data-off="{{ __('voyager::bread.soft_deletes_on') }}"> --}}
             @endif
         @endcan
-        @foreach($actions as $action)
+        {{-- @foreach($actions as $action)
             @if (method_exists($action, 'massAction'))
                 @include('voyager::bread.partials.actions', ['action' => $action, 'data' => null])
             @endif
-        @endforeach
+        @endforeach --}}
         @include('voyager::multilingual.language-selector')
         {{-- <button class="btn btn-primary  btn-add-new" type="button" data-toggle="modal" data-target="#modal-print-last-month" >
             <i class="voyager-file-text"></i>
