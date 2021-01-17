@@ -547,6 +547,13 @@ class DonaturController extends VoyagerBaseController
         return Voyager::view($view, compact('dataType', 'dataTypeContent', 'isModelTranslatable','donatur_groups'));
     }
 
+    public function form_confirmation_referer(Request $request)
+    {
+        $programs = Program::all();
+        $donatur = Donatur::where('id',$request->id)->first();
+        return view('vendor.voyager.donaturs.form_confirmation_donasi',compact('donatur','programs'));
+    }
+
     /**
      * POST BRE(A)D - Store data.
      *
@@ -1156,6 +1163,7 @@ class DonaturController extends VoyagerBaseController
     }
 
     public function confirm_donation(Request $request){
+        dd($request->donation_id);die;
         $donation_id = $request->donation_id;
         $status = null;
         $midtran = Midtran::where('id',$donation_id)->first();
@@ -1166,10 +1174,10 @@ class DonaturController extends VoyagerBaseController
             ]);
         }
         if(Auth::user()->role->id == 3){
-            $status="on_funding"." *".Auth::user()->name."*";
+            $status="on_funding";
             $cash="pending";
         }else if(Auth::user()->role->id == 2 || Auth::user()->role->id == 1){
-            $status="settlement"." *".Auth::user()->name."*";
+            $status="settlement";
             $cash="cash";
 
             // return redirect()->back()->with([

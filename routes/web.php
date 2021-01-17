@@ -31,6 +31,7 @@ Route::get('/symlink_create', function () {
 
 Route::group(['prefix' => 'admin'], function () {
     Route::get('donaturs/add-donation','Voyager\DonaturController@add_donation')->name('donaturs.add_donation');
+    Route::get('donaturs/confirmation-donation','Voyager\DonaturController@form_confirmation_referer')->name('donaturs.groups.form.confirmation');
     Route::post('donaturs/store-donation','Voyager\DonaturController@store_donation')->name('donaturs.store_donation');
     Route::get('donaturs/group.donaturs/{group_id}','Voyager\DonaturController@index')->name('voyager.donaturs.index.groups');
     Route::get('donaturs/group.donaturs.detail/{id}','Voyager\ProgramGroupsController@index')->name('voyager.donatur-groups.index.detail');

@@ -29,6 +29,7 @@ class AppServiceProvider extends ServiceProvider
         Voyager::addAction(\App\Actions\AddPrintKwitansiAction::class);
         Voyager::addAction(\App\Actions\AddCOnfirmationAction::class);
         Voyager::addAction(\App\Actions\AddKwitansiGroupsAction::class);
+        Voyager::addAction(\App\Actions\AddKonfirmasiAction::class);
         Voyager::replaceAction(ViewAction::class,\App\Actions\ViewDonatorAction::class);
         Voyager::addAction(\App\Actions\AddDonationAction::class);
         Voyager::addAction(\App\Actions\AddDeleteDonaturgroupsAction::class);

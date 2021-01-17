@@ -8,7 +8,7 @@ class AddPrintKwitansiAction extends AbstractAction
 {
     public function getTitle()
     {
-        return 'kwitansi';
+        return ' kwitansi';
     }
 
     public function getIcon()
@@ -27,7 +27,7 @@ class AddPrintKwitansiAction extends AbstractAction
 
                 return [
                     'id' => 'submit-print-kwitansi-cabang',
-                    'class' => 'btn btn-sm btn-dark pull-right',
+                    'class' => 'col-md-12 btn btn-sm btn-dark pull-right no-sort no-click bread-actions',
                     'target' => '_blank'
                 ];
 

@@ -16,7 +16,7 @@
         @endcan
            <button class="btn btn-primary btn-add-new" type="button" data-toggle="modal" data-target="#modal-status" >
             <i class="voyager-file-text"></i>
-            Filter Status
+            Filter Status s
         </button>
         @can('delete', app($dataType->model_name))
             {{-- @include('voyager::partials.bulk-delete') --}}
@@ -258,46 +258,6 @@
                                                     @else
                                                         {{ trans_choice('voyager::media.files', 0) }}
                                                     @endif
-                                                       {{--     $collection = collect($data->name);
-                                                    $collection = $collection->splice(2);
-
-                                                        $merged = $collection->merge($loops);
-                                                        $merged->all();
-                                                        $cabang = $merged->toArray();
-
-                                                          $countpetugas = $user->whereIn('parent_id', [$data->name])->whereIn('role_id', [3])->count();
-                                                    $caripetugas = $user->whereIn('parent_id', [$data->name])->whereIn('role_id', [3])->get();
-                                                    foreach ($caripetugas as $key => $value) {
-                                                        // # code...
-                                                        //     $namaDonatur[] = $value->name;
-
-                                                        progress deploy :
-                                                         $countpetugas = $user->whereIn('parent_id', [$data->name])->whereIn('role_id', [3])->count();
-                                                    $caripetugas = $user->whereIn('role_id', [2])->get();
-                                                    
-                                                    foreach ($caripetugas as $key => $value) {
-                                                        // # code...
-                                                        $loops[] = $value->name;
-                                                        $caripetugasdaricabang = $user->whereIn('parent_id', [$value->name])->whereIn('role_id', [3])->get();
-
-                                                    }
-                                                 
-                                                    foreach ($caripetugasdaricabang as $key => $value) {
-                                                        # code...
-                                                        $carinamadonaturgroup[] = $value->name;
-                                                        $caridonaturgroups = $donaturgroup->whereIn('id_parent', [$value->name])->get();
-
-                                                    }
-
-
-                                                    foreach ($caridonaturgroups as $key => $value) {
-                                                        # code...
-                                                        $carigroupname[] = $value->donatur_group_name;
-                                                    $amount = $midtrans->whereIn('added_by_user_id', [$carigroupname])->sum('amount');
-                                                            
-                                                    }
-
-                                                    --}}
                                                 @else
                                                     @include('voyager::multilingual.input-hidden-bread-browse')
                                                     @inject('user','App\User')
@@ -305,7 +265,7 @@
                                                     @inject('donaturgroup','App\DonaturGroup') 
                                                     @inject('midtrans','App\Midtran')
                                                     @php
-                                                     $countpetugas = $user->whereIn('parent_id', [$data->name])->whereIn('role_id', [3])->count();
+                                                    $countpetugas = $user->whereIn('parent_id', [$data->name])->whereIn('role_id', [3])->count();
                                                     $caripetugas = $user->whereIn('name', [$data->name])->whereIn('role_id', [2])->get();
                                                     
                                                     foreach ($caripetugas as $key => $value) {
@@ -327,68 +287,28 @@
                                                             
                                                     }
 
-                                                   
+                                                            if(!isset($bulan) || !isset($tahun)){
+                                                                $amount = $midtrans
+                                                                ->whereIn('added_by_user_id', $groupidHasParentGroupDonatur)
+                                                                ->sum('amount');
+                                                                
+                                                            } else {
 
-                                                                        if(!isset($bulan) || !isset($tahun)){
-                                                                            // dd($bulan);
-                                                                         
-                                                                            $amount = $midtrans
-                                                                            ->whereIn('added_by_user_id', $groupidHasParentGroupDonatur)
-                                                                            ->sum('amount');
-                                                                                // dd("true",$amount);
-                                                                            
-                                                                        } else {
+                                                                $amount = $midtrans->whereIn('added_by_user_id', $groupidHasParentGroupDonatur)
+                                                                ->where(function($querys) use($bulan, $tahun) {
+                                                                    $querys
+                                                                    ->whereMonth('updated_at', '=', $bulan)
+                                                                    ->whereYear('updated_at', '=', $tahun);
+                                                                })->sum('amount');
 
-                                                                            $amount = $midtrans->whereIn('added_by_user_id', $groupidHasParentGroupDonatur)
-                                                                            ->where(function($querys) use($bulan, $tahun) {
-                                                                            $querys
-                                                                            // ->whereDay('updated_at', '=', '06' : NULL)
-                                                                            ->whereMonth('updated_at', '=', $bulan)
-                                                                            ->whereYear('updated_at', '=', $tahun);
-                                                                            // ->whereNotIn('payment_status', ['settlement']); 
-                                                                        })->sum('amount');
-                                                                        // dd("false", $amount);
+                                                            }
 
-                                                                        }
-                                                                        // dd($amount);
-                                                    // $amount = $midtrans
-                                                    // ->whereIn('added_by_user_id', $groupidHasParentGroupDonatur)
-                                                    // ->whereIn('payment_status', $status === NULL ? ['kwitansi'] : $status)
-                                                    // ->sum('amount');
-
-                                                        //total seluruh donasi loss
-                                                        // $caricabang = $user->whereIn('name', [$data->id_parent])->get();
-                                                        //         $caripetugas = $user->whereIn('id', [$data->add_by_user_id])->get();
-                                                               
-                                                                // dd($s);
-                                                                // $amountlunas = $midtrans
-                                                                //         ->whereIn('added_by_user_id', [$groupidHasParentGroupDonatur])
-                                                                //         ->where('payment_status',['settlement'])->sum('amount');
-                                                                //         $amountIDloss = $midtrans
-                                                                //         ->whereIn('added_by_user_id', [$groupidHasParentGroupDonatur])
-                                                                //         ->where(function($query) {
-                                                                //             $query->whereYear('updated_at','=','2021')
-                                                                //             ->whereMonth('updated_at','=','01');
-                                                                //         })->sum('amount');
-                                                    $kwitansi = $midtrans->groupBy('group_id')
-                                                                        ->where('group_id', [$group_id])
-                                                                        // ->whereIn('payment_status',['kwitansi'])->get();
-                                                                        ->where(function($querys) {
-                                                                            $querys
-                                                                            // ->whereMonth('updated_at','=','01')
-                                                                            ->whereIn('payment_status', ['kwitansi']);
-                                                                            // ->orWhereNotIn('payment_status', ['settlement']); 
-                                                                        })->get();
-                                                                        // dd($kwitansi);
-
-                                                                        // dd($kwitansi)
-                                                                        // $settlement = $midtrans
-                                                                        // ->whereIn('added_by_user_id', [$data->donatur_group_name])
-                                                                        // ->where(function($querys) {
-                                                                        //     $querys->whereYear('updated_at','=','2021')
-                                                                        //     ->whereMonth('updated_at','=','01')
-                                                                        //     ->where('payment_status','settlement'); 
-                                                                        // })->sum('amount');
+                                                                $kwitansi = $midtrans->whereIn('added_by_user_id', $groupidHasParentGroupDonatur)
+                                                                    ->where(function($querys) {
+                                                                    $querys
+                                                                    ->whereIn('payment_status', ['kwitansi']);
+                                                                })
+                                                                ->sum('amount');
                                                     @endphp
                                                     {{--  <span>{{ $data->{$row->field} }}</span>  --}}
                                                      @if ($row->display_name == 'JUMLAH PETUGAS')
@@ -407,7 +327,8 @@
                                                         <span>{{ $data->{$row->field} }}</span>
                                                     @endif
                                                       @if ($row->display_name == 'DONASI LOSS')
-                                                        <span>{{ $kwitansi }} asdasd</span>
+                                                        <span>{{ "Rp " . number_format($kwitansi,2,',','.') }}</span>
+
                                                     @endif
                                                       {{--  @if ($data->amil_id == "amil_id)
                                                       {{ __('241412312') }}

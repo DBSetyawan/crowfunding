@@ -32,11 +32,11 @@
                 {{-- <input type="checkbox" @if ($showSoftDeleted) checked @endif id="show_soft_deletes" data-toggle="toggle" data-on="{{ __('voyager::bread.soft_deletes_off') }}" data-off="{{ __('voyager::bread.soft_deletes_on') }}"> --}}
             @endif
         @endcan
-        @foreach($actions as $action)
+        {{-- @foreach($actions as $action)
             @if (method_exists($action, 'massAction'))
                 @include('voyager::bread.partials.actions', ['action' => $action, 'data' => null])
             @endif
-        @endforeach
+        @endforeach --}}
         @include('voyager::multilingual.language-selector')
         {{-- <button class="btn btn-primary  btn-add-new" type="button" data-toggle="modal" data-target="#modal-print-last-month" >
             <i class="voyager-file-text"></i>
@@ -302,6 +302,7 @@
                                                                     ->whereYear('updated_at','=','2021')
                                                                             ->whereMonth('updated_at','=','01')->
                                                                             sum('amount');
+<<<<<<< HEAD
                                                                         
                                                                         $sts = $midtrans
                                                                         ->whereIn('donatur_id', [$data->user_id])->whereNotIn('payment_status', ['settlement'])->first();
@@ -316,6 +317,10 @@
 
                                                                         // dd($sts);
                                                                 $confirmation->getAttributes(isset($sts) ? $sts["payment_status"] : 'settlement');
+=======
+                                                            $sts = $midtrans
+                                                            ->whereIn('donatur_id', [$data->user_id])->whereNotIn('payment_status', ['settlement'])->first();
+>>>>>>> 8da593375dd6c8e006fad67ae2c01ce531e6ccb4
                                                             
                                                             @endphp
                                                     <span>{{ $data->{$row->field} }}</span>
@@ -333,6 +338,9 @@
                                                     @endif
                                                 @if ($row->display_name == 'STATUS')
                                                 <span>{{ isset($sts) ? $sts["payment_status"] : 'settlement' }}</span>
+                                                <script>
+                                                    $('.stats_pembayaran').hide()
+                                                </script>
                                             @endif
                                                 @endif
                                             </td>
@@ -402,6 +410,37 @@
     @include('vendor.voyager.midtrans.modal-print-kwitansi');
     @include('vendor.voyager.midtrans.modal-import-history-okt');
 
+    {{-- start modal confirmation --}}
+    <div class="modal fade modal-confirmation" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+        <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+            <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+            <h4 class="modal-title" id="myModalLabel">Konfirmasi status pendonasian</h4>
+            </div>
+            <div class="modal-body">
+            Dengan melakukan ini anda akan merubah status donasi, menjadi <?php echo "<br/>" ?> status "<?php 
+                if(Auth::user()->role->id == 1 || Auth::user()->role->id == 2){
+                    echo " <b>Settlement</b> ";
+                }else if(Auth::user()->role->id == 3){
+                    echo " <b>On Funding</b> ";
+                }
+            ?>"
+            </div>
+            <div class="modal-footer">
+                <form method="POST" action="{{route('donaturs.confirm_donation')}}">
+                    {{ csrf_field() }}
+                <button type="button" class="btn btn-default" data-dismiss="modal">Tutup</button>
+            
+                <input type="hidden" value="" name="donation_id" id="confirmation-donation-id" />
+                <button type="submit" class="btn btn-success">Konfirmasi Donasi</button>
+            </form>
+            
+            </div>
+        </div>
+        </div>
+    </div>
+    {{-- end modal confirmation --}}
 @stop
 
 @section('css')
@@ -411,12 +450,16 @@
 @stop
 
 @section('javascript')
-    <!-- DataTables -->
-    @if(!$dataType->server_side && config('dashboard.data_tables.responsive'))
-        <script src="{{ voyager_asset('lib/js/dataTables.responsive.min.js') }}"></script>
-    @endif
-    <script>
-        $(document).ready(function () {
+<!-- DataTables -->
+@if(!$dataType->server_side && config('dashboard.data_tables.responsive'))
+<script src="{{ voyager_asset('lib/js/dataTables.responsive.min.js') }}"></script>
+@endif
+<script>
+    $("#daniel").click(function (e) {
+        e.preventDefault();
+        alert('success');
+    })
+    $(document).ready(function () {
             @if (!$dataType->server_side)
                 var table = $('#dataTable').DataTable({!! json_encode(
                     array_merge([
