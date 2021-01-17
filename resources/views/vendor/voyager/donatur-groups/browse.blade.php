@@ -286,14 +286,14 @@
                                                                         $tglamounted = $midtrans
                                                                         ->whereIn('added_by_user_id', [$data->donatur_group_name])
                                                                         ->where(function($query) {
-                                                                            $query->whereYear('updated_at','=','2021')
-                                                                            ->whereMonth('updated_at','=','1') 
-                                                                            ->select('updated_at');
+                                                                            $query->whereYear('updated_at','=','2020')
+                                                                            ->whereMonth('updated_at','=','12') 
+                                                                            ->get();
                                                                         })->get();
                                                                         // dd($tglamounted);
                                                                         foreach ($tglamounted as $key => $value) {
                                                                             # code...
-                                                                            $date = \Carbon\Carbon::parse($value->updated_at, 'UTC');
+                                                                            $date = \Carbon\Carbon::parse($value->created_at, 'UTC');
                                                                             $s = $date->isoFormat('MMMM YYYY'); 
                                                                         }
                                                                     // $amountloss = $midtrans

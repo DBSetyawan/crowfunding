@@ -302,6 +302,12 @@
                                                                     ->whereYear('updated_at','=','2021')
                                                                             ->whereMonth('updated_at','=','01')->
                                                                             sum('amount');
+
+                                                                            $statusall = $midtrans
+                                                                    ->whereIn('donatur_id', [$data->user_id])->whereNotNull('payment_status')->
+                                                                    // ->whereYear('updated_at','=','2021')
+                                                                    //         ->whereMonth('updated_at','=','01')->
+                                                                            get();
 // <<<<<<< HEAD
                                                                         
 //                                                                         $sts = $midtrans
@@ -336,7 +342,15 @@
                                                         <span>{{ $kwitansi === 0 ? $sudahlunas : $kwitansi }}</span>
                                                     @endif
                                                 @if ($row->display_name == 'STATUS')
-                                                <span>{{ isset($sts) ? $sts["payment_status"] : 'settlement' }}</span>
+                                                {{-- <span>{{ isset($sts) ? $sts["payment_status"] : 'settlement' }}</span> --}}
+                                                <ul>
+                                                    @foreach ($statusall as $k => $v)
+                                                        {{-- <li> --}}
+                                                            <button>{{ $v->payment_status }} {{ $v->id }}</button>
+                                                        {{-- </li> --}}
+                                                        
+                                                    @endforeach
+                                                </ul>
                                                 <script>
                                                     $('.stats_pembayaran').hide()
                                                 </script>
