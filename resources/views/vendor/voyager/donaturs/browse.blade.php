@@ -266,7 +266,7 @@
                                                     @inject('user','App\User')
                                                     @inject('donaturs','App\Donatur')
                                                     @inject('midtrans','App\Midtran')
-                                                    @inject('confirmation','App\Actions\AddCOnfirmationAction')
+                                                    {{-- @inject('confirmation','App\Actions\AddCOnfirmationAction') --}}
                                                     @inject('DonaturGroup','App\DonaturGroup')
                                                             @php
 
@@ -302,25 +302,24 @@
                                                                     ->whereYear('updated_at','=','2021')
                                                                             ->whereMonth('updated_at','=','01')->
                                                                             sum('amount');
-<<<<<<< HEAD
+// <<<<<<< HEAD
                                                                         
-                                                                        $sts = $midtrans
-                                                                        ->whereIn('donatur_id', [$data->user_id])->whereNotIn('payment_status', ['settlement'])->first();
-                                                                //         foreach($status as $statusx){
-                                                                    // $idxs = $sts-;
-                                                                //     $sts[] = $statusx->payment_status;
-                                                                // }
-                                                                        // ->where(function($querys) {
-                                                                        //     $querys
-                                                                        //    ; 
-                                                                        // })->get();
+//                                                                         $sts = $midtrans
+//                                                                         ->whereIn('donatur_id', [$data->user_id])->whereNotIn('payment_status', ['settlement'])->first();
+//                                                                 //         foreach($status as $statusx){
+//                                                                     // $idxs = $sts-;
+//                                                                 //     $sts[] = $statusx->payment_status;
+//                                                                 // }
+//                                                                         // ->where(function($querys) {
+//                                                                         //     $querys
+//                                                                         //    ; 
+//                                                                         // })->get();
 
-                                                                        // dd($sts);
-                                                                $confirmation->getAttributes(isset($sts) ? $sts["payment_status"] : 'settlement');
-=======
+//                                                                         // dd($sts);
+// =======
                                                             $sts = $midtrans
                                                             ->whereIn('donatur_id', [$data->user_id])->whereNotIn('payment_status', ['settlement'])->first();
->>>>>>> 8da593375dd6c8e006fad67ae2c01ce531e6ccb4
+// >>>>>>> 8da593375dd6c8e006fad67ae2c01ce531e6ccb4
                                                             
                                                             @endphp
                                                     <span>{{ $data->{$row->field} }}</span>

@@ -17,9 +17,8 @@ class AddCOnfirmationAction extends AbstractAction
         return 'voyager-plus';
     }
 
-    public function getAttributes($req = null)
+    public function getAttributes()
     {
-        return $req;
         if(Auth::user()->role->id == 3 || Auth::user()->role->id == 1 || Auth::user()->role->id == 2) {
             return [
                 'class' => 'btn btn-sm btn-primary pull-right',
