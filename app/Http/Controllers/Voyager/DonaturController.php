@@ -1163,7 +1163,7 @@ class DonaturController extends VoyagerBaseController
     }
 
     public function confirm_donation(Request $request){
-        dd($request->donation_id);die;
+            dd($request->donation_id);die;
         $donation_id = $request->donation_id;
         $status = null;
         $midtran = Midtran::where('id',$donation_id)->first();
@@ -1219,6 +1219,13 @@ class DonaturController extends VoyagerBaseController
 
         $data = Midtran::with('donatursFK')->whereIn('added_by_user_id',[$donatur_name])
                 ->where('payment_status', 'kwitansi')->get();
+                $caripetugas__ = DonaturGroup::where(function($query) use($group_name){
+                        return $query->whereIn('id', [$group_name]);
+                })->select('id_petugas')->get();
+                $ptgname = User::whereIn('id',[$caripetugas__[0]->id_petugas])->get();
+                // dd($ptgname);
+                $carigroup__ = DonaturGroup::whereIn('id',[$group_name])->get();
+                // dd($carigroup__);
         // $data = Midtran::whereBetween('updated_at',[$request->start_date,$request->end_date])->limit(100)->get();
         // $data = Midtran::where('payment_gateway','offline')->whereBetween('updated_at',[$request->start_date,$request->end_date])->get();
         // dd($data);
@@ -1245,7 +1252,7 @@ class DonaturController extends VoyagerBaseController
             } 
         }
 
-        return view('kwitansi',compact('data'));
+        return view('kwitansi',compact('data','carigroup__','ptgname'));
         
         
     }
