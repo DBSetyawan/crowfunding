@@ -430,7 +430,7 @@
     @include('vendor.voyager.midtrans.modal-import-history-okt');
 
     {{-- start modal confirmation --}}
-    <div class="modal fade modal-confirmation" id="myModals" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+    <div class="modal fade modal-confirmation" id="myModals" tabindex="-1" data-keyboard="false" data-backdrop="static" role="dialog" aria-labelledby="myModalLabel">
         <div class="modal-dialog" role="document">
         <div class="modal-content">
             <div class="modal-header">

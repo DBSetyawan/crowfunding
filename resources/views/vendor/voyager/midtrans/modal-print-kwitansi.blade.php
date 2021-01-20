@@ -87,13 +87,14 @@
 $(document).on("click", ".pays", function () {
 
     Swal.fire({
-        title: 'Are you sure?',
-        text: "You won't be able to revert this!",
+        title: 'Apakah anda yakin mengkonfirmasi transaksi donatur ini?',
+        text: "Transaksi tidak bisa dibatalkan, jika sudah ditindaklanjuti!",
         icon: 'warning',
         showCancelButton: true,
-        confirmButtonColor: '#3085d6',
+        confirmButtonColor: 'GREEN',
         cancelButtonColor: '#d33',
-        confirmButtonText: 'Yes, delete it!'
+        confirmButtonText: 'ya, lanjutkan!',
+        cancelButtonText: 'batalkan'
         }).then((result) => {
         if (result.isConfirmed) {
          var id_history_donaturs = $(this).val();
@@ -112,12 +113,11 @@ $(document).on("click", ".pays", function () {
                 )
             }, 2000);
             
-           
                 setTimeout(() => {
 
                     window.location.reload(true);
 
-                }, 4000);
+                }, 5000);
             }) 
         }
     })

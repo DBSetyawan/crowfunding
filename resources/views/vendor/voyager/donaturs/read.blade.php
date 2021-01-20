@@ -52,7 +52,7 @@
                                     <th>Jumlah(Rp)</th>
                                     <th>Tanggal Transaksi</th>
                                     @if(Auth::user()->role->id == 1 || Auth::user()->role->id == 2|| Auth::user()->role->id == 3)
-                                    <th>Actions</th>
+                                    <th class="hidden">Actions</th>
                                     @endif
                                 </tr>
                             </thead>

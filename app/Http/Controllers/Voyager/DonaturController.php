@@ -1204,10 +1204,10 @@ class DonaturController extends VoyagerBaseController
         }
         
         if($midtran->payment_status == "on_funding"){
-            // Midtran::where('id',$donation_id)->update([
-            //     'payment_status'=>"settlement",
-            //     'payment_gateway'=> "cash"
-            // ]);
+            Midtran::where('id',$donation_id)->update([
+                'payment_status'=>"settlement",
+                'payment_gateway'=> "cash"
+            ]);
             return response()->json(
                     ['data'=> true,'response'=>'Dengan anda melakukan fitur ini. donasi berhasil dikonfirmasi, status menjadi settlement.']
                 );
@@ -1219,10 +1219,10 @@ class DonaturController extends VoyagerBaseController
         }
         
         if($midtran->payment_status == "kwitansi"){
-            // Midtran::where('id',$donation_id)->update([
-            //     'payment_status'=>"on_funding",
-            //     'payment_gateway'=> "pending"
-            // ]);
+            Midtran::where('id',$donation_id)->update([
+                'payment_status'=>"on_funding",
+                'payment_gateway'=> "pending"
+            ]);
             return response()->json(
                     ['data'=> true,'response'=>'Dengan anda melakukan fitur ini. donasi telah diproses, status menjadi on_funding.']
                 );
