@@ -347,13 +347,13 @@
                                                     @foreach ($statusall as $k => $v)
                                                         {{-- <li> --}}
                                                                 @if ($v->payment_status == "settlement")
-                                                                    <button id="payment" value="{{ $v->id }}" class="btn btn-success pays">{{ $v->payment_status }} {{ $v->id }}</button>
+                                                                    <button id="payment" value="{{ $v->id }}" class="btn btn-success pays">{{ $v->payment_status }}</button>
                                                                 @endif
                                                                 @if ($v->payment_status == "on_funding")
-                                                                    <button id="payment" value="{{ $v->id }}" class="btn btn-warning pays">{{ $v->payment_status }} {{ $v->id }}</button>
+                                                                    <button id="payment" value="{{ $v->id }}" class="btn btn-warning pays">{{ $v->payment_status }}</button>
                                                                 @endif
                                                                 @if ($v->payment_status == "kwitansi")
-                                                                    <button id="payment" value="{{ $v->id }}" class="btn btn-danger pays">{{ $v->payment_status }} {{ $v->id }}</button>
+                                                                    <button id="payment" value="{{ $v->id }}" class="btn btn-danger pays">{{ $v->payment_status }}</button>
                                                                 @endif
                                                             {{-- <button class="btn btn-primary  btn-add-new pays" type="button" data-toggle="modal" data-donaturs="{{ $v->id }}" data-target="#modal-confirmation"  --}}
                                                         {{-- </li> --}}
