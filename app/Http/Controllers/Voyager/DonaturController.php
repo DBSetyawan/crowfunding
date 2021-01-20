@@ -1163,43 +1163,84 @@ class DonaturController extends VoyagerBaseController
     }
 
     public function confirm_donation(Request $request){
-            dd($request->donation_id);die;
         $donation_id = $request->donation_id;
         $status = null;
         $midtran = Midtran::where('id',$donation_id)->first();
+        // dd($donation_id);die;
+        // return response()->json(
+        //     ['data'=> $midtran->payment_status]
+        // );die;
         if(!$midtran){
-            return redirect()->back()->with([
-                'message'    => "donasi tidak ditemukan",
-                'alert-type' => 'error',
-            ]);
-        }
-        if(Auth::user()->role->id == 3){
-            $status="on_funding";
-            $cash="pending";
-        }else if(Auth::user()->role->id == 2 || Auth::user()->role->id == 1){
-            $status="settlement";
-            $cash="cash";
-
             // return redirect()->back()->with([
-            //     'message'    => "anda tidak memiliki hak untuk menkonfirmasi donasi ini.",
+            //     'message'    => "donasi tidak ditemukan",
             //     'alert-type' => 'error',
             // ]);
-        }
+            return response()->json(['response'=> false]);
 
-        if($status){
-            Midtran::where('id',$donation_id)->update([
-                'payment_status'=>$status,
-                'payment_gateway'=>$cash
-            ]);
-            return redirect()->back()->with([
-                'message'    => "Donation telah di konfirmasi",
-                'alert-type' => 'success',
-            ]);
-        }else{
-            return redirect()->back()->with([
-                'message'    => "hak akses dibatasi untuk user ini.",
-                'alert-type' => 'error',
-            ]);
+        }
+        // if(Auth::user()->role->id == 3){
+        //     $status="on_funding";
+        //     $cash="pending";
+        // }else if(Auth::user()->role->id == 2 || Auth::user()->role->id == 1){
+        //     $status="settlement";
+        //     $cash="cash";
+
+        //     // return redirect()->back()->with([
+        //     //     'message'    => "anda tidak memiliki hak untuk menkonfirmasi donasi ini.",
+        //     //     'alert-type' => 'error',
+        //     // ]);
+        // }
+
+        if($midtran->payment_status == "settlement"){
+          
+            return response()->json(
+                    ['data'=> true,'response'=>'tidak ada aksi apapun untuk status ini.']
+                );
+
+            // return redirect()->back()->with([
+            //     'message'    => "Donation telah di konfirmasi",
+            //     'alert-type' => 'success',
+            // ]);
+        }
+        
+        if($midtran->payment_status == "on_funding"){
+            // Midtran::where('id',$donation_id)->update([
+            //     'payment_status'=>"settlement",
+            //     'payment_gateway'=> "cash"
+            // ]);
+            return response()->json(
+                    ['data'=> true,'response'=>'Dengan anda melakukan fitur ini. donasi berhasil dikonfirmasi, status menjadi settlement.']
+                );
+
+            // return redirect()->back()->with([
+            //     'message'    => "Donation telah di konfirmasi",
+            //     'alert-type' => 'success',
+            // ]);
+        }
+        
+        if($midtran->payment_status == "kwitansi"){
+            // Midtran::where('id',$donation_id)->update([
+            //     'payment_status'=>"on_funding",
+            //     'payment_gateway'=> "pending"
+            // ]);
+            return response()->json(
+                    ['data'=> true,'response'=>'Dengan anda melakukan fitur ini. donasi telah diproses, status menjadi on_funding.']
+                );
+
+            // return redirect()->back()->with([
+            //     'message'    => "Donation telah di konfirmasi",
+            //     'alert-type' => 'success',
+            // ]);
+        }
+            else{
+
+                return response()->json(
+                ['data'=> false,'response'=>'status tidak diketahui.']
+            );
+            // return redirect()->back()->with([
+            //     'message'    => "hak akses dibatasi untuk user ini.",
+            //     'alert-type' => 'error',
+            // ]);
         }
         
 

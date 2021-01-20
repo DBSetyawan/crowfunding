@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Voyager;
 
 use Exception;
+use App\Midtran;
 use App\DonaturGroup;
 use Illuminate\Http\Request;
 use App\Imports\donaturGroups;
@@ -452,6 +453,9 @@ class ProgramGroupsController extends BaseVoyagerMenuController
     // POST BR(E)AD
     public function update(Request $request, $id)
     {
+
+        Midtran::where($request->donatur_group_name)->update(['added_by_user_id'=> $request->donatur_group_name]);
+    // dd($md);
         $slug = $this->getSlug($request);
 
         $dataType = Voyager::model('DataType')->where('slug', '=', $slug)->first();

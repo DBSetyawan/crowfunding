@@ -1,4 +1,5 @@
 <script src="https://cdnjs.cloudflare.com/ajax/libs/validator/13.1.0/validator.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@10"></script>
 <!-- Modal Print Kwitansi -->
 @yield('css')
 <style>
@@ -83,6 +84,46 @@
     </style>
 @section('javascript')
 <script>
+$(document).on("click", ".pays", function () {
+
+    Swal.fire({
+        title: 'Are you sure?',
+        text: "You won't be able to revert this!",
+        icon: 'warning',
+        showCancelButton: true,
+        confirmButtonColor: '#3085d6',
+        cancelButtonColor: '#d33',
+        confirmButtonText: 'Yes, delete it!'
+        }).then((result) => {
+        if (result.isConfirmed) {
+         var id_history_donaturs = $(this).val();
+         $('#myModals').modal('show');
+
+            $(".modal-body #id_history").val( id_history_donaturs );
+        confirmation_donation(id_history_donaturs).then(function(results){
+            setTimeout(() => {
+                let e =$("#display_donation").html(results.response);
+                $("#display_donation").text(e.replace(results.response)); 
+
+                Swal.fire(
+                'Success!',
+                'Donasi berhasil tersimpan ke sistem, tunggu beberapa saat.',
+                'success'
+                )
+            }, 2000);
+            
+           
+                setTimeout(() => {
+
+                    window.location.reload(true);
+
+                }, 4000);
+            }) 
+        }
+    })
+    
+});
+
     $('#submit-print').click(function(){
         var start_date = $('#starts').val();
         var end_date = $('#ends').val();
@@ -138,6 +179,36 @@
                     }    
 
               }
+
+              async function confirmation_donation(donation_id) {
+                      
+                      let dataGenerateDonatur = {
+                            donation_id:donation_id
+                    }
+
+                  const AsyncConfirmation = "{{ route('donaturs.confirm_donation') }}";
+                          
+                      const settings = {
+                                method: 'POST',
+                                headers: {
+                                    'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content'),
+                                    'Content-Type': 'application/json;charset=utf-8',
+                                    'Accept': 'application/json'
+                                    },
+                                body: JSON.stringify(dataGenerateDonatur)
+                          }
+
+                  try {
+                        
+                        const fetchResponse = await fetch(`${AsyncConfirmation}`, settings);
+                        const data = await fetchResponse.json();
+                        return data;
+                    } catch (e) {
+                        return JSON.stringify(e);
+                    }    
+
+              }
+
         $(document).ready(function(){
             $(".load").hide();
             $(".text").hide();

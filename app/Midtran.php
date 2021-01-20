@@ -7,7 +7,11 @@ use Illuminate\Database\Eloquent\Model;
 
 class Midtran extends Model
 {
-    protected $guarded = [];  
+    protected $fillable = [
+        'added_by_user_id',
+        'group_id',
+        'id_cabang',
+    ];
 
     protected $dates = [
         'created_at',

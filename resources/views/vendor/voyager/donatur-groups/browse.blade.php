@@ -286,9 +286,8 @@
                                                                         $tglamounted = $midtrans
                                                                         ->whereIn('added_by_user_id', [$data->donatur_group_name])
                                                                         ->where(function($query) {
-                                                                            $query->whereYear('updated_at','=','2020')
-                                                                            ->whereMonth('updated_at','=','12') 
-                                                                            ->get();
+                                                                            $query->whereYear('updated_at','=','2021')
+                                                                            ->whereMonth('updated_at','=','1');
                                                                         })->get();
                                                                         // dd($tglamounted);
                                                                         foreach ($tglamounted as $key => $value) {

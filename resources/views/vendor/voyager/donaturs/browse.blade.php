@@ -343,17 +343,23 @@
                                                     @endif
                                                 @if ($row->display_name == 'STATUS')
                                                 {{-- <span>{{ isset($sts) ? $sts["payment_status"] : 'settlement' }}</span> --}}
-                                                <ul>
+                                                {{-- <ul> --}}
                                                     @foreach ($statusall as $k => $v)
                                                         {{-- <li> --}}
-                                                            <button>{{ $v->payment_status }} {{ $v->id }}</button>
+                                                                @if ($v->payment_status == "settlement")
+                                                                    <button id="payment" value="{{ $v->id }}" class="btn btn-success pays">{{ $v->payment_status }} {{ $v->id }}</button>
+                                                                @endif
+                                                                @if ($v->payment_status == "on_funding")
+                                                                    <button id="payment" value="{{ $v->id }}" class="btn btn-warning pays">{{ $v->payment_status }} {{ $v->id }}</button>
+                                                                @endif
+                                                                @if ($v->payment_status == "kwitansi")
+                                                                    <button id="payment" value="{{ $v->id }}" class="btn btn-danger pays">{{ $v->payment_status }} {{ $v->id }}</button>
+                                                                @endif
+                                                            {{-- <button class="btn btn-primary  btn-add-new pays" type="button" data-toggle="modal" data-donaturs="{{ $v->id }}" data-target="#modal-confirmation"  --}}
                                                         {{-- </li> --}}
                                                         
                                                     @endforeach
-                                                </ul>
-                                                <script>
-                                                    $('.stats_pembayaran').hide()
-                                                </script>
+                                                {{-- </ul> --}}
                                             @endif
                                                 @endif
                                             </td>
@@ -424,29 +430,24 @@
     @include('vendor.voyager.midtrans.modal-import-history-okt');
 
     {{-- start modal confirmation --}}
-    <div class="modal fade modal-confirmation" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+    <div class="modal fade modal-confirmation" id="myModals" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
         <div class="modal-dialog" role="document">
         <div class="modal-content">
             <div class="modal-header">
             <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-            <h4 class="modal-title" id="myModalLabel">Konfirmasi status pendonasian</h4>
+            <h4 class="modal-title" id="myModalLabel">Memproses transaksi, silahkan menunggu..</h4>
             </div>
             <div class="modal-body">
-            Dengan melakukan ini anda akan merubah status donasi, menjadi <?php echo "<br/>" ?> status "<?php 
-                if(Auth::user()->role->id == 1 || Auth::user()->role->id == 2){
-                    echo " <b>Settlement</b> ";
-                }else if(Auth::user()->role->id == 3){
-                    echo " <b>On Funding</b> ";
-                }
-            ?>"
+                <input type="text" class="hidden" id="id_history">
+            <span id="display_donation"></span> 
             </div>
             <div class="modal-footer">
                 <form method="POST" action="{{route('donaturs.confirm_donation')}}">
                     {{ csrf_field() }}
-                <button type="button" class="btn btn-default" data-dismiss="modal">Tutup</button>
-            
+                <button type="button" class="btn btn-danger" data-dismiss="">can't canceled or refresh page !</button>
+                    
                 <input type="hidden" value="" name="donation_id" id="confirmation-donation-id" />
-                <button type="submit" class="btn btn-success">Konfirmasi Donasi</button>
+                {{-- <button type="submit" class="btn btn-success">Konfirmasi Donasi</button> --}}
             </form>
             
             </div>
@@ -468,6 +469,7 @@
 <script src="{{ voyager_asset('lib/js/dataTables.responsive.min.js') }}"></script>
 @endif
 <script>
+
     $("#daniel").click(function (e) {
         e.preventDefault();
         alert('success');
