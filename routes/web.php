@@ -52,10 +52,13 @@ Route::group(['prefix' => 'admin'], function () {
     Route::post('donaturs/generate_and_print_last_month','Voyager\DonaturController@generate_and_print_last_month')->name('donaturs.generate_and_print_last_month');
     Route::post('konfirmasi-donasi','Voyager\DonaturController@confirm_donation')->name('donaturs.confirm_donation');
     Route::post('file-import', [ProgramGroupsController::class, 'fileImport'])->name('file-import');
+    Route::post('file-import', [ProgramGroupsController::class, 'fileImport'])->name('file-import');
     Route::post('file-import-users-allow', [VoyagerUserController::class, 'import'])->name('file-import-users');
     Route::post('admin/users', [VoyagerUserController::class, 'store'])->name('voyager.users.store');
+    Route::post('admin/donatur-groups/stored', [ProgramGroupsController::class, 'store'])->name('voyager.donatur-groups.store');
     Route::post('admin/users/filter-status', [VoyagerUserController::class, 'filter_bln_thn_cbg'])->name('voyager.users.filter.bulan.tahun');
     Route::post('admin/users/{id}', [VoyagerUserController::class, 'update'])->name('voyager.users.update');
+    Route::post('admin/donatur-groups/{id}', [ProgramGroupsController::class, 'update'])->name('voyager.donatur-groups.update');
     Route::post('file-import-donaturs-attemps', [DonaturController::class, 'fileImport'])->name('file-import-donaturs');
     Route::post('file-import-branch', [VoyagerCabangController::class, 'fileImport'])->name('file-import-branch');
     Route::post('file-import-funding', [VoyagerPetugasController::class, 'fileImport'])->name('file-import-funding');

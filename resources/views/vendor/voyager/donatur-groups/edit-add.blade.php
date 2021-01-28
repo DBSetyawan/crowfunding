@@ -48,7 +48,8 @@
                             <label for="name"></label>
                             <input class="form-control hidden" id="id_cabang" name="id_cabang" placeholder=""
                                    value="{{ auth()->user()->name }}">
-
+                                   {{-- <input class="form-control" id="id" name="id" placeholder=""
+                                   value="{{ App\DonaturGroup::select('id')->max('id')+1 }}"> --}}
                             <label for="email"></label>
                             <input class="form-control hidden" id="id_parent" name="id_parent" placeholder="{{ __('voyager::generic.email') }}"
                                    value="{{ auth()->user()->name }}">
@@ -60,8 +61,9 @@
                         </div>
 
                         <div class="form-group">
-                            <label for="email"> Nama group</label>
-                            <input class="form-control" id="donatur_group_name" name="donatur_group_name" placeholder="{{ __('donatur group name') }}">
+                            <label for="email"> Nama group</label>}
+                                       
+                                       <input class="form-control" id="donatur_group_name" name="donatur_group_name" placeholder="{{ __('donatur group name') }}"value="{{ old('donatur_group_name', $dataTypeContent->donatur_group_name ?? '') }}">
                         </div>
 
                         <button type="submit" class="btn btn-primary pull-right save">

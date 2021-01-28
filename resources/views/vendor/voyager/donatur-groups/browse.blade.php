@@ -290,11 +290,11 @@
                                                                             ->whereMonth('updated_at','=','1');
                                                                         })->get();
                                                                         // dd($tglamounted);
-                                                                        foreach ($tglamounted as $key => $value) {
-                                                                            # code...
-                                                                            $date = \Carbon\Carbon::parse($value->created_at, 'UTC');
-                                                                            $s = $date->isoFormat('MMMM YYYY'); 
-                                                                        }
+                                                                        // foreach ($tglamounted as $key => $value) {
+                                                                        //     # code...
+                                                                        //     $date = \Carbon\Carbon::parse($value->created_at, 'UTC');
+                                                                        //     $s = $date->isoFormat('MMMM YYYY'); 
+                                                                        // }
                                                                     // $amountloss = $midtrans
                                                                     //     ->whereIn('added_by_user_id', [$data->donatur_group_name])
                                                                     //     ->whereIn('updated_at', [$amount->])->sum('amount');
@@ -335,7 +335,7 @@
                                                                     <span>{{ "Rp " . number_format($kwitansi,2,',','.') }}</span>
                                                                 @endif
                                                                 @if ($row->display_name == 'TANGGAL DONASI')
-                                                                <span> {{ $s }}</span>
+                                                                {{-- <span> {{ $s }}</span> --}}
                                                             @endif
                                                                 @endif
                                                         @endif

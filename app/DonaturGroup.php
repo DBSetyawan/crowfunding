@@ -7,18 +7,20 @@ use Illuminate\Database\Eloquent\Model;
 
 class DonaturGroup extends Model
 {
+    protected $table = 'donatur_groups';
+
     protected $fillable = [
-        'donatur_group_name',
-        'id',
-        'id_petugas',
         'id_cabang',
         'id_parent',
+        'id',
+        'id_petugas',
         'id_users',
-        'add_by_user_id'
+        'donatur_group_name',
+        // 'add_by_user_id'
     ];
 
-    public $incrementing = true;
-
+    protected $primaryKey = 'id';
+    public $incrementing = false;
     public function hasManyToUserRelationship()
     {
         return $this->hasMany(User::class, 'add_by_user_id');

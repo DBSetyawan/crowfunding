@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Voyager;
 
+use App\User;
 use Exception;
 use App\Midtran;
 use App\DonaturGroup;
@@ -162,6 +163,7 @@ class ProgramGroupsController extends BaseVoyagerMenuController
 
     public function index(Request $request, $id = null)
     {
+        
 
         // dd(Auth::user()->role->id);
         // GET THE SLUG, ex. 'posts', 'pages', etc.
@@ -217,6 +219,8 @@ class ProgramGroupsController extends BaseVoyagerMenuController
             if(Auth::user()->role->id == 3){
                 $query = $model->whereIn('add_by_user_id', [(Int) $id]);
             }
+
+            session(['id_donatur_groups'=> $id]);
 
             if ($dataType->scope && $dataType->scope != '' && method_exists($model, 'scope'.ucfirst($dataType->scope))) {
                 $query = $model->{$dataType->scope}();
@@ -454,7 +458,7 @@ class ProgramGroupsController extends BaseVoyagerMenuController
     public function update(Request $request, $id)
     {
 
-        Midtran::where($request->donatur_group_name)->update(['added_by_user_id'=> $request->donatur_group_name]);
+        // Midtran::where($request->donatur_group_name)->update(['added_by_user_id'=> $request->donatur_group_name]);
     // dd($md);
         $slug = $this->getSlug($request);
 
@@ -483,7 +487,8 @@ class ProgramGroupsController extends BaseVoyagerMenuController
         event(new BreadDataUpdated($dataType, $data));
 
         if (auth()->user()->can('browse', app($dataType->model_name))) {
-            $redirect = redirect()->route("voyager.{$dataType->slug}.index");
+            $redirect = redirect()->route("voyager.donatur-groups.index.detail", session()->get('id_donatur_groups'));
+
         } else {
             $redirect = redirect()->back();
         }
@@ -552,34 +557,42 @@ class ProgramGroupsController extends BaseVoyagerMenuController
     public function store(Request $request)
     {
 
+        $user = User::create(['role_id'=> 7,'name'=> $request->donatur_group_name,'parent_id'=> auth()->user()->name,'cabang_id' => 0]);
+        DonaturGroup::create(['id'=> $user->id,'id_petugas'=>auth()->user()->id,'id_parent'=> auth()->user()->name,'donatur_group_name'=>$request->donatur_group_name,'id_cabang'=> $user->cabang_id]);
         // dd($request->all());
         $slug = $this->getSlug($request);
-
+        // dd($slug);
         $dataType = Voyager::model('DataType')->where('slug', '=', $slug)->first();
 
         // Check permission
         $this->authorize('add', app($dataType->model_name));
 
         // Validate fields with ajax
-        $val = $this->validateBread($request->all(), $dataType->addRows)->validate();
-        $data = $this->insertUpdateData($request, $slug, $dataType->addRows, new $dataType->model_name());
+        // $val = $this->validateBread($request->all(), $dataType->addRows)->validate();
+        // $data = $this->insertUpdateData($request, $slug, $dataType->addRows, new $dataType->model_name());
 
-        event(new BreadDataAdded($dataType, $data));
+        // event(new BreadDataAdded($dataType, $data));
+        $redirect = redirect()->route("voyager.{$dataType->slug}.index");
 
-        if (!$request->has('_tagging')) {
-            if (auth()->user()->can('browse', $data)) {
-                $redirect = redirect()->route("voyager.{$dataType->slug}.index");
-            } else {
-                $redirect = redirect()->back();
-            }
+        return $redirect->with([
+            'message'    => __('voyager::generic.successfully_added_new')." {$dataType->getTranslatedAttribute('display_name_singular')}",
+            'alert-type' => 'success',
+        ]);
 
-            return $redirect->with([
-                'message'    => __('voyager::generic.successfully_added_new')." {$dataType->getTranslatedAttribute('display_name_singular')}",
-                'alert-type' => 'success',
-            ]);
-        } else {
-            return response()->json(['success' => true, 'data' => $data]);
-        }
+        // if (!$request->has('_tagging')) {
+        //     if (auth()->user()->can('browse', $data)) {
+        //         $redirect = redirect()->route("voyager.{$dataType->slug}.index");
+        //     } else {
+        //         $redirect = redirect()->back();
+        //     }
+
+        //     return $redirect->with([
+        //         'message'    => __('voyager::generic.successfully_added_new')." {$dataType->getTranslatedAttribute('display_name_singular')}",
+        //         'alert-type' => 'success',
+        //     ]);
+        // } else {
+        //     return response()->json(['success' => true, 'data' => $data]);
+        // }
     }
 
     //***************************************
