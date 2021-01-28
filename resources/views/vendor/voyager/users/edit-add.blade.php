@@ -155,7 +155,11 @@ type="text/css"
                              <div class="form-group">
                                 <label for="parent_id">User detect</label>
                                 <input type="text" class="form-control" id="parent_id" name="parent_id" placeholder="parent_id"
-                                value="{{ auth()->user()->role->name }}">
+                                value="{{ auth()->user()->name }}">
+                                <input type="text" class="form-control hidden" id="added_by_user_id" name="added_by_user_id" placeholder="parent_id"
+                                value="{{ auth()->user()->name }}">
+                                <input type="text" class="form-control hidden" id="users_id" name="users_id" placeholder="parent_id"
+                                value="{{ auth()->user()->id }}">
                             </div>
 
                             {{-- @can('editRoles', $dataTypeContent) --}}

@@ -17,6 +17,8 @@ class DonaturGroup extends Model
         'add_by_user_id'
     ];
 
+    public $incrementing = true;
+
     public function hasManyToUserRelationship()
     {
         return $this->hasMany(User::class, 'add_by_user_id');

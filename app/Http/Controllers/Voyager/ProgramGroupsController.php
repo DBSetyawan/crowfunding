@@ -403,7 +403,7 @@ class ProgramGroupsController extends BaseVoyagerMenuController
     //
     //****************************************
 
-    public function edit(Request $request, $id)
+     public function edit(Request $request, $id)
     {
         $slug = $this->getSlug($request);
 
@@ -551,6 +551,8 @@ class ProgramGroupsController extends BaseVoyagerMenuController
      */
     public function store(Request $request)
     {
+
+        // dd($request->all());
         $slug = $this->getSlug($request);
 
         $dataType = Voyager::model('DataType')->where('slug', '=', $slug)->first();

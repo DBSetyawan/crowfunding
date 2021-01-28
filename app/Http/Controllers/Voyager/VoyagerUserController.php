@@ -48,6 +48,7 @@ class VoyagerUserController extends BaseVoyagerUserController
 
     public function store(Request $request)
     {
+        // dd($request->all());
         $slug = $this->getSlug($request);
 
         $dataType = Voyager::model('DataType')->where('slug', '=', $slug)->first();
@@ -175,6 +176,14 @@ class VoyagerUserController extends BaseVoyagerUserController
             return redirect()->route('voyager.donatur-groups.index.detail', ['id'=> Auth::user()->id ]); 
             
         }
+
+        // if(Auth::user()->role->id == 2){
+    
+        //     // return redirect()->route('donaturs.sub.amil.history', ['group_id'=> Auth::user()->id ]); 
+        //     return redirect()->route('voyager.donatur-groups.index.detail', ['id'=> Auth::user()->id ]); 
+
+            
+        // }
 
         $slug = $this->getSlug($request);
 
@@ -870,9 +879,9 @@ class VoyagerUserController extends BaseVoyagerUserController
             // }
             // $data = DonaturGroup::whereIn('id_parent', [$namapetugas])->count();
             // dd($data);
-
-        if ($request->ajax()) {
-        $data = User::with('role','usersDonatur')->whereIn('parent_id', [$parent_id])->whereIn('role_id', [3])->get();
+            if ($request->ajax()) {
+                $data = User::with('role','usersDonatur')->whereIn('parent_id', [$parent_id])->whereIn('role_id', [3])->get();
+                // dd($parent_id);
             
             return Datatables::of($data)
                     ->addIndexColumn()
@@ -898,24 +907,24 @@ class VoyagerUserController extends BaseVoyagerUserController
                         // $btn = '<a href="{{ route("donaturs.sub.amil.history",  ["group_id"=> $row->id]) }}" class="btn btn-primary btn-lg button-confirmation">Detail group</a>';
                             return $btn;
                     }) 
-                    ->addColumn('asd', function ($query) use($parent_id){
-                        $name = $query->name;
-                        $da = Donatur::whereIn('added_by_user_id', [$name])->get();
+                    // ->addColumn('asd', function ($query) use($parent_id){
+                    //     $name = $query->name;
+                    //     $da = Donatur::whereIn('added_by_user_id', [$name])->get();
 
-                        foreach ($da as $key => $value) {
-                            # code...
-                            $namadonatur[] = $value->nama;
-                        }
+                    //     foreach ($da as $key => $value) {
+                    //         # code...
+                    //         $namadonatur[] = $value->nama;
+                    //     }
                         
-                        $daonturgroups = DonaturGroup::whereIn('donatur_group_name', $namadonatur)->get();
+                    //     $daonturgroups = DonaturGroup::whereIn('donatur_group_name', $namadonatur)->get();
                         
-                        foreach ($daonturgroups as $key => $value) {
-                            # code...
-                            $sdsad[] = $value->donatur_group_name;
-                        }
-                        $numbers = Midtran::whereIn('added_by_user_id', $sdsad)->sum('amount');return"Rp " . number_format($numbers,2,',','.');
-                        // dd($sdsad);
-                    })
+                    //     foreach ($daonturgroups as $key => $value) {
+                    //         # code...
+                    //         $sdsad[] = $value->donatur_group_name;
+                    //     }
+                    //     $numbers = Midtran::whereIn('added_by_user_id', $sdsad)->sum('amount');return"Rp " . number_format($numbers,2,',','.');
+                    //     // dd($sdsad);
+                    // })
                     // ->addColumn('action_edit', function($row){
                     //     // if($row->payment_gateway !== "offline"){
                     //     //     return "";
@@ -929,7 +938,7 @@ class VoyagerUserController extends BaseVoyagerUserController
                     //     // }
                            
                     // })
-                    ->rawColumns(['action','asd'])
+                    ->rawColumns(['action'])
                     // ->rawColumns(['action','action_petugas'])
                     ->make(true);
         }

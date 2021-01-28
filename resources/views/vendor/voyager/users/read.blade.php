@@ -5,7 +5,11 @@
 @section('page_header')
     <h1 class="page-title">
         <i class="{{ $dataType->icon }}"></i> {{ __('voyager::generic.viewing') }} | Admin Cabang - Petugas {{ ucfirst($dataType->getTranslatedAttribute('display_name_singular')) }} &nbsp;
-
+        @can('add', app($dataType->model_name))
+                <a href="{{ route('voyager.'.$dataType->slug.'.create') }}" class="btn btn-success btn-add-new">
+                <i class="voyager-plus"></i> <span>{{ __('voyager::generic.add_new') }}</span>
+            </a>
+        @endcan&nbsp;&nbsp;
         @can('edit', $dataTypeContent)
             <a href="{{ route('voyager.'.$dataType->slug.'.edit', $dataTypeContent->getKey()) }}" class="btn btn-info">
                 <span class="glyphicon glyphicon-pencil"></span>&nbsp;
@@ -53,7 +57,7 @@
                                     <th>NAMA PETUGAS</th>
                                     <th>NAMA GROUP</th>
                                     <th>NAMA USER</th>
-                                    <th>DONASI</th>
+                                    {{-- <th>DONASI</th> --}}
                                     @if(Auth::user()->role->name == "admin-pusat" || Auth::user()->role->name == "admin-cabang"|| Auth::user()->role->name == "petugas" )
                                     <th class="no-sort no-click bread-actions">Actions</th>
                                     @endif
@@ -320,7 +324,7 @@
             {data: 'groups_id', name: 'groups_id'},
             {data: 'groups_id', name: 'groups_id'},
             // {data: 'email', name: 'email'},
-            {data: 'asd', name: 'asd'}, //refere to parent id donatur groups
+            // {data: 'asd', name: 'asd'}, //refere to parent id donatur groups
             // {
             //     data: null, 
             //     render: function ( data, type, row ) {

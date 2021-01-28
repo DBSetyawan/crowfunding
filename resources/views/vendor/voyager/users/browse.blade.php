@@ -272,7 +272,11 @@
                                                         // # code...
                                                         $loops[] = $value->name;
                                                     }
-                                                        $caridonaturgroup = $user->whereIn('parent_id', $loops)->whereIn('role_id', [3])->get();
+
+                                                    // dd($loops);
+                                                        $caridonaturgroup = $user->whereIn('role_id', [2])->get();
+
+                                                        // dd($caridonaturgroup);
 
                                                     foreach ($caridonaturgroup as $key => $value) {
                                                         # code...
