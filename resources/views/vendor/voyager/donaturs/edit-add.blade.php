@@ -47,25 +47,25 @@ type="text/css"
                         <div class="panel-body">
                             <div class="form-group">
                                 <label for="nama">Nama</label>
-                                <input type="text" class="form-control" id="nama" name="nama" placeholder=""
-                                       value="{{ old('nama', $dataTypeContent->nama ?? '') }}">
+                                <input type="text" class="form-control" id="name" name="name" placeholder=""
+                                       value="{{ old('nama', $dataTypeContent->name ?? '') }}">
                             </div>
 
-                            <div class="form-group">
+                            {{-- <div class="form-group">
                                 <label for="no_hp">No. Hp</label>
                                 <input type="text" class="form-control" id="no_hp" name="no_hp" placeholder=""
                                        value="{{ old('no_hp', $dataTypeContent->no_hp ?? '') }}">
+                            </div> --}}
+
+                            <div class="form-group">
+                                <label for="pekerjaan">Email</label>
+                                <input type="text" class="form-control" id="email" name="email" placeholder=""
+                                       value="{{ old('email', $dataTypeContent->email ?? '') }}">
                             </div>
 
                             <div class="form-group">
-                                <label for="pekerjaan">Pekerjaan</label>
-                                <input type="text" class="form-control" id="pekerjaan" name="pekerjaan" placeholder=""
-                                       value="{{ old('pekerjaan', $dataTypeContent->pekerjaan ?? '') }}">
-                            </div>
-
-                            <div class="form-group">
-                                <label for="alamat">Alamat</label>
-                                <textarea class="form-control" id="alamat" name="alamat">{{ old('alamat', $dataTypeContent->alamat ?? '') }}</textarea>
+                                <label for="alamat">Password</label>
+                                <textarea class="form-control" id="password" name="password">{{ old('password', $dataTypeContent->alamat ?? '') }}</textarea>
                             </div>
 
                             {{--  <div class="form-group">
@@ -77,7 +77,7 @@ type="text/css"
                                 </select>
                             </div>  --}}
                             
-                            <div class="form-group">
+                            <div class="form-group hidden">
                                 <label for="kelurahan">kelurahan</label>
                                 <input type="text" class="form-control" id="kelurahan_id" name="kelurahan_id">
                             </div>
@@ -93,7 +93,7 @@ type="text/css"
                             </div>
                             <div class="form-group">
                                 <label for="kelurahan_id">Grup Donatur</label>
-                                <select class="form-control select2" id="donatur_group_id" name="donatur_group_id">
+                                <select class="form-control select2" id="group_id" name="group_id">
                                     @foreach ($donatur_groups as $donatur_group)
                                         <option value="{{$donatur_group->id}}" >{{$donatur_group->donatur_group_name}}</option>
                                     @endforeach

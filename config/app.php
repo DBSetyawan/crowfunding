@@ -52,9 +52,9 @@ return [
     |
     */
 
-    'url' => env('APP_URL', 'http://office.Kotakamal.care'),
+    'url' => env('APP_URL', 'http://crowdfunding.test'),
 
-    'asset_url' => env('ASSET_URL', 'http://office.Kotakamal.care/public'),
+    'asset_url' => env('ASSET_URL', 'http://crowdfunding.test/'),
 
     /*
     |--------------------------------------------------------------------------
@@ -122,7 +122,7 @@ return [
     'key' => env('APP_KEY'),
 
     'cipher' => 'AES-256-CBC',
-    'public_app_url' => env('PUBLIC_APP_URL','http://office.Kotakamal.care'),
+    'public_app_url' => env('PUBLIC_APP_URL','http://crowdfunding.test'),
     /*
     |--------------------------------------------------------------------------
     | Autoloaded Service Providers

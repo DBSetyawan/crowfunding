@@ -19,6 +19,7 @@ use TCG\Voyager\Facades\Voyager;
 use App\Jobs\ImportDonaturNewJobs;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Hash;
 use Maatwebsite\Excel\Facades\Excel;
 use TCG\Voyager\Events\BreadDataAdded;
 use TCG\Voyager\Events\BreadDataDeleted;
@@ -566,31 +567,27 @@ class DonaturController extends VoyagerBaseController
 
         $slug = $this->getSlug($request);
 
+        $user = User::create(['alamat' => $request->kelurahan_id, 'role_id'=> 4,'password'=> Hash::make($request->password),'name'=> $request->name,'parent_id'=> auth()->user()->name,'cabang_id' => auth()->user()->cabang_id, 'group_id' => $request->group_id, 'email' => $request->email, 'added_by_user_id' => $request->added_by_user_id]);
+
+        // dd($request->all());
+
         $dataType = Voyager::model('DataType')->where('slug', '=', $slug)->first();
 
         // Check permission
-        $this->authorize('add', app($dataType->model_name));
+        // $this->authorize('add', app($dataType->model_name));
 
         // Validate fields with ajax
-        $val = $this->validateBread($request->all(), $dataType->addRows)->validate();
-        $data = $this->insertUpdateData($request, $slug, $dataType->addRows, new $dataType->model_name());
+        // $val = $this->validateBread($request->all(), $dataType->addRows)->validate();
+        // $data = $this->insertUpdateData($request, $slug, $dataType->addRows, new $dataType->model_name());
 
-        event(new BreadDataAdded($dataType, $data));
+        // event(new BreadDataAdded($dataType, $data));
 
-        if (!$request->has('_tagging')) {
-            if (auth()->user()->can('browse', $data)) {
-                $redirect = redirect()->route("voyager.{$dataType->slug}.index");
-            } else {
-                $redirect = redirect()->back();
-            }
+        $redirect = redirect()->route("voyager.{$dataType->slug}.index");
 
-            return $redirect->with([
-                'message'    => __('voyager::generic.successfully_added_new')." {$dataType->getTranslatedAttribute('display_name_singular')}",
-                'alert-type' => 'success',
-            ]);
-        } else {
-            return response()->json(['success' => true, 'data' => $data]);
-        }
+        return $redirect->with([
+            'message'    => __('voyager::generic.successfully_added_new')." {$dataType->getTranslatedAttribute('display_name_singular')}",
+            'alert-type' => 'success',
+        ]);
     }
 
     //***************************************

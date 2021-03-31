@@ -557,15 +557,14 @@ class ProgramGroupsController extends BaseVoyagerMenuController
     public function store(Request $request)
     {
 
+        $this->authorize('add', app($dataType->model_name));
+
+        $slug = $this->getSlug($request);
         $user = User::create(['role_id'=> 7,'name'=> $request->donatur_group_name,'parent_id'=> auth()->user()->name,'cabang_id' => 0]);
         DonaturGroup::create(['id'=> $user->id,'id_petugas'=>auth()->user()->id,'id_parent'=> auth()->user()->name,'donatur_group_name'=>$request->donatur_group_name,'id_cabang'=> $user->cabang_id]);
         // dd($request->all());
-        $slug = $this->getSlug($request);
         // dd($slug);
         $dataType = Voyager::model('DataType')->where('slug', '=', $slug)->first();
-
-        // Check permission
-        $this->authorize('add', app($dataType->model_name));
 
         // Validate fields with ajax
         // $val = $this->validateBread($request->all(), $dataType->addRows)->validate();

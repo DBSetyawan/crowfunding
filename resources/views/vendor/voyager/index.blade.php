@@ -12,8 +12,14 @@
             @else
                 <p style="border-radius:4px; padding:20px; background:#fff; margin:0; color:#999; text-align:center;">
                     {!! __('voyager::analytics.no_client_id') !!}
-                    <a href="https://console.developers.google.com" target="_blank">https://console.developers.google.com</a>
+                    <a href="https://console.developers.google.com" target="_blank">https://console.developers.google.coms</a>
                 </p>
+                @inject('cr', 'Carbon\Carbon')
+                @php
+                    $now = $cr->create(2021, 3, 31, 0);
+                    // $nows = $now->toDateTimeString();
+                        // dd($now->subWeeks(3))
+                @endphp
             @endif
 
             <div class="Dashboard Dashboard--full" id="analytics-dashboard">
