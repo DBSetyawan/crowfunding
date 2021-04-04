@@ -278,62 +278,73 @@
 
                                                         // dd($caridonaturgroup);
 
-                                                    foreach ($caridonaturgroup as $key => $value) {
-                                                        # code...
-                                                        $carinamadonaturgroup[] = $value->name;
-                                                    }
+                                                    // foreach ($caridonaturgroup as $key => $value) {
+                                                    //     # code...
+                                                    //     $carinamadonaturgroup[] = $value->name;
+                                                    // }
 
-                                                           $caridonaturgroups = $donaturgroup->whereIn('id_parent', $carinamadonaturgroup)->get();
-                                                    foreach ($caridonaturgroups as $key => $value) {
-                                                        # code...
-                                                        $groupidHasParentGroupDonatur[] = $value->donatur_group_name;
-                                                        $group_id[] = $value->id;
+                                                    //        $caridonaturgroups = $donaturgroup->whereIn('id_parent', $carinamadonaturgroup)->get();
+                                                    // foreach ($caridonaturgroups as $key => $value) {
+                                                    //     # code...
+                                                    //     $groupidHasParentGroupDonatur[] = $value->donatur_group_name;
+                                                    //     $group_id[] = $value->id;
                                                             
-                                                    }
+                                                    // }
 
-                                                            if(!isset($bulan) || !isset($tahun)){
-                                                                $amount = $midtrans
-                                                                ->whereIn('added_by_user_id', $groupidHasParentGroupDonatur)
-                                                                ->sum('amount');
+                                                            // if(!isset($bulan) || !isset($tahun)){
+                                                                // $amount = $midtrans
+                                                                // ->whereIn('added_by_user_id', $groupidHasParentGroupDonatur)
+                                                                // ->sum('amount');
                                                                 
-                                                            } else {
+                                                            // } else {
 
-                                                                $amount = $midtrans->whereIn('added_by_user_id', $groupidHasParentGroupDonatur)
-                                                                ->where(function($querys) use($bulan, $tahun) {
-                                                                    $querys
-                                                                    ->whereMonth('updated_at', '=', $bulan)
-                                                                    ->whereYear('updated_at', '=', $tahun);
-                                                                })->sum('amount');
+                                                                // $amount = $midtrans->whereIn('added_by_user_id', $groupidHasParentGroupDonatur)
+                                                                // ->where(function($querys) use($bulan, $tahun) {
+                                                                //     $querys
+                                                                //     ->whereMonth('updated_at', '=', $bulan)
+                                                                //     ->whereYear('updated_at', '=', $tahun);
+                                                                // })->sum('amount');
 
-                                                            }
+                                                            // }
 
-                                                                $kwitansi = $midtrans->whereIn('added_by_user_id', $groupidHasParentGroupDonatur)
-                                                                    ->where(function($querys) {
-                                                                    $querys
-                                                                    ->whereIn('payment_status', ['kwitansi']);
-                                                                })
-                                                                ->sum('amount');
+                                                                // $kwitansi = $midtrans->whereIn('added_by_user_id', $group_id)
+                                                                //     ->where(function($querys) {
+                                                                //     $querys
+                                                                //     ->whereIn('payment_status', ['kwitansi']);
+                                                                // })
+                                                                // ->sum('amount');
                                                     @endphp
-                                                    {{--  <span>{{ $data->{$row->field} }}</span>  --}}
+                                                     {{-- <span>{{ $data->{$row->field} }}</span>  --}}
                                                      @if ($row->display_name == 'JUMLAH PETUGAS')
                                                      
                                                         <span>{{ $countpetugas  }}</span>
                                                          
-                                                    @else
-                                                @if ($row->display_name == 'NAMA')
+                                                    {{-- @if ($row->display_name == 'DONASI')
+                                                        <span>{{ "Rp " . number_format($amount,2,',','.') }}</span>
+                                                        @endif --}}
+                                                        {{-- <span>{{ $data->{$row->field} }}</span> --}}
+                                                    @endif
+                                                    @if ($row->display_name == 'NAMA')
                                                      
-                                                    <span>({{ $data->email }}) {{ $data->nama  }}</span>
+                                                    <span> {{ $data->name  }}</span>
                                                      
                                                 @endif
-                                                    @if ($row->display_name == 'DONASI')
-                                                        <span>{{ "Rp " . number_format($amount,2,',','.') }}</span>
-                                                        @endif
-                                                        <span>{{ $data->{$row->field} }}</span>
-                                                    @endif
-                                                      @if ($row->display_name == 'DONASI LOSS')
-                                                        <span>{{ "Rp " . number_format($kwitansi,2,',','.') }}</span>
+                                                @if ($row->display_name == 'ID')
+                                                     
+                                                <span> {{ $data->id  }}</span>
+                                                 
+                                            @endif
 
-                                                    @endif
+                                                @if ($row->display_name == 'EMAIL')
+                                                     
+                                                <span>({{ $data->email }})</span>
+                                                 
+                                            @endif
+                                                      {{-- @if ($row->display_name == 'DONASI LOSS') --}}
+                                                        {{-- <span>{{ "Rp " . number_format($kwitansi,2,',','.') }}</span> --}}
+                                                        {{-- <span>{{ "Rp " . number_format($amount,2,',','.') }}</span> --}}
+
+                                                    {{-- @endif --}}
                                                       {{--  @if ($data->amil_id == "amil_id)
                                                       {{ __('241412312') }}
                                                       
@@ -349,6 +360,8 @@
                                                       {{ __('asdas') }}
                                                           
                                                       @endif        --}}
+                                                    {{-- {{ dd($groupidHasParentGroupDonatur) }} --}}
+
                                                 @endif
                                             </td>
                                         @endforeach

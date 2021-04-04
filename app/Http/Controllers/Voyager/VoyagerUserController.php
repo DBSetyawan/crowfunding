@@ -219,7 +219,7 @@ class VoyagerUserController extends BaseVoyagerUserController
         // Next Get or Paginate the actual content from the MODEL that corresponds to the slug DataType
         if (strlen($dataType->model_name) != 0) {
             $model = app($dataType->model_name);
-            // dd(Auth::user()->role->permissions);
+            // dd(Auth::user()->role->id);
             if(Auth::user()->role->id == 1){
             $query = $model->whereIn('role_id', [2]);
                 // dd($query);
@@ -229,13 +229,23 @@ class VoyagerUserController extends BaseVoyagerUserController
                 }
             
 
+            } else {
+
+                if(Auth::user()->role->id == 2){
+
+                    return $this->show($request, Auth::user()->id);
+                    
+                }
+
+                if(Auth::user()->role->id == 3){
+
+                    return $this->show($request, Auth::user()->id);
+                    
+                }
+    
             }
 
-            if(Auth::user()->role->id == 2){
-
-                return $this->show($request, Auth::user()->id);
-                
-            }
+            // dd($namacabang);
 
             if ($dataType->scope && $dataType->scope != '' && method_exists($model, 'scope'.ucfirst($dataType->scope))) {
                 $query = $model->{$dataType->scope}();
@@ -870,17 +880,18 @@ class VoyagerUserController extends BaseVoyagerUserController
     }
     public function detailBranchUser(Request $request, $parent_id)
     {
-        // $data = User::with('role','AmilDonaturGroup')->whereIn('parent_id', [$parent_id])->whereIn('role_id', [3])->get();
+        $data = User::with('role','AmilDonaturGroup')->whereIn('parent_id', [$parent_id])->whereIn('role_id', [3])->get();
 
-
-            // foreach ($data as $key => $value) {
-            //     # code...
-            //     $namapetugas[] = $value->name;
-            // }
-            // $data = DonaturGroup::whereIn('id_parent', [$namapetugas])->count();
-            // dd($data);
+        // // dd($data);
+            foreach ($data as $key => $value) {
+                # code...
+                $namapetugas[] = $value->normalizer_get_raw_decomposition;
+            }
+            $datas = DonaturGroup::whereIn('id_parent', [$namapetugas])->get();
+            
+            // dd($datas);
             if ($request->ajax()) {
-                $data = User::with('role','usersDonatur')->whereIn('parent_id', [$parent_id])->whereIn('role_id', [3])->get();
+                $data = User::with('role','usersDonatur','AmilDonaturGroup')->whereIn('parent_id', [$parent_id])->whereIn('role_id', [3])->get();
                 // dd($parent_id);
             
             return Datatables::of($data)
@@ -907,6 +918,50 @@ class VoyagerUserController extends BaseVoyagerUserController
                         // $btn = '<a href="{{ route("donaturs.sub.amil.history",  ["group_id"=> $row->id]) }}" class="btn btn-primary btn-lg button-confirmation">Detail group</a>';
                             return $btn;
                     }) 
+                       ->addColumn('group_total', function ($datas) use($parent_id){
+
+                        // foreach ($rows as $key => $value) {
+                        //        # code...
+                        //        $d[] = $value;
+                        // }
+
+                        // $datas = User::with('role','usersDonatur','AmilDonaturGroup')->whereIn('parent_id', [$parent_id])->whereIn('role_id', [3])->get();
+
+                        // }
+
+                        // dd(session()->get('id_donatur_groups'));
+
+                        // foreach($datas as $kl){
+                        //     // $ds[] = $kl->name;
+                        //     $counts[] = DonaturGroup::whereIn('id_parent', [$kl->name])->count();
+                        // }
+                // $datas = User::whereIn('add_by_user_id', [$parent_id])->get();
+                        //  foreach($datas as $kl){
+                        //     $ds[] = $kl->name;
+                        //     $counts = DonaturGroup::whereIn('id_parent', [$ds])->get();
+                        // }
+// dd($ds);
+            $datas = DonaturGroup::whereIn('add_by_user_id', [$datas->id])->count();
+            return $datas;
+
+                        // $name = $query->name;
+                        // $da = Donatur::whereIn('added_by_user_id', [$name])->get();
+
+                        // foreach ($da as $key => $value) {
+                        //     # code...
+                        //     $namadonatur[] = $value->nama;
+                        // }
+                        
+                        // $daonturgroups = DonaturGroup::whereIn('donatur_group_name', $namadonatur)->get();
+                        
+                        // foreach ($daonturgroups as $key => $value) {
+                        //     # code...
+                        //     $sdsad[] = $value->donatur_group_name;
+                        // }
+                        // $numbers = Midtran::whereIn('added_by_user_id', $sdsad)->sum('amount');return"Rp " . number_format($numbers,2,',','.');
+                        // dd($sdsad);
+                        // return $datas;
+                    })
                     // ->addColumn('asd', function ($query) use($parent_id){
                     //     $name = $query->name;
                     //     $da = Donatur::whereIn('added_by_user_id', [$name])->get();
@@ -938,7 +993,7 @@ class VoyagerUserController extends BaseVoyagerUserController
                     //     // }
                            
                     // })
-                    ->rawColumns(['action'])
+                    ->rawColumns(['action','group_total'])
                     // ->rawColumns(['action','action_petugas'])
                     ->make(true);
         }

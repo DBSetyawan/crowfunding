@@ -321,7 +321,7 @@
             {data: 'role.name', name: 'role.name'},
             {data: 'parent_id', name: 'parent_id'},
             {data: 'name', name: 'name'},
-            {data: 'groups_id', name: 'groups_id'},
+            {data: 'group_total', name: 'group_total'},
             {data: 'groups_id', name: 'groups_id'},
             // {data: 'email', name: 'email'},
             // {data: 'asd', name: 'asd'}, //refere to parent id donatur groups

@@ -27,7 +27,7 @@ class AddPrintKwitansiAction extends AbstractAction
 
                 return [
                     'id' => 'submit-print-kwitansi-cabang',
-                    'class' => 'col-md-12 btn btn-sm btn-dark pull-right no-sort no-click bread-actions',
+                    'class' => 'col-md-12 btn btn-sm btn-dark pull-right no-sort no-click bread-actions hidden',
                     'target' => '_blank'
                 ];
 

@@ -13,6 +13,7 @@ class DonaturGroup extends Model
         'id_cabang',
         'id_parent',
         'id',
+        'add_by_user_id',
         'id_petugas',
         'id_users',
         'donatur_group_name',

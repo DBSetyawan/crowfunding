@@ -192,13 +192,16 @@ class DonaturController extends VoyagerBaseController
 
             if(Auth::user()->role->id == 3){
                 $query_donatur_group = DonaturGroup::whereIn('id', [(Int) $group_id])->get();
+
                     foreach ($query_donatur_group as $key => $value) {
                         # code...
                         $queryIngroupName[$key] = $value->donatur_group_name;
                     }
+
                     $query = isset($queryIngroupName) 
                     ? $model->whereIn('added_by_user_id', [$queryIngroupName]) 
                     : $model->select('*');
+
             }
 
             if ($dataType->scope && $dataType->scope != '' && method_exists($model, 'scope'.ucfirst($dataType->scope))) {
@@ -567,7 +570,8 @@ class DonaturController extends VoyagerBaseController
 
         $slug = $this->getSlug($request);
 
-        $user = User::create(['alamat' => $request->kelurahan_id, 'role_id'=> 4,'password'=> Hash::make($request->password),'name'=> $request->name,'parent_id'=> auth()->user()->name,'cabang_id' => auth()->user()->cabang_id, 'group_id' => $request->group_id, 'email' => $request->email, 'added_by_user_id' => $request->added_by_user_id]);
+        $user = User::create(['alamat' => $request->kelurahan_id, 'role_id'=> 4,'password'=> Hash::make($request->password),'name'=> $request->name,'users_id'=> auth()->user()->id,'parent_id'=> auth()->user()->name,'cabang_id' => auth()->user()->cabang_id, 'group_id' => 0, 'email' => $request->email, 'added_by_user_id' => $request->added_by_user_id]);
+        Donatur::create(['id'=> $user->id,'alamat'=>$request->kelurahan_id,'added_by_user_id' => $request->group_id, 'user_id' => auth()->user()->id,'nama'=> $user->name]);
 
         // dd($request->all());
 
@@ -582,7 +586,7 @@ class DonaturController extends VoyagerBaseController
 
         // event(new BreadDataAdded($dataType, $data));
 
-        $redirect = redirect()->route("voyager.{$dataType->slug}.index");
+        $redirect = redirect()->route("voyager.donaturs.index.groups", ['group_id' => auth()->user()->id]);
 
         return $redirect->with([
             'message'    => __('voyager::generic.successfully_added_new')." {$dataType->getTranslatedAttribute('display_name_singular')}",
@@ -1118,7 +1122,7 @@ class DonaturController extends VoyagerBaseController
                                     }
                                 }
                         }
-                        if(Auth::user()->role->id == 3 || Auth::user()->role->id == 2 || Auth::user()->role->id == 1){
+                        if(Auth::user()->role->id == 3 || Auth::user()->role->id == 1){
                             $disable="hidden";
                             if($row->payment_status == "kwitansi"){
                                 $btn = '<button type="button" class="btn btn-primary btn-lg button-confirmation" data-toggle="modal" data-target="#myModal" data-id="'.$row->id.'">Konfirmasi</button>';
@@ -1168,77 +1172,88 @@ class DonaturController extends VoyagerBaseController
         //     ['data'=> $midtran->payment_status]
         // );die;
         if(!$midtran){
-            // return redirect()->back()->with([
-            //     'message'    => "donasi tidak ditemukan",
-            //     'alert-type' => 'error',
-            // ]);
-            return response()->json(['response'=> false]);
+            return redirect()->back()->with([
+                'message'    => "donasi tidak ditemukan",
+                'alert-type' => 'error',
+            ]);
+            // return response()->json(['response'=> false]);
 
         }
-        // if(Auth::user()->role->id == 3){
-        //     $status="on_funding";
-        //     $cash="pending";
-        // }else if(Auth::user()->role->id == 2 || Auth::user()->role->id == 1){
-        //     $status="settlement";
-        //     $cash="cash";
+        if(Auth::user()->role->id == 3){
+            $status="on_funding";
+            $cash="pending";
+
+        }else if(Auth::user()->role->id == 2 || Auth::user()->role->id == 1){
+            $status="settlement";
+            $cash="cash";
+
+        
+        }
+
+    Midtran::where('id',$donation_id)->update([
+        'payment_status'=>$status,
+        'payment_gateway'=> $cash
+    ]);
+
+    return redirect()->back()->with([
+        'message'    => "Berhasil mengupdate transaksi status menjadi {$status}.",
+        'alert-type' => 'success',
+    ]);
+    // return response()->json(
+    //         ['data'=> true,'response'=>'Dengan anda melakukan fitur ini. donasi berhasil dikonfirmasi, status menjadi settlement.']
+    //     );
+
+        // if($midtran->payment_status == "settlement"){
+          
+        //     return response()->json(
+        //             ['data'=> true,'response'=>'tidak ada aksi apapun untuk status ini.']
+        //         );
 
         //     // return redirect()->back()->with([
-        //     //     'message'    => "anda tidak memiliki hak untuk menkonfirmasi donasi ini.",
+        //     //     'message'    => "Donation telah di konfirmasi",
+        //     //     'alert-type' => 'success',
+        //     // ]);
+        // }
+        
+        // if($midtran->payment_status == "on_funding"){
+        //     Midtran::where('id',$donation_id)->update([
+        //         'payment_status'=>"settlement",
+        //         'payment_gateway'=> "cash"
+        //     ]);
+        //     return response()->json(
+        //             ['data'=> true,'response'=>'Dengan anda melakukan fitur ini. donasi berhasil dikonfirmasi, status menjadi settlement.']
+        //         );
+
+        //     // return redirect()->back()->with([
+        //     //     'message'    => "Donation telah di konfirmasi",
+        //     //     'alert-type' => 'success',
+        //     // ]);
+        // }
+        
+        // if($midtran->payment_status == "kwitansi"){
+        //     Midtran::where('id',$donation_id)->update([
+        //         'payment_status'=>"on_funding",
+        //         'payment_gateway'=> "pending"
+        //     ]);
+        //     return response()->json(
+        //             ['data'=> true,'response'=>'Dengan anda melakukan fitur ini. donasi telah diproses, status menjadi on_funding.']
+        //         );
+
+        //     // return redirect()->back()->with([
+        //     //     'message'    => "Donation telah di konfirmasi",
+        //     //     'alert-type' => 'success',
+        //     // ]);
+        // }
+        //     else{
+
+        //         return response()->json(
+        //         ['data'=> false,'response'=>'status tidak diketahui.']
+        //     );
+        //     // return redirect()->back()->with([
+        //     //     'message'    => "hak akses dibatasi untuk user ini.",
         //     //     'alert-type' => 'error',
         //     // ]);
         // }
-
-        if($midtran->payment_status == "settlement"){
-          
-            return response()->json(
-                    ['data'=> true,'response'=>'tidak ada aksi apapun untuk status ini.']
-                );
-
-            // return redirect()->back()->with([
-            //     'message'    => "Donation telah di konfirmasi",
-            //     'alert-type' => 'success',
-            // ]);
-        }
-        
-        if($midtran->payment_status == "on_funding"){
-            Midtran::where('id',$donation_id)->update([
-                'payment_status'=>"settlement",
-                'payment_gateway'=> "cash"
-            ]);
-            return response()->json(
-                    ['data'=> true,'response'=>'Dengan anda melakukan fitur ini. donasi berhasil dikonfirmasi, status menjadi settlement.']
-                );
-
-            // return redirect()->back()->with([
-            //     'message'    => "Donation telah di konfirmasi",
-            //     'alert-type' => 'success',
-            // ]);
-        }
-        
-        if($midtran->payment_status == "kwitansi"){
-            Midtran::where('id',$donation_id)->update([
-                'payment_status'=>"on_funding",
-                'payment_gateway'=> "pending"
-            ]);
-            return response()->json(
-                    ['data'=> true,'response'=>'Dengan anda melakukan fitur ini. donasi telah diproses, status menjadi on_funding.']
-                );
-
-            // return redirect()->back()->with([
-            //     'message'    => "Donation telah di konfirmasi",
-            //     'alert-type' => 'success',
-            // ]);
-        }
-            else{
-
-                return response()->json(
-                ['data'=> false,'response'=>'status tidak diketahui.']
-            );
-            // return redirect()->back()->with([
-            //     'message'    => "hak akses dibatasi untuk user ini.",
-            //     'alert-type' => 'error',
-            // ]);
-        }
         
 
     }
@@ -1460,37 +1475,37 @@ class DonaturController extends VoyagerBaseController
                 } else {
                     // $success = "<div class='alert alert-success'>Berhasil menyimpan data.</div>";
                     // return response()->json(['success'=> $success, 'status' => true]);
-                    // $bulkAction = DB::transaction(function() use ($kloningDonaturs, $nextMonthTransaction) {
-                    //     foreach (array_chunk($kloningDonaturs->toArray(), 1000) as $responseChunk)
-                    //     {
-                    //         $insertableArray = [];
-                    //         foreach($responseChunk as $BulkHistory) {
-                    //             $insertableArray[] = [
-                    //                 'created_at' => $nextMonthTransaction,
-                    //                 'amount' => $BulkHistory['amount'],
-                    //                 'donatur_id' => $BulkHistory['donatur_id'],
-                    //                 'id_cabang' => $BulkHistory['id_cabang'],
-                    //                 'group_id' => $BulkHistory['group_id'],
-                    //                 'transaction_id' => $BulkHistory['transaction_id'],
-                    //                 'transaction_time' => $BulkHistory['transaction_time'],
-                    //                 'payment_gateway' => $BulkHistory['payment_gateway'],
-                    //                 'payment_status' => "kwitansi",
-                    //                 'program_id' => $BulkHistory['program_id'],
-                    //                 'updated_at' => $nextMonthTransaction,
-                    //                 'added_by_user_id' => $BulkHistory['added_by_user_id']
-                    //             ];
-                    //         }
-                    //         $response = DB::table('midtrans')->insert($insertableArray);
-                    //     }
+                    $bulkAction = DB::transaction(function() use ($kloningDonaturs, $nextMonthTransaction) {
+                        foreach (array_chunk($kloningDonaturs->toArray(), 1000) as $responseChunk)
+                        {
+                            $insertableArray = [];
+                            foreach($responseChunk as $BulkHistory) {
+                                $insertableArray[] = [
+                                    'created_at' => $nextMonthTransaction,
+                                    'amount' => $BulkHistory['amount'],
+                                    'donatur_id' => $BulkHistory['donatur_id'],
+                                    'id_cabang' => $BulkHistory['id_cabang'],
+                                    'group_id' => $BulkHistory['group_id'],
+                                    'transaction_id' => $BulkHistory['transaction_id'],
+                                    'transaction_time' => $BulkHistory['transaction_time'],
+                                    'payment_gateway' => $BulkHistory['payment_gateway'],
+                                    'payment_status' => "kwitansi",
+                                    'program_id' => $BulkHistory['program_id'],
+                                    'updated_at' => $nextMonthTransaction,
+                                    'added_by_user_id' => $BulkHistory['added_by_user_id']
+                                ];
+                            }
+                            $response = DB::table('midtrans')->insert($insertableArray);
+                        }
 
-                    //     return $response;
+                        return $response;
 
-                    // });
-                    $bulkAction = true;
+                    });
+                    // $bulkAction = true;
 
                     if($bulkAction == true){
-                        // $success = "<div class='alert alert-success'>Berhasil menyimpan data.</div>";
-                        $success = "<div class='alert alert-success'>Data pernah disimpan sebelumnya !</div>";
+                        $success = "<div class='alert alert-success'>Berhasil menyimpan data.</div>";
+                        // $success = "<div class='alert alert-success'>Data pernah disimpan sebelumnya !</div>";
                         return response()->json(['success'=> $success, 'status' => true]);
                     } else {
                         $failed = "<div class='alert alert-danger'>gagal menyimpan data.</div>";

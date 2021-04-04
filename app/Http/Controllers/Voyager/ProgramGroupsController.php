@@ -557,14 +557,14 @@ class ProgramGroupsController extends BaseVoyagerMenuController
     public function store(Request $request)
     {
 
+        $slug = $this->getSlug($request);
+        $dataType = Voyager::model('DataType')->where('slug', '=', $slug)->first();
+
         $this->authorize('add', app($dataType->model_name));
 
-        $slug = $this->getSlug($request);
-        $user = User::create(['role_id'=> 7,'name'=> $request->donatur_group_name,'parent_id'=> auth()->user()->name,'cabang_id' => 0]);
-        DonaturGroup::create(['id'=> $user->id,'id_petugas'=>auth()->user()->id,'id_parent'=> auth()->user()->name,'donatur_group_name'=>$request->donatur_group_name,'id_cabang'=> $user->cabang_id]);
+        $user = User::create(['email'=> $request->donatur_group_name.'@kotakamal.care','role_id'=> 7,'name'=> $request->donatur_group_name,'parent_id'=> auth()->user()->name,'cabang_id' => auth()->user()->id, 'add_by_user_id'=> auth()->user()->id, 'users_id' => auth()->user()->id]);
+        DonaturGroup::create(['id'=> $user->id,'id_petugas'=>auth()->user()->id,'id_parent'=> auth()->user()->name,'donatur_group_name'=>$request->donatur_group_name,'id_cabang'=> $user->cabang_id, 'add_by_user_id'=> auth()->user()->id]);
         // dd($request->all());
-        // dd($slug);
-        $dataType = Voyager::model('DataType')->where('slug', '=', $slug)->first();
 
         // Validate fields with ajax
         // $val = $this->validateBread($request->all(), $dataType->addRows)->validate();

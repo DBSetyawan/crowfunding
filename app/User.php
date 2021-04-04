@@ -13,7 +13,7 @@ class User extends \TCG\Voyager\Models\User
     use Notifiable;
     use Translatable;
 
-    public $additional_attributes = ['user_count'];
+    // public $additional_attributes = ['user_count'];
 
     // protected $appends = [
     //     'petugasCount'
